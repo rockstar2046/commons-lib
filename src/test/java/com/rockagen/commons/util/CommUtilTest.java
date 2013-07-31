@@ -33,6 +33,8 @@ public class CommUtilTest {
 		System.out.println(CommUtil.subPostfix(CommUtil.generateRandomCode(12),0,4,"*"));
 		System.out.println(CommUtil.extractNumber(CommUtil.generateRandomCode(12)));
 		System.out.println(CommUtil.extractNumber(CommUtil.subPostfix(CommUtil.generateRandomCode(12),0,4,"*")));
+		
+		System.out.println(CommUtil.toCommaDelimitedString(new String[]{"tom","jack","axl","duff","slash","Izzy"," Adler"}));
 	}
 	
 	@Test
