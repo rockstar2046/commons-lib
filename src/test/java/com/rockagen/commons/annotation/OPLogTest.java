@@ -19,6 +19,9 @@ import java.lang.reflect.Method;
 
 import org.junit.Test;
 
+import com.rockagen.commons.util.ClassUtil;
+import com.rockagen.commons.util.CommUtil;
+
 /**
  *
  * @author AGEN
@@ -41,13 +44,14 @@ public class OPLogTest {
 	    boolean hasAnnotation = method.isAnnotationPresent(OPLog.class);
 
 	    if (hasAnnotation) {
-	      OPLog annotation = (OPLog)method.getAnnotation(OPLog.class);
-
+	      OPLog annotation = (OPLog)ClassUtil.getDeclaredMethod(getClass(), false, "test").getAnnotation(OPLog.class);
 	      String methodDescp = annotation.description();
-	      String value = annotation.value();
+	      if(CommUtil.isBlank(methodDescp)){
+	    	  methodDescp=annotation.value();
+	      }
+	     
 	      System.out.println("Target method: [" + method.getName() + "]");
-	      System.out.println("Description: [" + methodDescp + "]");
-	      System.out.println("Value: [" + value + "]");
+	      System.out.println("Value: [" + methodDescp + "]");
 	    } else {
 	      System.out.println(method.getName());
 	    }

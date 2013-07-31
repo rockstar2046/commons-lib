@@ -51,7 +51,7 @@ public class ReflexUtilTest {
 		 System.out.println(ReflexUtil.getBasicInstance(TestVo2.class, map,true));
 	 }
 	 @Test
-	 public void testGetInstance3()
+	 public void testGetInstance3() throws IllegalArgumentException, IllegalAccessException
 	 {
 			 
 		Class<?>[] clazz= new Class<?>[]{String.class,int.class,String.class};
@@ -60,6 +60,19 @@ public class ReflexUtilTest {
 		 System.out.println(ClassUtil.getInstance(TestVo2.class, true, clazz,obj));
 		 System.out.println(ClassUtil.getInstance(TestVo2.class, true, clazz,obj2));
 		// System.out.println(ClassUtil.getInstance(TestVo2.class, false, clazz,obj));
+		 TestVo2 vo2=ClassUtil.getInstance(TestVo2.class, true, clazz,obj);
+		 
+		 System.out.println(ReflexUtil.getFieldValue(vo2, "name", false));
+		 System.out.println(ReflexUtil.getFieldValue(vo2, "email", false));
+		 System.out.println(ReflexUtil.getFieldValue(vo2, "addr", false));
+		 
+		 ReflexUtil.setFieldValue(vo2, "name", "ROCKAGEN-USA",false);
+		 ReflexUtil.setFieldValue(vo2, "email", "rockagen@gmail.com",false);
+		 ReflexUtil.setFieldValue(vo2, "addr", "USA",false);
+		 System.out.println("========================================");
+		 System.out.println(ReflexUtil.getFieldValue(vo2, "name", false));
+		 System.out.println(ReflexUtil.getFieldValue(vo2, "email", false));
+		 System.out.println(ReflexUtil.getFieldValue(vo2, "addr", false));
 	 }
 	 @Test
 	 public void testGetAnnotations()
@@ -68,6 +81,7 @@ public class ReflexUtilTest {
 		System.out.println("Constructor: "+Arrays.toString(ClassUtil.getAnnotatedDeclaredConstructors(TestVo3.class, Deprecated.class, true)));
 		System.out.println("Field: "+Arrays.toString(ClassUtil.getAnnotatedDeclaredFields(TestVo3.class, Deprecated.class, true)));
 	 }
+	 
 	 
 	 @Test
 	 public void testClassUtils()

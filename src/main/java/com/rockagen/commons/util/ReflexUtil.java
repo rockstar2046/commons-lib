@@ -17,6 +17,7 @@ package com.rockagen.commons.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -53,7 +54,7 @@ public class ReflexUtil {
 	
 	/**
 	 * 
-	 * Direct reading the object attribute values鈥� the private / protected modifiers will be ignoring , without getter function.</br>
+	 * Direct reading the object attribute values,the private / protected modifiers will be ignoring.if getter function exist,return getter function value</br>
 	 * If recursively is true, will looking from all class hierarchy
 	 * 
 	 * @param object
@@ -68,6 +69,16 @@ public class ReflexUtil {
 		if (field == null)
 			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
 
+		String methodName="get"+CommUtil.capitalize(fieldName);
+		Method method=ClassUtil.getDeclaredMethod(object.getClass(), recursively, methodName);
+		if(method!=null){
+			try {
+				makeAccessible(method);
+				return method.invoke(object);
+			} catch (InvocationTargetException e) {
+				// do not
+			}
+		}
 		makeAccessible(field);
 		Object result = null;
 		result = field.get(object);
@@ -76,7 +87,7 @@ public class ReflexUtil {
 
 	
 	/**
-	 * Direct writing the object attribute values鈥� the private / protected modifiers will be ignoring , without setter function.</br>
+	 * Direct writing the object attribute values, the private / protected modifiers will be ignoring,if setter function exist,return setter function value.</br>
 	 * If recursively is true, will looking from all class hierarchy
 	 * 
 	 * @param object
@@ -92,6 +103,18 @@ public class ReflexUtil {
 		if (field == null)
 			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
 
+		String methodName="set"+CommUtil.capitalize(fieldName);
+		
+		Method method=ClassUtil.getDeclaredMethod(object.getClass(), recursively, methodName,value.getClass());
+		if(method!=null){
+			try {
+				makeAccessible(method);
+				method.invoke(object,value);
+				return ;
+			} catch (InvocationTargetException e) {
+				// do not
+			}
+		}
 		makeAccessible(field);
 
 		field.set(object, value);

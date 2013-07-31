@@ -24,6 +24,7 @@ public class TestVo2 {
 	private String name;
 	private int age;
 	private String email;
+	private String addr="CHINA";
 	
 	private TestVo2(){}
 	
@@ -34,6 +35,14 @@ public class TestVo2 {
 		this.email = email;
 	}
 	
+	public String getEmail() {
+		return email+"  [getter] ";
+	}
+
+	public void setEmail(String email) {
+		this.email = email+"  [setter] ";
+	}
+
 	public int getAge() {
 		return age;
 	}
@@ -42,12 +51,12 @@ public class TestVo2 {
 		this.age = age;
 	}
 
-	public String getName() {
-		return name;
+	private String getName() {
+		return name+"  [getter] ";
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	private void setName(String name) {
+		this.name = name+"  [setter] ";
 	}
 
 	@Override
