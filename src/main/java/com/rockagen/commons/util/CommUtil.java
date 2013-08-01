@@ -38,10 +38,13 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * Commons Utils
+ * 
  * @author AGEN
  * @since JDK1.6
+ * @since commons.lang3
  */
-public class CommUtil {
+public class CommUtil extends StringUtils{
 	
 	
 	// ~ Instance fields ==================================================

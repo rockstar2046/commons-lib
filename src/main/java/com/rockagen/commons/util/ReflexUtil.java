@@ -28,6 +28,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Reflex Utils
+ * 
  * @author AGEN
  * @since JDK1.6
  */

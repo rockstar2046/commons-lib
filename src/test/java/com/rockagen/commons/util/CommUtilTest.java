@@ -42,5 +42,11 @@ public class CommUtilTest {
 		System.out.println(CommUtil.generateRandomCode(12));
 		System.out.println(CommUtil.getRandomNumber(6));
 	}
+	@Test
+	public void testDigest(){
+		System.out.println(MDUtil.sha1Hex("hello"));
+		System.out.println(MDUtil.md5Hex("hello"));
+		System.out.println(MDUtil.md5("hello"));
+	}
 
 }

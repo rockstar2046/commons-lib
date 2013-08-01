@@ -24,14 +24,18 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Class Utils
+ * 
  * @author AGEN
  * @since JDK1.6
+ * @since commons.lang3
  */
-public class ClassUtil {
+public class ClassUtil extends ClassUtils{
 	
 	
 	//~ Instance fields ==================================================
