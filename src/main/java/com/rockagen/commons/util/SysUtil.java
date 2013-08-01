@@ -18,9 +18,10 @@ package com.rockagen.commons.util;
 import org.apache.commons.lang3.SystemUtils;
 
 /**
- * System Util
+ * System Utils
  * @author AGEN
  * @since JDK1.6
+ * @since commons.lang3
  */
 public class SysUtil extends SystemUtils{
 	
