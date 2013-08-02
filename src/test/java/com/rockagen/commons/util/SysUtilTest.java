@@ -21,17 +21,19 @@ import java.lang.reflect.InvocationTargetException;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author AGEN
  * @since JDK1.6
  */
 public class SysUtilTest {
-	
-	
+
 	@Test
-	public void openUrl() throws IllegalArgumentException, ClassNotFoundException, IllegalAccessException, InterruptedException, InvocationTargetException, IOException, NoSuchMethodException{
+	public void openUrl() throws IllegalArgumentException,
+			ClassNotFoundException, IllegalAccessException,
+			InterruptedException, InvocationTargetException, IOException,
+			NoSuchMethodException {
 		System.out.println(SysUtil.OS_NAME);
-		
+
 		SysUtil.browse("http://www.google.com");
 	}
 

@@ -50,10 +50,44 @@ public class CommUtil extends StringUtils{
 	/**
 	 * 0~9 A~Z cha array
 	 */
-	private static final char[] CHARS = { '0', '1', '2', '3', '4', '5', '6',
-			'7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-			'X', 'Y', 'Z' };
+	private static final char[] CHARS = {
+			'0', '1', '2', '3', '4', '5', '6','7', '8', '9', 
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 
+			'U', 'V', 'W','X', 'Y', 'Z' };
+	
+	
+    
+    
+    /**
+     * Single byte character set
+     */
+    private static final char[] SBC_CASE={
+     	'1','2','3','4','5','6','7','8','9','0',
+    	'!','@','#','$','%','^','&','*','(',')',
+    	'a','b','c','d','e','f','g','h','i','j',
+    	'k','l','m','n','o','p','q','r','s','t',
+    	'u','v','w','x','y','z','A','B','C','D',
+    	'E','F','G','H','I','J','K','L','M','N',
+    	'O','P','Q','R','S','T','U','V','W','X',
+    	'Y','Z','-','_','=','+','\\','|','[',']',
+    	 ';',':','\'','"',',','<','.','>','/','?'
+    };
+    
+    /**
+     * Double byte character set
+     */
+   private static final char[] DBC_CASE = { 
+	   '１', '２', '３', '４', '５', '６', '７', '８', '９', '０',  
+       '！', '＠', '＃', '＄', '％', '︿', '＆', '＊', '（', '）', 
+       'ａ', 'ｂ','ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 
+       'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ',
+       'ｕ', 'ｖ', 'ｗ', 'ｘ', 'ｙ', 'ｚ', 'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 
+       'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ',
+       'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｗ', 'Ｘ',  
+       'Ｙ', 'Ｚ', '－', '＿', '＝', '＋', '＼', '｜', '【', '】', 
+       '；', '：', '‘', '“', '，', '《', '。', '》', '／', '？'
+        }; 
 
 	
 	
@@ -828,7 +862,70 @@ public class CommUtil extends StringUtils{
 		}
 		return map;
 	}
+
 	
+	
+	/**
+	 * Generate len same chars
+	 * @param cs
+	 * @param len
+	 * @return String
+	 */
+	public static String genSameChars(String cs,int len){
+		if(isBlank(cs) || len <1)
+			return cs;
+		
+		StringBuffer sb=new StringBuffer();
+		for(int i=0;i<len;i++){
+			sb.append(cs);
+		}
+		return sb.toString();
+	}
+	
+    
+    /**
+     * Change dbc case String to Single byte character set 
+     * @param dbcString
+     * @return single byte character set string
+     */
+    public static String toSBC(String dbcString) {  
+    	StringBuffer sb = new StringBuffer();  
+    	  
+        for (int i = 0; i < dbcString.length(); i++) {  
+        	
+            int index = ArrayUtil.indexOf(DBC_CASE, dbcString.charAt(i));
+            
+            if (index != -1) {
+            	sb.append(SBC_CASE[index]);
+            } else {  
+                sb.append(dbcString.charAt(i));
+            }  
+        }  
+        return sb.toString();
+    	
+    }
+    /**
+     * Change sbc case String to double byte character set 
+     * @param sbcString
+     * @return double byte character set string
+     */
+    public static String toDBC(String sbcString) {  
+    	StringBuffer sb = new StringBuffer();  
+    	
+    	for (int i = 0; i < sbcString.length(); i++) {  
+    		
+    		int index = ArrayUtil.indexOf(SBC_CASE, sbcString.charAt(i));
+    		
+    		if (index != -1) {
+    			sb.append(DBC_CASE[index]);
+    		} else {  
+    			sb.append(sbcString.charAt(i));
+    		}  
+    	}  
+    	return sb.toString();
+    	
+    }
+
 
 	
 
