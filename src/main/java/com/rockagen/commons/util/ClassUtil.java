@@ -63,7 +63,7 @@ public class ClassUtil extends ClassUtils{
      * @param accessible
      * @param parameterTypes
      * @param paramValue
-     * @return
+     * @return instance
      */
     public static <T> T getInstance(Class<T> clazz,boolean accessible,Class<?>[] parameterTypes,Object[] paramValue) {
     	if(clazz==null) return null;
@@ -104,7 +104,7 @@ public class ClassUtil extends ClassUtils{
      * Create new instance of specified class and type
      * @param clazz
      * @param accessible
-     * @return
+     * @return instance
      */
     public static <T> T getInstance(Class<T> clazz,boolean accessible) {
     	if(clazz==null) return null;
@@ -134,8 +134,7 @@ public class ClassUtil extends ClassUtils{
     /**
      * Create new instance of specified class and type
      * @param clazz
-     * @param accessible
-     * @return
+     * @return instance
      */
     public static <T> T getInstance(Class<T> clazz) {
     	return getInstance(clazz,false);
@@ -221,7 +220,7 @@ public class ClassUtil extends ClassUtils{
      * @param recursively
      * @param methodName
      * @param parameterTypes
-     * @return
+     * @return method
      */
     public static Method getDeclaredMethod(Class<?> clazz,boolean recursively,String methodName,Class<?>... parameterTypes) {
     	

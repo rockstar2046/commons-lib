@@ -15,13 +15,11 @@
  */
 package com.rockagen.commons.util;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +31,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -73,7 +71,7 @@ public class CommUtil extends StringUtils{
 	 * 
 	 * @param len
 	 *            length
-	 * @return randomCode
+	 * @return a length is  len randomCode String
 	 */
 	public static String generateRandomCode(int len) {
 		if (len < 1){
@@ -89,7 +87,7 @@ public class CommUtil extends StringUtils{
 	 * 
 	 * @param len
 	 * @param size
-	 * @return list
+	 * @return size list
 	 */
 	public static List<String> generateRandomCodes(int len, int size) {
 		if (len < 1 || size < 1) {
@@ -109,7 +107,7 @@ public class CommUtil extends StringUtils{
 	 * mask the Last char to "*"
 	 * 
 	 * @param name
-	 * @return
+	 * @return lastMask String
 	 */
 	public static String lastMask(String name) {
 		
@@ -125,7 +123,7 @@ public class CommUtil extends StringUtils{
 	 * Verify the email
 	 * 
 	 * @param str
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean isEmail(String str) {
 		// email regular
@@ -141,11 +139,11 @@ public class CommUtil extends StringUtils{
 	 * Verify special characters
 	 * 
 	 * @param src
-	 * @return
+	 * @return boolean
 	 */
 	public static boolean hasSpecialChar(String src) {
-		// ≈–∂œ «∑Ò∞¸∫¨Ãÿ ‚◊÷∑˚
-		String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~£°@#£§%°≠°≠&*£®£©°™°™+|{}°æ°ø°Æ£ª£∫°±°∞°Ø°££¨°¢£ø]";
+		
+		String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~ÔºÅ@#Ôø•%‚Ä¶‚Ä¶&*ÔºàÔºâ‚Äî‚Äî+|{}„Äê„Äë‚ÄòÔºõÔºö‚Äù‚Äú‚Äô„ÄÇÔºå„ÄÅÔºü]";
 		Pattern pattern = Pattern.compile(regEx);
 		Matcher matcher = pattern.matcher(src);
 		if (matcher.matches()) {
@@ -158,8 +156,8 @@ public class CommUtil extends StringUtils{
 	
 	/**
 	 * Verify phone number
-	 * @param mobiles
-	 * @return
+	 * @param number
+	 * @return boolean
 	 */
 	public static boolean isPhoneNum(String number){
 		int retval=getPhoneNumberType(number);
@@ -172,11 +170,11 @@ public class CommUtil extends StringUtils{
 	
 	/**
 	 *Get Mobile operator
-	 * <li>0£∫ number error</li> <li>1£∫ china mobile(phone)</li> <li>2£∫china unicom(phone)</li> <li>
-	 * 3£∫China Telecom(phone)</li> <li>4£∫  Tel</li>
+	 * <li>0: number error</li> <li>1: china mobile(phone)</li> <li>2: china unicom(phone)</li> <li>
+	 * 3: China Telecom(phone)</li> <li>4:  Tel</li>
 	 * 
 	 * @param number
-	 * @return
+	 * @return 0,1,2,3,4
 	 */
 	public static int getPhoneNumberType(String number) {
 		// ~ phone
@@ -207,7 +205,7 @@ public class CommUtil extends StringUtils{
 	 * 
 	 * @param date
 	 * @param pattern
-	 * @return
+	 * @return date String
 	 */
 	public static String date2String(Date date,String pattern) {
 		java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(
@@ -218,8 +216,8 @@ public class CommUtil extends StringUtils{
 	
 	/**
 	 * Date ---> String (yyyyMMddHHmmss)
-	 * @param time
-	 * @return
+	 * @param date
+	 * @return date String
 	 */
 	public static String dateTime2StringFs(Date date){
 		
@@ -230,7 +228,8 @@ public class CommUtil extends StringUtils{
 	 * 
 	 * Date ---> String (yyyyMMddHHmmssSSS)
 	 * 
-	 * @param time
+	 * @param date
+	 * @return date String
 	 */
 	public static String dateTime2StringFS(Date date) {
 		
@@ -243,7 +242,7 @@ public class CommUtil extends StringUtils{
 	 * 
 	 * @param dateStr
 	 * @param pattern
-	 * @return
+	 * @return date
 	 */
 	public static Date string2Date(String dateStr,String pattern) {
 		java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(
@@ -260,7 +259,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * String --> Date (yyyyMMddHHmmss)
 	 * @param dateStr
-	 * @return
+	 * @return date
 	 */
 	public static Date string2DateFs(String dateStr){
 		
@@ -272,7 +271,7 @@ public class CommUtil extends StringUtils{
 	 * String --> Date (yyyyMMddHHmmssSSS)
 	 * 
 	 * @param dateStr
-	 * @return
+	 * @return date
 	 */
 	public static Date string2DateFS(String dateStr) {
 		
@@ -285,7 +284,7 @@ public class CommUtil extends StringUtils{
 	 * Return the next day's date and time 00:00:00 start date
 	 * 
 	 * @param date
-	 * @return
+	 * @return next day begin
 	 */
 	public static Date nextDayBegin(Date date) {
 		Calendar cal = Calendar.getInstance();
@@ -302,7 +301,7 @@ public class CommUtil extends StringUtils{
 	 * Return the next month's date and time 00:00:00 start date
 	 * 
 	 * @param date
-	 * @return
+	 * @return next month begin
 	 */
 	public static Date nextMonthBegin(Date date) {
 		Calendar cal = Calendar.getInstance();
@@ -321,7 +320,7 @@ public class CommUtil extends StringUtils{
 	 * Return the next month's date
 	 * 
 	 * @param date
-	 * @return
+	 * @return next month
 	 */
 	public static Date nextMonth(Date date) {
 
@@ -335,7 +334,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * Return the next day's date
 	 * @param date
-	 * @return
+	 * @return next day
 	 */
 	public static Date nextDay(Date date) {
 		Calendar cal = Calendar.getInstance();
@@ -347,7 +346,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * Return the next hour's date(24H)
 	 * @param date
-	 * @return
+	 * @return next hour
 	 */
 	public static Date nextHour(Date date) {
 		
@@ -359,7 +358,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * Return the current year 
 	 * @param date
-	 * @return
+	 * @return current year
 	 */
 	public static int getCurrentYear(Date date){
 		Calendar cal = Calendar.getInstance();
@@ -371,7 +370,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * Return the current month of year (1~12)
 	 * @param date
-	 * @return
+	 * @return month of year (1~12)
 	 */
 	public static int getCurrentMonthOfYear(Date date){
 		Calendar cal = Calendar.getInstance();
@@ -382,7 +381,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * Return the current day of month
 	 * @param date
-	 * @return
+	 * @return current day
 	 */
 	public static int getCurrentDayOfMounth(Date date){
 		Calendar cal = Calendar.getInstance();
@@ -392,7 +391,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * Return the current hour of day (24H)
 	 * @param date
-	 * @return
+	 * @return current hour
 	 */
 	public static int getCurrentHourOfDay(Date date){
 		Calendar cal = Calendar.getInstance();
@@ -401,44 +400,11 @@ public class CommUtil extends StringUtils{
 	}
 
 
-
-	/**
-	 * md5 encrypt
-	 * 
-	 * @param src
-	 * @return
-	 * @throws NoSuchAlgorithmException 
-	 * @throws UnsupportedEncodingException 
-	 */
-	public static String md5(String src) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		MessageDigest messageDigest = null;
-		
-				messageDigest = MessageDigest.getInstance("MD5");
-				messageDigest.reset();
-				messageDigest.update(src.getBytes("UTF-8"));
-			
-		
-
-		byte[] byteArray = messageDigest.digest();
-
-		StringBuffer md5StrBuff = new StringBuffer();
-
-		for (int i = 0; i < byteArray.length; i++) {
-			if (Integer.toHexString(0xFF & byteArray[i]).length() == 1)
-				md5StrBuff.append("0").append(
-						Integer.toHexString(0xFF & byteArray[i]));
-			else
-				md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));
-		}
-
-		return md5StrBuff.toString();
-	}
-
 	/**
 	 * return a ArrayList from comma-separated string 
 	 * 
 	 * @param access
-	 * @return
+	 * @return list
 	 */
 	public static java.util.List<String> createListFromCommaDelimitedString(
 			String access){
@@ -459,7 +425,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * return a double value from String
 	 * @param src
-	 * @return
+	 * @return double
 	 */
 	public static double extractNumber(String src) {
 		String temp="0.0";
@@ -487,7 +453,7 @@ public class CommUtil extends StringUtils{
 	 * @param startIndex
 	 * @param endIndex
 	 * @param postfix
-	 * @return
+	 * @return string
 	 */
 	public static String  subPostfix(String str, int startIndex, int endIndex, String postfix) {
 		 if (StringUtils.isBlank(str)) return "";
@@ -505,7 +471,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * base64 encode
 	 * @param plainText
-	 * @return
+	 * @return base64 string
 	 */
 	public static String encodeBase64(String plainText){
 		byte[] b=Base64.encodeBase64(plainText.getBytes(), true);;
@@ -516,7 +482,7 @@ public class CommUtil extends StringUtils{
 	/**
 	 * base 64 decode
 	 * @param signature
-	 * @return
+	 * @return decode Base64 string 
 	 */
 	public static String decodeBase64(String signature){
 		byte[] b = Base64.decodeBase64(signature.getBytes());
@@ -527,7 +493,7 @@ public class CommUtil extends StringUtils{
     /**
 	 * return a  <code>len</code> not repeat random number String, len must be less than 10 
 	 * @param len must less than 10
-	 * @return
+	 * @return random number 
 	 */
 	public static String getRandomNumber(int len){
 		StringBuffer sb = new StringBuffer();
@@ -545,7 +511,7 @@ public class CommUtil extends StringUtils{
 	 * Array to a comma-delimited string
 	 * 
 	 * @param src
-	 * @return
+	 * @return string
 	 */
 	public static String toCommaDelimitedString(String[] src) {
 		StringBuffer sb = new StringBuffer();
@@ -581,54 +547,12 @@ public class CommUtil extends StringUtils{
         }
 	}
 	
-	/**
-	 * see StringUtils.isBlank(cs)
-	 * 
-	 * @param cs
-	 * @return
-	 */
-	public static boolean isBlank(CharSequence cs){
-		return StringUtils.isBlank(cs);
-	}
-	
-	/**
-	 * see StringUtils.capitalize(src)
-	 * 
-	 * @param cs
-	 * @return
-	 */
-	public static String capitalize(String src){
-		return StringUtils.capitalize(src);
-	}
-	/**
-	 * see StringUtils.uncapitalize(src)
-	 * 
-	 * @param cs
-	 * @return
-	 */
-	public static String uncapitalize(String src){
-		return StringUtils.uncapitalize(src);
-	}
-	
-	/**
-	 * see StringUtils.trim(String)
-	 * 
-	 * @param src
-	 * @return
-	 */
-	public static String trim(String src) {
-		if(isBlank(src)){
-			return src;
-		}
-		
-		return StringUtils.trim(src);
-	};
 	
 	/**
 	 * escape CSV  see StringEscapeUtils.escapeCsv(str)
 	 * 
 	 * @param str
-	 * @return
+	 * @return string
 	 */
 	public static String escapeCsv(String str){
 		if(isBlank(str)){
@@ -638,7 +562,10 @@ public class CommUtil extends StringUtils{
 	}
 	
 	/**
-	 * <p>escape HTML  see StringEscapeUtils.escapeHtml(str)</p>
+	 * <p>escape HTML  see StringEscapeUtils.escapeHtml3(str)</p>
+     * <p>Supports all known HTML 3.0 entities, including funky accents.
+     * Note that the commonly used apostrophe escape character (&amp;apos;)
+     * is not a legal entity and so is not supported). </p>
      * <p>
      * For example:
      * </p> 
@@ -649,26 +576,52 @@ public class CommUtil extends StringUtils{
      * </p>
 	 * 
 	 * @param str
-	 * @return
+	 * @return string
 	 */
-	public static String escapeHtml(String str){
+	public static String escapeHtml3(String str){
 		if(isBlank(str)){
 			return str;
 		}
-		return StringEscapeUtils.escapeHtml(str);
+		return StringEscapeUtils.escapeHtml3(str);
 	}
+	
+	
+	/**
+	 * <p>escape HTML  see StringEscapeUtils.escapeHtml4(str)</p>
+     * <p>Supports all known HTML 4.0 entities, including funky accents.
+     * Note that the commonly used apostrophe escape character (&amp;apos;)
+     * is not a legal entity and so is not supported). </p>
+     * <p>
+     * For example:
+     * </p> 
+     * <p><code>"bread" & "butter"</code></p>
+     * becomes:
+     * <p>
+     * <code>&amp;quot;bread&amp;quot; &amp;amp; &amp;quot;butter&amp;quot;</code>.
+     * </p>
+	 * 
+	 * @param str
+	 * @return string
+	 */
+	public static String escapeHtml4(String str){
+		if(isBlank(str)){
+			return str;
+		}
+		return StringEscapeUtils.escapeHtml4(str);
+	}
+	
 	/**
 	 * escape JAVA  see StringEscapeUtils.escapeJava(str)
      * For example:
      * </p> 
-     * <p><code>"÷–π˙"</code></p>
+     * <p><code>"‰∏≠ÂõΩ"</code></p>
      * becomes:
      * <p>
      * <code>\u4E2D\u56FD</code>.
      * </p>
 	 *  --> 
 	 * @param str
-	 * @return
+	 * @return string
 	 */
 	public static String escapeJava(String str){
 		if(isBlank(str)){
@@ -676,25 +629,13 @@ public class CommUtil extends StringUtils{
 		}
 		return StringEscapeUtils.escapeJava(str);
 	}
-	
-	/**
-	 * escape SQL  see StringEscapeUtils.escapeSql(str)
-	 * 
-	 * @param str
-	 * @return
-	 */
-	public static String escapeSql(String str){
-		if(isBlank(str)){
-			return str;
-		}
-		return StringEscapeUtils.escapeSql(str);
-	}
+
 	
 	/**
 	 * escape XML  see StringEscapeUtils.escapeXml(str)
 	 * 
 	 * @param str
-	 * @return
+	 * @return string
 	 */
 	public static String escapeXml(String str){
 		if(isBlank(str)){
@@ -709,7 +650,7 @@ public class CommUtil extends StringUtils{
 	 * unescape CSV  see StringEscapeUtils.unescapeCsv(str)
 	 * 
 	 * @param str
-	 * @return
+	 * @return string
 	 */
 	public static String unescapeCsv(String str){
 		if(isBlank(str)){
@@ -719,7 +660,10 @@ public class CommUtil extends StringUtils{
 	}
 	
 	/**
-	 * <p>unescape HTML  see StringEscapeUtils.unescapeHtml(str)</p>
+	 * <p>unescape HTML  see StringEscapeUtils.unescapeHtml3(str)</p>
+     * <p>Supports all known HTML 3.0 entities, including funky accents.
+     * Note that the commonly used apostrophe escape character (&amp;apos;)
+     * is not a legal entity and so is not supported). </p>
 	 * <p>
 	 * For example:
 	 * </p> 
@@ -730,14 +674,39 @@ public class CommUtil extends StringUtils{
 	 * </p>
 	 * 
 	 * @param str
-	 * @return
+	 * @return string
 	 */
-	public static String unescapeHtml(String str){
+	public static String unescapeHtml3(String str){
 		if(isBlank(str)){
 			return str;
 		}
-		return StringEscapeUtils.unescapeHtml(str);
+		return StringEscapeUtils.unescapeHtml3(str);
 	}
+	
+	/**
+	 * <p>unescape HTML  see StringEscapeUtils.unescapeHtml4(str)</p>
+     * <p>Supports all known HTML 4.0 entities, including funky accents.
+     * Note that the commonly used apostrophe escape character (&amp;apos;)
+     * is not a legal entity and so is not supported). </p>
+	 * <p>
+	 * For example:
+	 * </p> 
+	 * <p><code>&amp;quot;bread&amp;quot; &amp;amp; &amp;quot;butter&amp;quot;</code></p>
+	 * becomes:
+	 * <p>
+	 * <code>"bread" & "butter"</code>.
+	 * </p>
+	 * 
+	 * @param str
+	 * @return string
+	 */
+	public static String unescapeHtml4(String str){
+		if(isBlank(str)){
+			return str;
+		}
+		return StringEscapeUtils.unescapeHtml4(str);
+	}
+	
 	/**
 	 * unescape JAVA  see StringEscapeUtils.unescapeJava(str)
 	 * For example:
@@ -745,11 +714,11 @@ public class CommUtil extends StringUtils{
 	 * <p><code>\u4E2D\u56FD</code></p>
 	 * becomes:
 	 * <p>
-	 * <code>"÷–π˙"</code>.
+	 * <code>"‰∏≠ÂõΩ"</code>.
 	 * </p>
 	 *  --> 
 	 * @param str
-	 * @return
+	 * @return string
 	 */
 	public static String unescapeJava(String str){
 		if(isBlank(str)){
@@ -763,7 +732,7 @@ public class CommUtil extends StringUtils{
 	 * unescape XML  see StringEscapeUtils.unescapeXml(str)
 	 * 
 	 * @param str
-	 * @return
+	 * @return string
 	 */
 	public static String unescapeXml(String str){
 		if(isBlank(str)){
@@ -771,6 +740,96 @@ public class CommUtil extends StringUtils{
 		}
 		return StringEscapeUtils.unescapeXml(str);
 	}
+	
+	
+	
+	/**
+	 * wrap a map to String by connector 
+	 * <p>
+	 * Here are some more examples of how strings can be used: <blockquote> if
+	 * connector is & :
+	 * 
+	 * <pre>
+	 *     a=1&b=2&c=3
+	 * </pre>
+	 * 
+	 * </blockquote>
+	 * <p>
+	 * <block
+	 * 
+	 * @param map
+	 * @param connector
+	 * @return string
+	 */
+	public static String joinMapValue(Map<String, String> map, String connector) {
+		StringBuffer b = new StringBuffer();
+		for (Map.Entry<String, String> entry : map.entrySet()) {
+			b.append(entry.getKey());
+			b.append('=');
+			if (entry.getValue() != null) {
+				b.append(entry.getValue());
+			}
+			b.append(connector);
+		}
+		return removeEnd(b.toString(), connector);
+	}
+
+	/**
+	 * <p>
+	 * split and return a hashMap ,outerRegex is ' ' ,innerRegex is '=' by default.
+	 * </p>
+	 * <p>
+	 * if str is null or "",return null
+	 * </p>
+	 * <p>
+	 * <blockquote>
+	 * if outRegex is '&' and innerRegex is '='
+	 * 
+	 * <pre>
+	 * str="a=1&b=2&c=3&d=";
+	 * Map<String, String> map = new HashMap<String, String>();
+	 * map.put("a","1");
+	 * map.put("b","2");
+	 * map.put("c","3");
+	 * map.put("d","");
+	 * </pre>
+	 * 
+	 * </blockquote>
+	 * <p>
+	 * 
+	 * @param outRegex
+	 * @param innerRegex
+	 * @param str
+	 * @return string
+	 */
+	public static Map<String, String> convertToMap(String outRegex, String innerRegex,String str ) {
+		if (isBlank(str)) {
+			return null;
+		}
+		if (isBlank(outRegex)) {
+			outRegex = " ";
+		}
+		if (isBlank(innerRegex)) {
+			innerRegex = "=";
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		String[] args = str.split(outRegex);
+		for (String arg : args) {
+			String[] temp=arg.split(innerRegex);
+			if(temp.length==1){
+				map.put(temp[0],"");
+				continue;
+			}
+			if(temp.length == 2){
+				map.put(temp[0], temp[1]);
+			}
+					
+					
+		}
+		return map;
+	}
+	
+
 	
 
 }

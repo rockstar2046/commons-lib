@@ -44,6 +44,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.protocol.ClientContext;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
@@ -98,7 +99,7 @@ public class HttpConn {
 	/**
 	 * Get HttpClient
 	 * 
-	 * @return
+	 * @return DefaultHttpClient
 	 */
 	public static DefaultHttpClient getHttpClient() {
 		if (null == HTTPCLIENT) {
@@ -107,7 +108,7 @@ public class HttpConn {
 	        // be using the HttpClient.
 			PoolingClientConnectionManager cm = new PoolingClientConnectionManager();
 	        cm.setMaxTotal(MAXTOTAL);
-			HTTPCLIENT = getNewHttpClient();
+			HTTPCLIENT = getNewHttpClient(cm);
 		}
 		return HTTPCLIENT;
 	}
@@ -115,7 +116,18 @@ public class HttpConn {
 	/**
 	 * Get new HttpClient
 	 * 
-	 * @return
+	 * @return DefaultHttpClient by ClientConnectionManager
+	 */
+	public static DefaultHttpClient getNewHttpClient(ClientConnectionManager cm) {
+		DefaultHttpClient httpClient = new DefaultHttpClient(cm);
+		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler());
+		return httpClient;
+	}
+	
+	/**
+	 * Get new HttpClient
+	 * 
+	 * @return DefaultHttpClient
 	 */
 	public static DefaultHttpClient getNewHttpClient() {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -126,7 +138,7 @@ public class HttpConn {
 	/**
 	 * Get auth cache
 	 * 
-	 * @return
+	 * @return BasicAuthCache
 	 */
 	public static AuthCache getAuthCache() {
 		if (null == AUTHCACHE) {
@@ -142,7 +154,7 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @return
+	 * @return result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, String uri,Header... headers) throws IOException {
@@ -158,7 +170,7 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @return
+	 * @return result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri,Header... headers) throws IOException {
@@ -176,7 +188,7 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @return
+	 * @return result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,Header... headers)
@@ -193,7 +205,7 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri,Header... headers) throws IOException {
@@ -208,11 +220,11 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @param message
+	 * @param postParameters
 	 *            postParameters
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, String uri, ArrayList<NameValuePair> postParameters,
@@ -229,11 +241,11 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @param message
+	 * @param postParameters
 	 *            postParameters
 	 * @param headers
 	 * 
-	 * @return
+	 * @return result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri,
@@ -250,11 +262,11 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @param message
+	 * @param postParameters
 	 *            postParameters
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri,
@@ -273,11 +285,11 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @param message
+	 * @param postParameters
 	 *            postParameters
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
@@ -298,7 +310,7 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, String uri, String encoding,
@@ -321,7 +333,7 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri, String encoding,
@@ -344,7 +356,7 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri, String encoding,
@@ -369,7 +381,7 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
@@ -388,7 +400,7 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, String uri, String message, Header... headers)
@@ -409,7 +421,7 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri, String message, Header... headers)
@@ -430,7 +442,7 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri, String message,
@@ -454,7 +466,7 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
@@ -476,7 +488,7 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, String uri, String encoding, String message, Header... headers)
@@ -499,7 +511,7 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri, String encoding, String message,
@@ -522,7 +534,7 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri, String encoding,
@@ -547,7 +559,7 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
@@ -575,7 +587,7 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(boolean basicAuth, UsernamePasswordCredentials upc, HttpHost targetHost, String uri,
@@ -610,7 +622,7 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(boolean basicAuth, UsernamePasswordCredentials upc,HttpHost targetHost,
@@ -664,7 +676,7 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendPost(boolean basicAuth, UsernamePasswordCredentials upc, boolean customSSL,
@@ -700,7 +712,7 @@ public class HttpConn {
 	 *            URI
 	 * @param headers
 	 *            (optional)
-	 * @return
+	 * @return result String
 	 * @throws IOException
 	 */
 	public static String sendGet(HttpHost targetHost, String uri, Header... headers) throws IOException {
@@ -719,7 +731,7 @@ public class HttpConn {
 	 *            URI
 	 * @param headers
 	 *            (optional)
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendGet(HttpHost targetHost, HttpHost proxy, String uri, Header... headers) throws IOException {
@@ -738,7 +750,7 @@ public class HttpConn {
 	 *            URI
 	 * @param headers
 	 *            (optional)
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendGet(UsernamePasswordCredentials upc, HttpHost targetHost, String uri, Header... headers)
@@ -760,7 +772,7 @@ public class HttpConn {
 	 *            URI
 	 * @param headers
 	 *            (optional)
-	 * @return
+	 * @return result String
 	 * @throws IOException
 	 */
 	public static String sendGet(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
@@ -780,7 +792,7 @@ public class HttpConn {
 	 *            (optional)
 	 * @param encoding
 	 *            (default UTF-8)
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendGet(HttpHost targetHost, String uri, String encoding, Header... headers)
@@ -802,7 +814,7 @@ public class HttpConn {
 	 *            (optional)
 	 * @param encoding
 	 *            (default UTF-8)
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendGet(HttpHost targetHost, HttpHost proxy, String uri, String encoding, Header... headers)
@@ -826,7 +838,7 @@ public class HttpConn {
 	 *            (default UTF-8)
 	 * @param headers
 	 *            (optional)
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendGet(boolean basicAuth, UsernamePasswordCredentials upc, HttpHost targetHost, String uri,
@@ -852,7 +864,7 @@ public class HttpConn {
 	 *            (default UTF-8)
 	 * @param headers
 	 *            (optional)
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendGet(boolean basicAuth, UsernamePasswordCredentials upc, HttpHost targetHost,
@@ -884,7 +896,7 @@ public class HttpConn {
 	 *            (default UTF-8)
 	 * @param headers
 	 *            (optional)
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String sendGet(boolean basicAuth, UsernamePasswordCredentials upc, boolean customSSL,
@@ -915,7 +927,7 @@ public class HttpConn {
 	 * @param customSSL
 	 * @param keyStoreInputStream
 	 * @param password
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 * @throws KeyStoreException
 	 * 
@@ -993,7 +1005,7 @@ public class HttpConn {
 	 * @param httpClient
 	 * @param response
 	 * @param encoding
-	 * @return
+	 * @return  result String
 	 * @throws IOException
 	 */
 	public static String getResponse(HttpClient httpClient, HttpResponse response, String encoding) throws IOException {
@@ -1041,8 +1053,6 @@ public class HttpConn {
 
 	/**
 	 * shutdown
-	 * 
-	 * @param httpClient
 	 */
 	public static void shutdown() {
 		if (HTTPCLIENT != null) {
@@ -1050,6 +1060,15 @@ public class HttpConn {
 		}
 	}
 
+	
+	//~ Methods ==================================================
+	
+	/**
+	 * Get url
+	 * @param targetHost
+	 * @param uri
+	 * @return new url string
+	 */
 	public static String getURL(HttpHost targetHost, String uri) {
 		if (targetHost != null && !CommUtil.isBlank(targetHost.getSchemeName())
 				&& !CommUtil.isBlank(targetHost.getHostName()) && targetHost.getPort() > 0) {
@@ -1068,7 +1087,7 @@ public class HttpConn {
 	 * <li>[0]--> HttpHost</li> <li>[1]--> URI</li>
 	 * 
 	 * @param str
-	 * @return
+	 * @return object array [0]= HttpHOst [1]=String(uri)
 	 */
 	public static Object[] resolveString(String str) {
 
@@ -1146,7 +1165,7 @@ public class HttpConn {
 	 * Get UsernamePasswordCredentials
 	 * @param username
 	 * @param password
-	 * @return
+	 * @return UsernamePasswordCredentials
 	 */
 	public static UsernamePasswordCredentials getUPC(String username,String password){
 		if(CommUtil.isBlank(username) && CommUtil.isBlank(password)){
@@ -1162,7 +1181,7 @@ public class HttpConn {
 	 * Get UsernamePasswordCredentials
 	 * 
 	 * @param usernameSamePassword
-	 * @return
+	 * @return UsernamePasswordCredentials
 	 */
 	public static  UsernamePasswordCredentials getUPC(String usernameSamePassword){
 		if(CommUtil.isBlank(usernameSamePassword)){

@@ -25,7 +25,7 @@ public class CommUtilTest {
 	
 	@Test
 	public void testEscape(){
-		System.out.print(CommUtil.escapeJava("ÖÐ¹ú"));
+		System.out.print(CommUtil.escapeJava("ä¸­å›½"));
 	}
 	
 	@Test

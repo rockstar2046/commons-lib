@@ -156,8 +156,8 @@ public class Arith {
      * div 
      * @param v1
      * @param v2
-     * @param scale precision default {@value #DIV_SCALE}
-     * @param roundingMode default {@value #ROUNDING_MODE} 
+     * @param scale precision default {@link #DIV_SCALE}
+     * @param roundingMode default {@link #ROUNDING_MODE} 
      * @return v1/v2
      */
     public static double div(double v1,double v2,int scale,int roundingMode){
@@ -177,8 +177,8 @@ public class Arith {
      * div 
      * @param v1
      * @param v2
-     * @param scale precision default {@value #DIV_SCALE}
-     * @param roundingMode default {@value #ROUNDING_MODE} 
+     * @param scale precision default {@link #DIV_SCALE}
+     * @param roundingMode default {@link #ROUNDING_MODE} 
      * @return v1/v2
      */
     public static float div(float v1,float v2,int scale,int roundingMode){
@@ -198,8 +198,7 @@ public class Arith {
      * random
      * @param v
      * @param scale
-     * @param roundingMode
-     * @return
+     * @return double
      */
     public static double round(double v,int scale){
     	return round(v,scale,ROUNDING_MODE);
@@ -207,9 +206,7 @@ public class Arith {
     /**
      * random
      * @param v
-     * @param scale
-     * @param roundingMode
-     * @return
+     * @return double
      */
     public static double round(double v){
     	return round(v,DIV_SCALE,ROUNDING_MODE);
@@ -220,7 +217,7 @@ public class Arith {
      * @param v
      * @param scale
      * @param roundingMode
-     * @return
+     * @return double
      */
     public static double round(double v,int scale,int roundingMode){
     	   if(scale<0){
@@ -238,8 +235,7 @@ public class Arith {
      * random
      * @param v
      * @param scale
-     * @param roundingMode
-     * @return
+     * @return round float 
      */
     public static float round(float v,int scale){
     	return round(v,scale,ROUNDING_MODE);
@@ -247,9 +243,7 @@ public class Arith {
     /**
      * random
      * @param v
-     * @param scale
-     * @param roundingMode
-     * @return
+     * @return round float
      */
     public static float round(float v){
     	return round(v,DIV_SCALE,ROUNDING_MODE);
@@ -260,7 +254,7 @@ public class Arith {
      * @param v
      * @param scale
      * @param roundingMode
-     * @return
+     * @return round float
      */
     public static float round(float v,int scale,int roundingMode){
     	if(scale<0){
@@ -278,7 +272,7 @@ public class Arith {
     /**
      * to double
      * @param d
-     * @return
+     * @return double
      */
     public static float toFloat(double d){
     	BigDecimal b = new BigDecimal(Double.toString(d));
@@ -290,7 +284,7 @@ public class Arith {
     /**
      * to float
      * @param f
-     * @return
+     * @return double
      */
     public static double toDouble(float f){
     	BigDecimal b = new BigDecimal(Float.toString(f));

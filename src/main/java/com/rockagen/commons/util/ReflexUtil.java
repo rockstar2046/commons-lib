@@ -64,7 +64,7 @@ public class ReflexUtil {
 	 * @param recursively
 	 * @throws IllegalArgumentException 
 	 * @throws IllegalAccessException 
-	 * @return
+	 * @return object
 	 */
 	public static Object getFieldValue(final Object object, String fieldName,boolean recursively) throws IllegalArgumentException, IllegalAccessException {
 		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,recursively);
@@ -106,16 +106,20 @@ public class ReflexUtil {
 			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
 
 		String methodName="set"+CommUtil.capitalize(fieldName);
-		
+
+		try {
 		Method method=ClassUtil.getDeclaredMethod(object.getClass(), recursively, methodName,value.getClass());
 		if(method!=null){
-			try {
+			
 				makeAccessible(method);
 				method.invoke(object,value);
 				return ;
-			} catch (InvocationTargetException e) {
-				// do not
-			}
+			
+		}
+		} catch (InvocationTargetException e) {
+			// do not
+		}catch (NullPointerException e){
+			log.warn(object+" field: ["+fieldName+"] is null.");
 		}
 		makeAccessible(field);
 
@@ -160,7 +164,7 @@ public class ReflexUtil {
 	 *  ClassB<T> extends ClassA<T>
 	 * </code>
 	 * @param clazz 
-	 * @return
+	 * @return Type
 	 */
 	public static Type[] getSuperClassGenricType(final Class<?> clazz) {
 
@@ -188,7 +192,7 @@ public class ReflexUtil {
 	 * @param clazz
 	 * @param paramsMap attributes
 	 * @param accessible
-	 * @return
+	 * @return instance
 	 */
 	public static <T> T getBasicInstance(Class<T> clazz,Map<String,Object> paramsMap,boolean accessible){
 		
@@ -214,9 +218,8 @@ public class ReflexUtil {
 				}
 					
 			 }
-			 bufnp.deleteCharAt(bufnp.lastIndexOf(","));
 			 bufnp.append("]");
-			 log.warn(bufnp.toString());	
+			 log.warn(CommUtil.removeEnd(bufnp.toString(), ","));	
 			 return instance;
 		}else{
 			return null;

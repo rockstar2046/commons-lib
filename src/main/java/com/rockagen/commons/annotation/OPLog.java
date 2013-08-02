@@ -36,10 +36,15 @@ import java.lang.annotation.Target;
 public @interface OPLog {
 	/** 
      * description
-     * @return 
+     * @return  string
      */  
     public String description() default "no description";
 
+	
+	/**
+	 * value if description not exist
+	 * @return string
+	 */
 	public String value() default "no description";   
 
 }
