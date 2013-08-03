@@ -161,7 +161,7 @@ public class ReflexUtil {
 	 * obtained the parent class generic parameter types</br>
 	 * <p>for exmaple:</p>
 	 * <code>
-	 *  ClassB<T> extends ClassA<T>
+	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
 	 * </code>
 	 * @param clazz 
 	 * @return Type

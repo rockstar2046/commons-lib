@@ -15,54 +15,33 @@
  */
 package com.rockagen.commons.util;
 
-import com.rockagen.commons.annotation.OPLog;
-
 /**
+ *
  * @author AGEN
  * @since JDK1.6
  */
-public class TestVo {
-
-	private String name;
-	private int age;
-	private String email;
+public class TestVo4 {
 	
-
-	public TestVo(String name, int age, String email) {
-		super();
-		this.name = name;
-		this.age = age;
-		this.email = email;
+	private String city;
+	private TestVo testVo;
+	
+	public String getCity() {
+		return city;
 	}
-	public TestVo(){};
-
-	@OPLog
-	public int getAge() {
-		return age;
+	public void setCity(String city) {
+		this.city = city;
 	}
-
-	public void setAge(int age) {
-		this.age = age;
+	public TestVo getTestVo() {
+		return testVo;
 	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setTestVo(TestVo testVo) {
+		this.testVo = testVo;
 	}
 	@Override
 	public String toString() {
-		return "TestVo [name=" + name + ", age=" + age + ", email=" + email
-				+ "]";
+		return "TestVo4 [city=" + city + ", testVo=" + testVo + "]";
 	}
-
 	
+	
+
 }

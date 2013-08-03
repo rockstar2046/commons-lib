@@ -20,15 +20,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -77,6 +73,10 @@ public class CommUtil extends StringUtils {
 			'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｗ', 'Ｘ', 'Ｙ', 'Ｚ',
 			'－', '＿', '＝', '＋', '＼', '｜', '【', '】', '；', '：', '‘', '“', '，',
 			'《', '。', '》', '／', '？' };
+	/**
+	 * WEEK DAYS
+	 */
+	private static final String[] WEEK_DAYS = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
 
 	// ~ Constructors ==================================================
 
@@ -309,8 +309,7 @@ public class CommUtil extends StringUtils {
 	 * @return next day begin
 	 */
 	public static Date nextDayBegin(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		Calendar cal =getCalendar(date);
 		cal.add(Calendar.DATE, 1); // next day's am O0:00:00
 		cal.set(Calendar.AM_PM, Calendar.AM);
 		cal.set(Calendar.HOUR, 0);
@@ -326,8 +325,7 @@ public class CommUtil extends StringUtils {
 	 * @return next month begin
 	 */
 	public static Date nextMonthBegin(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		Calendar cal = getCalendar(date);
 		cal.set(Calendar.DAY_OF_MONTH, 1); // next month's am O0:00:00
 		cal.add(Calendar.MONTH, 1);
 
@@ -345,9 +343,7 @@ public class CommUtil extends StringUtils {
 	 * @return next month
 	 */
 	public static Date nextMonth(Date date) {
-
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		Calendar cal = getCalendar(date);
 		cal.add(Calendar.MONTH, 1);
 		return cal.getTime();
 	}
@@ -359,8 +355,7 @@ public class CommUtil extends StringUtils {
 	 * @return next day
 	 */
 	public static Date nextDay(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		Calendar cal =getCalendar(date);
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		return cal.getTime();
 	}
@@ -372,9 +367,7 @@ public class CommUtil extends StringUtils {
 	 * @return next hour
 	 */
 	public static Date nextHour(Date date) {
-
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		Calendar cal = getCalendar(date);
 		cal.add(Calendar.HOUR_OF_DAY, 1);
 		return cal.getTime();
 	}
@@ -386,8 +379,7 @@ public class CommUtil extends StringUtils {
 	 * @return current year
 	 */
 	public static int getCurrentYear(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		Calendar cal =getCalendar(date);
 		return cal.get(Calendar.YEAR);
 	}
 
@@ -398,9 +390,58 @@ public class CommUtil extends StringUtils {
 	 * @return month of year (1~12)
 	 */
 	public static int getCurrentMonthOfYear(Date date) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
+		Calendar cal =getCalendar(date);
 		return cal.get(Calendar.MONTH) + 1;
+	}
+	
+	/**
+	 * Return the current week of year 
+	 * 
+	 * @param date
+	 * @return current week of year 
+	 */
+	public static int getCurrentWeekOfYear(Date date) {
+		Calendar cal = getCalendar(date);
+		return cal.get(Calendar.WEEK_OF_YEAR);
+	}
+	/**
+	 * Return the current week of month 
+	 * 
+	 * @param date
+	 * @return current week of month 
+	 */
+	public static int getCurrentWeekOfMonth(Date date) {
+		Calendar cal = getCalendar(date);
+		return cal.get(Calendar.WEEK_OF_MONTH);
+	}
+	
+	 /**
+     * Get the current day of the week<br>
+     * 
+     * @param date Date
+     * @return current day of week String. e.g:SUNDAY,MONDAY...
+     */
+    public static String getCurrentDayOfWeekS(Date date) {
+        Calendar cal =getCalendar(date);
+
+        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        if (w < 0)
+            w = 0;
+        return WEEK_DAYS[w];
+    }
+	
+	/**
+	 * Get Calendar if date is null ,return new Date
+	 * @param date
+	 * @return calendar
+	 */
+	public static Calendar getCalendar(Date date){
+		Calendar cal = Calendar.getInstance();
+		if(date==null){
+			date=new Date();
+		}
+		cal.setTime(date);
+		return cal;
 	}
 
 	/**
@@ -413,6 +454,17 @@ public class CommUtil extends StringUtils {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		return cal.get(Calendar.DAY_OF_MONTH);
+	}
+	/**
+	 * Return the current day of week
+	 * 
+	 * @param date
+	 * @return current day of week
+	 */
+	public static int getCurrentDayOfWeek(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal.get(Calendar.DAY_OF_WEEK);
 	}
 
 	/**
@@ -560,33 +612,6 @@ public class CommUtil extends StringUtils {
 		}
 		sb.deleteCharAt(sb.lastIndexOf(","));
 		return sb.toString();
-	}
-
-	/**
-	 * json object into JAVA List object
-	 * 
-	 * @param jsonBuff
-	 * @param clazz
-	 * @param list
-	 * @param classMap
-	 */
-	@SuppressWarnings("unchecked")
-	public static <T> void jsonToList(String jsonBuff, Class<T> clazz,
-			List<T> list, Map<String, Object> classMap) {
-
-		if (clazz == null)
-			return;
-
-		if (null == list) {
-			list = new ArrayList<T>();
-		}
-		JSONArray array = JSONArray.fromObject(jsonBuff);
-
-		Iterator<?> iter = array.iterator();
-		while (iter.hasNext()) {
-			JSONObject jsonObject = (JSONObject) iter.next();
-			list.add((T) JSONObject.toBean(jsonObject, clazz, classMap));
-		}
 	}
 
 	/**
@@ -865,7 +890,7 @@ public class CommUtil extends StringUtils {
 	 * @param str
 	 * @return string
 	 */
-	public static Map<String, String> convertToMap(String outRegex,
+	public static Map<String, String> toMap(String outRegex,
 			String innerRegex, String str) {
 		if (isBlank(str)) {
 			return null;
