@@ -6,7 +6,7 @@ commons lib for java,some wrapper functions .
 [Pull requests][] are welcome;
 
 ##Download
-Go to [download][] jar file
+Go to [download][] jar file.
 
 ##License 
 The commons-lib under version 2.0 of the [Apache License][].
