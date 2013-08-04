@@ -58,7 +58,7 @@ e.g.
  */
 ```
 
-## Use //~ tags for fields,Constructors,method.
+## Use //~ tags for fields,Constructors,methods
 These can appear only once.
 e.g.
 ```java
