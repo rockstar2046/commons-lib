@@ -16,6 +16,7 @@
 package com.rockagen.commons.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +86,11 @@ public class JsonUtilTest {
 			list.add(vo4);
 			list.add(vo5);
 			System.out.println(JsonUtil.toJson(list));
+			
+			Map<String, TestVo4> map=new HashMap<String,TestVo4>();
+			map.put("testVo1", vo4);
+			map.put("testVo2", vo5);
+			System.out.println(JsonUtil.toJson(map));
 	}
 	
 	@Test
@@ -92,9 +98,15 @@ public class JsonUtilTest {
 		String jsonStr1="[{\"city\":\"CHINA 0\",\"testVo\":{\"name\":\"ROCKAGEN 0\",\"age\":0,\"email\":\"agen@rockagen.com 0\"}},"
 				+ "{\"city\":\"Beijing 0\",\"testVo\":{\"name\":\"ROCKAGEN2 0\",\"age\":0,\"email\":\"agen@rockagen.com2 0\"}}]";
 		
-		List<TestVo4> tvs=JsonUtil.toBean(jsonStr1,new TypeReference<List<TestVo4>>(){});
-		for(TestVo4 tv : tvs)
- 		System.out.println(tv.getTestVo().getName()+" "+tv.getTestVo().getAge()+" "+tv.getTestVo().getEmail()+" "+tv.getCity());	}
+		for(TestVo4 tv : JsonUtil.toBean(jsonStr1,new TypeReference<List<TestVo4>>(){})){
+ 		System.out.println(tv.getTestVo().getName()+" "+tv.getTestVo().getAge()+" "+tv.getTestVo().getEmail()+" "+tv.getTestVo().getEmail());
+		}
+		
+		String jsonStr2="{\"testVo1\":{\"city\":\"CHINA\",\"testVo\":{\"name\":\"ROCKAGEN\",\"age\":20,\"email\":\"agen@rockagen.com \"}},\"testVo2\":{\"city\":\"Beijing\",\"testVo\":{\"name\":\"ROCKAGEN2\",\"age\":21,\"email\":\"agen@rockagen.com2\"}}}";
+		 for (Map.Entry<String, TestVo4> entry :JsonUtil.toBean(jsonStr2,new TypeReference<Map<String,TestVo4>>(){}).entrySet()) {
+			   System.out.println( entry.getKey().toString()+" "+entry.getValue().getCity()+" "+entry.getValue().getTestVo().getEmail()+" "+entry.getValue().getTestVo().getEmail());
+		 }
+	}
 		
 
 }

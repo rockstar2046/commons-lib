@@ -115,5 +115,6 @@ public class ReflexUtilTest {
 				+ ClassUtil.getDeclaredMethod(TestVo3.class, true, "setName",
 						new Class[] { String.class }));
 	}
+	
 
 }
