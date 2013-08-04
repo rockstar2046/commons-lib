@@ -22,31 +22,52 @@ import org.junit.Test;
  * @since JDK1.6
  */
 public class CommUtilTest {
-	
+
 	@Test
-	public void testEscape(){
+	public void testEscape() {
 		System.out.print(CommUtil.escapeJava("中国"));
 	}
-	
+
 	@Test
-	public void testString(){
-		System.out.println(CommUtil.subPostfix(CommUtil.generateRandomCode(12),0,4,"*"));
-		System.out.println(CommUtil.extractNumber(CommUtil.generateRandomCode(12)));
-		System.out.println(CommUtil.extractNumber(CommUtil.subPostfix(CommUtil.generateRandomCode(12),0,4,"*")));
-		
-		System.out.println(CommUtil.toCommaDelimitedString(new String[]{"tom","jack","axl","duff","slash","Izzy"," Adler"}));
+	public void testString() {
+		System.out.println(CommUtil.subPostfix(CommUtil.generateRandomCode(12),
+				0, 4, "*"));
+		System.out.println(CommUtil.extractNumber(CommUtil
+				.generateRandomCode(12)));
+		System.out.println(CommUtil.extractNumber(CommUtil.subPostfix(
+				CommUtil.generateRandomCode(12), 0, 4, "*")));
+
+		System.out.println(CommUtil.toCommaDelimitedString(new String[] {
+				"tom", "jack", "axl", "duff", "slash", "Izzy", " Adler" }));
 	}
-	
+
 	@Test
-	public void testRandomString(){
+	public void testRandomString() {
 		System.out.println(CommUtil.generateRandomCode(12));
 		System.out.println(CommUtil.getRandomNumber(6));
 	}
+
 	@Test
-	public void testDigest(){
+	public void testDigest() {
 		System.out.println(MDUtil.sha1Hex("hello"));
 		System.out.println(MDUtil.md5Hex("hello"));
 		System.out.println(MDUtil.md5("hello"));
+	}
+
+	@Test
+	public void testSameChars() {
+		System.out.println(CommUtil.genSameChars("B", 10));
+		System.out.println(CommUtil.genSameChars("B", 1));
+		System.out.println(CommUtil.genSameChars("B", 0));
+		System.out.println(CommUtil.genSameChars("B", -1));
+
+	}
+
+	@Test
+	public void testBC() {
+		System.out.println(CommUtil.toDBC("!?<>\"'D"));
+		System.out.println(CommUtil.toSBC(".<@《“”"));
+
 	}
 
 }

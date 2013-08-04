@@ -15,26 +15,33 @@
  */
 package com.rockagen.commons.util;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
-import org.junit.Test;
-
 /**
- * 
+ *
  * @author AGEN
  * @since JDK1.6
  */
-public class SysUtilTest {
-
-	@Test
-	public void openUrl() throws IllegalArgumentException,
-			ClassNotFoundException, IllegalAccessException,
-			InterruptedException, InvocationTargetException, IOException,
-			NoSuchMethodException {
-		System.out.println(SysUtil.OS_NAME);
-
-		SysUtil.browse("http://www.google.com");
+public class TestVo4 {
+	
+	private String city;
+	private TestVo testVo;
+	
+	public String getCity() {
+		return city;
 	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public TestVo getTestVo() {
+		return testVo;
+	}
+	public void setTestVo(TestVo testVo) {
+		this.testVo = testVo;
+	}
+	@Override
+	public String toString() {
+		return "TestVo4 [city=" + city + ", testVo=" + testVo + "]";
+	}
+	
+	
 
 }

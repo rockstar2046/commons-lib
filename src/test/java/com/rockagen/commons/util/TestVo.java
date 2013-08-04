@@ -27,6 +27,7 @@ public class TestVo {
 	private int age;
 	private String email;
 	
+
 	public TestVo(String name, int age, String email) {
 		super();
 		this.name = name;
@@ -51,10 +52,17 @@ public class TestVo {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	@Override
 	public String toString() {
-		return "TestVo [name=" + name + ", age=" + age + ", email=" + email + "]";
+		return "TestVo [name=" + name + ", age=" + age + ", email=" + email
+				+ "]";
 	}
+
 	
 }

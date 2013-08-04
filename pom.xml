@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rockagen</groupId>
 	<artifactId>commons-lib</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1-M1</version>
 	<name>commons-lib</name>
 	<description>A java commons lib</description>
 
@@ -17,6 +17,8 @@
 				<version>3.1</version>
 				<configuration>
 					<encoding>UTF-8</encoding>
+					<source>1.6</source>
+					<target>1.6</target>
 				</configuration>
 			</plugin>
 
@@ -103,6 +105,13 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.8</version>
 		</dependency>
+		
+		<dependency>
+	<groupId>org.codehaus.jackson</groupId>
+	<artifactId>jackson-jaxrs</artifactId>
+	<version>1.9.13</version>
+</dependency>
+            
 
 	</dependencies>
 
