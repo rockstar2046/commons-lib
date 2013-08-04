@@ -24,19 +24,22 @@ import java.net.URL;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * 
  * @author AGEN
  * @since JDK1.6
- * @see JACKSON 1.9.13
+ * @since JACKSON 2.2.0
  */
 public class JsonUtil {
 
@@ -75,18 +78,35 @@ public class JsonUtil {
 		if (MAPPER == null) {
 			synchronized (ObjectMapper.class) {
 				MAPPER = new ObjectMapper();
-				MAPPER.configure(
-						org.codehaus.jackson.map.DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
-						false);
-				MAPPER.configure(
-						org.codehaus.jackson.map.SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS,
-						false);
-				MAPPER.configure(
-						org.codehaus.jackson.map.SerializationConfig.Feature.FLUSH_AFTER_WRITE_VALUE,
-						true);
+				initMapper();
 			}
 		}
 		return MAPPER;
+	}
+	
+	protected static synchronized void initMapper(){
+		if(MAPPER!=null){
+			// to enable standard indentation ("pretty-printing"):
+			MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
+			// to allow serialization of "empty" POJOs (no properties to serialize)
+			// (without this setting, an exception is thrown in those cases)
+			MAPPER.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+			// set writer flush after writer value
+			MAPPER.enable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+			//ObjectMapper will call close() and root values that implement java.io.Closeable;
+			//including cases where exception is thrown and serialization does not completely succeed.
+			MAPPER.enable(SerializationFeature.CLOSE_CLOSEABLE);
+			// to write java.util.Date, Calendar as number (timestamp):
+			MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+			// DeserializationFeature for changing how JSON is read as POJOs:
+
+			// to prevent exception when encountering unknown property:
+			MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			// to allow coercion of JSON empty String ("") to null Object value:
+			MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+			
+		}
 	}
 
 	/**
@@ -97,6 +117,18 @@ public class JsonUtil {
 	public static JsonFactory getJsonFactory() {
 		if (JSONFACTORY == null) {
 			JSONFACTORY = new JsonFactory();
+			// JsonParser.Feature for configuring parsing settings:
+			// to allow C/C++ style comments in JSON (non-standard, disabled by default)
+			JSONFACTORY.enable(JsonParser.Feature.ALLOW_COMMENTS);
+			// to allow (non-standard) unquoted field names in JSON:
+			JSONFACTORY.disable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+			// to allow use of apostrophes (single quotes), non standard
+			JSONFACTORY.disable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+
+			// JsonGenerator.Feature for configuring low-level JSON generation:
+
+			// no escaping of non-ASCII characters:
+			JSONFACTORY.disable(JsonGenerator.Feature.ESCAPE_NON_ASCII);
 		}
 		return JSONFACTORY;
 	}
@@ -483,7 +515,7 @@ public class JsonUtil {
 		String jsonStr = "";
 		JsonGenerator gen = null;
 		try {
-			gen = getJsonFactory().createJsonGenerator(writer);
+			gen = getJsonFactory().createGenerator(writer);
 			getMapper().writeValue(gen, obj);
 			writer.flush();
 			jsonStr = writer.toString();
@@ -519,13 +551,13 @@ public class JsonUtil {
 		// ~ Constructors ==================================================
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(File)}
+		 * Set jsonParser from {@link JsonFactory#createParser(File)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(File obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
 				log.error(e);
 			} catch (IOException e) {
@@ -534,13 +566,13 @@ public class JsonUtil {
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(Reader)}
+		 * Set jsonParser from {@link JsonFactory#createParser(Reader)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(Reader obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
 				log.error(e);
 			} catch (IOException e) {
@@ -549,13 +581,13 @@ public class JsonUtil {
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(byte[])}
+		 * Set jsonParser from {@link JsonFactory#createParser(byte[])}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(byte[] obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
 				log.error(e);
 			} catch (IOException e) {
@@ -564,13 +596,13 @@ public class JsonUtil {
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(String)}
+		 * Set jsonParser from {@link JsonFactory#createParser(String)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(String obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
 				log.error(e);
 			} catch (IOException e) {
@@ -579,13 +611,13 @@ public class JsonUtil {
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(URL)}
+		 * Set jsonParser from {@link JsonFactory#createParser(URL)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(URL obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
 				log.error(e);
 			} catch (IOException e) {
@@ -594,13 +626,13 @@ public class JsonUtil {
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(InputStream)}
+		 * Set jsonParser from {@link JsonFactory#createParser(InputStream)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(InputStream obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
 				log.error(e);
 			} catch (IOException e) {

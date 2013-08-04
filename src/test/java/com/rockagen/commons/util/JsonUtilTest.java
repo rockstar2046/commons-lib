@@ -20,8 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.type.TypeReference;
 import org.junit.Test;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  *
@@ -80,7 +81,7 @@ public class JsonUtilTest {
 			vo4.setTestVo(vo1);
 			
 			TestVo4 vo5=new TestVo4();
-			vo5.setCity("Beijing");
+			vo5.setCity("中国");
 			vo5.setTestVo(vo2);
 			List<TestVo4> list=new ArrayList<TestVo4>();
 			list.add(vo4);

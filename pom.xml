@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rockagen</groupId>
 	<artifactId>commons-lib</artifactId>
-	<version>0.1-M1</version>
+	<version>0.1-RC1</version>
 	<name>commons-lib</name>
 	<description>A java commons lib</description>
 
@@ -105,13 +105,21 @@
 			<artifactId>commons-codec</artifactId>
 			<version>1.8</version>
 		</dependency>
-		
+
 		<dependency>
-	<groupId>org.codehaus.jackson</groupId>
-	<artifactId>jackson-jaxrs</artifactId>
-	<version>1.9.13</version>
-</dependency>
-            
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
+
+
 
 	</dependencies>
 
