@@ -16,6 +16,7 @@
 package com.rockagen.commons.util;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -113,11 +114,12 @@ public class XMlUtil {
 			enc = ENCODING;
 
 		SAXReader reader = new SAXReader();
+		StringReader sr=new StringReader(xmlStr);
 
 		Document doc = null;
 		XMLWriter writer = null;
 		try {
-			doc = reader.read(xmlStr);
+			doc = reader.read(sr);
 			writer = new XMLWriter(formater);
 			writer.write(doc);
 			return writer.toString();
@@ -129,6 +131,7 @@ public class XMlUtil {
 			if (writer != null) {
 				try {
 					writer.close();
+					sr.close();
 				} catch (IOException e) {
 				}
 			}
