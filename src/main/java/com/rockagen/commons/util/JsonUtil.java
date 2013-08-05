@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
- * 
+ * JSON UTILS
  * @author AGEN
  * @since JDK1.6
  * @since JACKSON 2.2.0
@@ -507,7 +507,7 @@ public class JsonUtil {
 	/**
 	 * Bean to json string
 	 * 
-	 * @param obj
+	 * @param bean object
 	 * @return json string
 	 */
 	public static <T> String toJson(T obj) {
@@ -533,6 +533,7 @@ public class JsonUtil {
 		}
 		return jsonStr;
 	}
+
 
 	/**
 	 * JsonParser Helper</br> provide to
