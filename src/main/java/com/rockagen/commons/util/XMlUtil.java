@@ -27,88 +27,95 @@ import org.dom4j.io.XMLWriter;
 
 /**
  * XML UTIL
+ * 
  * @author AGEN
  * @since JDK1.6
  */
 public class XMlUtil {
-	
-	
-	//~ Instance fields ==================================================
-	
+
+	// ~ Instance fields ==================================================
+
 	/**
 	 * 
 	 */
 	private static final Log log = LogFactory.getLog(XMlUtil.class);
 	/**
-	 * Default Encoding 
+	 * Default Encoding
 	 */
-	private static final String ENCODING="UTF-8";
-	
-	//~ Constructors ==================================================
-	
+	private static final String ENCODING = "UTF-8";
+
+	// ~ Constructors ==================================================
+
 	/**
 	 */
-	private XMlUtil(){
-		
+	private XMlUtil() {
+
 	}
-	
-	//~ Methods ==================================================
-	
+
+	// ~ Methods ==================================================
+
 	/**
 	 * Format xml {@link OutputFormat#createPrettyPrint()}
+	 * 
 	 * @param xmlStr
 	 * @param enc
 	 * @return
 	 */
-	public static String formatPretty(String xmlStr,String enc){
+	public static String formatPretty(String xmlStr, String enc) {
 
-		if(CommUtil.isBlank(xmlStr)) return xmlStr;
-		
-		if(enc==null) enc=ENCODING;
-		
+		if (CommUtil.isBlank(xmlStr))
+			return xmlStr;
+
+		if (enc == null)
+			enc = ENCODING;
+
 		OutputFormat formater = OutputFormat.createPrettyPrint();
 		formater.setEncoding(enc);
-		
-		return format(xmlStr,formater,enc);
+
+		return format(xmlStr, formater, enc);
 	}
-	
+
 	/**
 	 * Format xml {@link OutputFormat#createCompactFormat()}
+	 * 
 	 * @param xmlStr
 	 * @param enc
-	 * @return Compact xml String 
+	 * @return Compact xml String
 	 */
-	public static String formatCompact(String xmlStr,String enc){
+	public static String formatCompact(String xmlStr, String enc) {
 
-		if(CommUtil.isBlank(xmlStr)) return xmlStr;
-		
-		if(enc==null) enc=ENCODING;
-		
+		if (CommUtil.isBlank(xmlStr))
+			return xmlStr;
+
+		if (enc == null)
+			enc = ENCODING;
+
 		OutputFormat formater = OutputFormat.createCompactFormat();
 		formater.setEncoding(enc);
-		
-		return format(xmlStr,formater,enc);
+
+		return format(xmlStr, formater, enc);
 	}
-	
-	
-	//~ Methods ==================================================
-	
+
 	/**
-	 * Format xml 
+	 * Format xml
+	 * 
 	 * @param xmlStr
-	 * @param formater {@link OutputFormat}
+	 * @param formater
+	 *            {@link OutputFormat}
 	 * @param enc
 	 * @return
 	 */
-	public static String format(String xmlStr,OutputFormat formater,String enc){
-	if(CommUtil.isBlank(xmlStr)) return xmlStr;
-		
-		if(enc==null) enc=ENCODING;
-		
+	public static String format(String xmlStr, OutputFormat formater, String enc) {
+		if (CommUtil.isBlank(xmlStr))
+			return xmlStr;
+
+		if (enc == null)
+			enc = ENCODING;
+
 		SAXReader reader = new SAXReader();
-		
-		Document doc=null;
-		XMLWriter writer=null;
+
+		Document doc = null;
+		XMLWriter writer = null;
 		try {
 			doc = reader.read(xmlStr);
 			writer = new XMLWriter(formater);
@@ -118,57 +125,64 @@ public class XMlUtil {
 			log.error(e);
 		} catch (IOException e) {
 			log.error(e);
-		}finally{
-			if(writer!=null){
+		} finally {
+			if (writer != null) {
 				try {
 					writer.close();
 				} catch (IOException e) {
 				}
 			}
-			
+
 		}
-		
+
 		return xmlStr;
 	}
-	
-	
+
 	/**
-	 * Format xml, use xml file encoding value as OutputFormat encoding ,if not exist encoding attribute use UTF-8 by default{@link OutputFormat#createPrettyPrint()}
+	 * Format xml, use xml file encoding value as OutputFormat encoding ,if not
+	 * exist encoding attribute use UTF-8 by default
+	 * {@link OutputFormat#createPrettyPrint()}
+	 * 
 	 * @param xmlStr
 	 * @return format xml string
 	 */
-	public static String formatPretty(String xmlStr){
-		return formatPretty(xmlStr,getEncoding(xmlStr));
+	public static String formatPretty(String xmlStr) {
+		return formatPretty(xmlStr, getEncoding(xmlStr));
 	}
+
 	/**
-	 * Format xml, use xml file encoding value as OutputFormat encoding,if not exist encoding attribute use UTF-8 by default {@link OutputFormat#createPrettyPrint()}
+	 * Format xml, use xml file encoding value as OutputFormat encoding,if not
+	 * exist encoding attribute use UTF-8 by default
+	 * {@link OutputFormat#createPrettyPrint()}
+	 * 
 	 * @param xmlStr
 	 * @return format xml string
 	 */
-	public static String formatCompact(String xmlStr){
-		return formatCompact(xmlStr,getEncoding(xmlStr));
+	public static String formatCompact(String xmlStr) {
+		return formatCompact(xmlStr, getEncoding(xmlStr));
 	}
-    
-    /**
-     * Obtain xml file encoding attribute
-     * @param text
-     * @return encoding value
-     */
-    public static String getEncoding(String xmlText) {
-        String result = null;
 
-        String xml = xmlText.trim();
+	/**
+	 * Obtain xml file encoding attribute
+	 * 
+	 * @param text
+	 * @return encoding value
+	 */
+	public static String getEncoding(String xmlText) {
+		String result = null;
 
-        if (xml.startsWith("<?xml")) {
-            int end = xml.indexOf("?>");
-            int encIndex=xml.indexOf("encoding=");
-            if(encIndex!=-1){
-            	 String sub=xml.substring(encIndex+9, end);
-            	 result=CommUtil.substringBetween(sub, "\"","\"");
-            	return result;
-            }
-        }
-        return result;
-    }
+		String xml = xmlText.trim();
+
+		if (xml.startsWith("<?xml")) {
+			int end = xml.indexOf("?>");
+			int encIndex = xml.indexOf("encoding=");
+			if (encIndex != -1) {
+				String sub = xml.substring(encIndex + 9, end);
+				result = CommUtil.substringBetween(sub, "\"", "\"");
+				return result;
+			}
+		}
+		return result;
+	}
 
 }
