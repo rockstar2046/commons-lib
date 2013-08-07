@@ -15,22 +15,24 @@
  */
 package com.rockagen.commons.util;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 
 /**
- * MessageDigest Utils
+ * FILE UTILS
  * @author AGEN
  * @since JDK1.6
- * @since COMMONS.CODEC 1.7
+ * @since COMMONS-IO 2.4
  */
-public class MDUtil extends DigestUtils{
+public class FileUtil extends FileUtils{
 	
 	
 	//~ Constructors ==================================================
 	
 	/**
 	 */
-	private MDUtil(){}
+	private FileUtil(){
+		
+	}
 	
 	// wait add more
 

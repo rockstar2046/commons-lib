@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Beans> 
+  <TestVo4 City="Beijing"> 
+    <testVo> 
+      <name>ROCKAGEN</name>  
+      <age>22</age>  
+      <email>agen@rockagen.com</email> 
+    </testVo> 
+  </TestVo4>  
+  <TestVo4 City="Shanghai"> 
+    <testVo> 
+      <name>ROCKAGEN</name>  
+      <age>22</age>  
+      <email>agen@rockagen.com</email> 
+    </testVo> 
+  </TestVo4> 
+</Beans>

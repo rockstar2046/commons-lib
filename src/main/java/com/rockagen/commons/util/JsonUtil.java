@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -98,13 +100,20 @@ public class JsonUtil {
 			MAPPER.enable(SerializationFeature.CLOSE_CLOSEABLE);
 			// to write java.util.Date, Calendar as number (timestamp):
 			MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+			// disable default date to timestamp
+			MAPPER.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
 
 			// DeserializationFeature for changing how JSON is read as POJOs:
 
 			// to prevent exception when encountering unknown property:
 			MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+			// disable default date to timestamp
+			MAPPER.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
 			// to allow coercion of JSON empty String ("") to null Object value:
 			MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+			DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+			// Set Default date fromat
+			MAPPER.setDateFormat(df);
 			
 		}
 	}

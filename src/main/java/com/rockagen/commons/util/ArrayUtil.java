@@ -22,7 +22,7 @@ import org.apache.commons.lang3.ArrayUtils;
  * 
  * @author AGEN
  * @since JDK1.6
- * @since commons.lang3
+ * @since COMMONS.LANG3
  */
 public class ArrayUtil extends ArrayUtils{
 	

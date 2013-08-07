@@ -26,7 +26,7 @@ import org.apache.commons.lang3.SystemUtils;
  * 
  * @author AGEN
  * @since JDK1.6
- * @since commons.lang3
+ * @since COMMONS.LANG3
  */
 public class SysUtil extends SystemUtils {
 

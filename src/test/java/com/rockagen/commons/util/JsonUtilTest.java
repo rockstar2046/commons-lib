@@ -16,6 +16,7 @@
 package com.rockagen.commons.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,7 @@ public class JsonUtilTest {
 		vo1.setAge(i);
 		vo1.setName("ROCKAGEN "+i);
 		vo1.setEmail("agen@rockagen.com "+i);
+		vo1.setBir(new Date());
 		TestVo vo2=new TestVo();
 		vo2.setAge(i);
 		vo2.setName("ROCKAGEN2 "+i);

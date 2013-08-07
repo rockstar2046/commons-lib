@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author AGEN
  * @since JDK1.6
- * @since commons.lang3
+ * @since COMMONS.LANG3
  */
 public class ClassUtil extends ClassUtils{
 	
