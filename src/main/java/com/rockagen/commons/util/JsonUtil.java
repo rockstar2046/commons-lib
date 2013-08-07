@@ -516,7 +516,7 @@ public class JsonUtil {
 	/**
 	 * Bean to json string
 	 * 
-	 * @param bean object
+	 * @param obj bean object
 	 * @return json string
 	 */
 	public static <T> String toJson(T obj) {

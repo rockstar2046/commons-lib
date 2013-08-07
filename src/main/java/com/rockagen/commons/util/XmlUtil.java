@@ -131,7 +131,7 @@ public class XmlUtil {
 	 * @param formater
 	 *            {@link OutputFormat}
 	 * @param enc
-	 * @return
+	 * @return format String
 	 */
 	public static String format(String xmlStr, OutputFormat formater, String enc) {
 		if (CommUtil.isBlank(xmlStr))
@@ -195,13 +195,13 @@ public class XmlUtil {
 	/**
 	 * Obtain xml file encoding attribute
 	 * 
-	 * @param text
+	 * @param xmlStr
 	 * @return encoding value
 	 */
-	public static String getEncoding(String xmlText) {
+	public static String getEncoding(String xmlStr) {
 		String result = null;
 
-		String xml = xmlText.trim();
+		String xml = xmlStr.trim();
 
 		if (xml.startsWith("<?xml")) {
 			int end = xml.indexOf("?>");
