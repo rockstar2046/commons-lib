@@ -15,6 +15,10 @@
  */
 package com.rockagen.commons.util;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
@@ -32,6 +36,44 @@ public class MDUtil extends DigestUtils{
 	 */
 	private MDUtil(){}
 	
+	
+	//~ Methods ==================================================
+	
+    /**
+     * Calculates the MD5 digest and returns the value as a 16 character hex string.
+     *
+     * @param data
+     *            Data to digest
+     * @return MD5 digest as a hex string
+     */
+	public String md5Hex16(final byte[] data){
+		return md5Hex(data).substring(8, 24);
+	}
+	
+    /**
+     * Calculates the MD5 digest and returns the value as a 16 character hex string.
+     *
+     * @param data
+     *            Data to digest
+     * @return MD5 digest as a hex string
+     * @throws IOException
+     *             On error reading from the stream
+     */
+    public static String md5Hex16(final InputStream data) throws IOException {
+        return md5Hex(data).substring(8, 24);
+    }
+
+    /**
+     * Calculates the MD5 digest and returns the value as a 16 character hex string.
+     *
+     * @param data
+     *            Data to digest
+     * @return MD5 digest as a hex string
+     */
+    public static String md5Hex16(final String data) {
+        return md5Hex(data).substring(8, 24);
+    }
+    
 	// wait add more
 
 }
