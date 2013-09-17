@@ -18,7 +18,6 @@ package com.rockagen.commons.util;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 
 /**
