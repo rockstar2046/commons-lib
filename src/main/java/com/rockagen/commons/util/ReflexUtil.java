@@ -128,7 +128,7 @@ public class ReflexUtil {
 		String methodName = "set" + CommUtil.capitalize(fieldName);
 
 		Method method = ClassUtil.getDeclaredMethod(object.getClass(),
-				recursively, methodName, value.getClass());
+				recursively, methodName, value==null?Object.class:value.getClass());
 		if (method != null) {
 			try {
 				makeAccessible(method);

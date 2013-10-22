@@ -51,32 +51,33 @@ public class CommUtil extends StringUtils {
 			'X', 'Y', 'Z' };
 
 	/**
-	 * Single byte character set
+	 * Single byte char
 	 */
-	private static final char[] SBC_CASE = { '1', '2', '3', '4', '5', '6', '7',
-			'8', '9', '0', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
-			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-			'-', '_', '=', '+', '\\', '|', '[', ']', ';', ':', '\'', '"', ',',
-			'<', '.', '>', '/', '?' };
+	private static final char[] SBC = { '1', '2', '3', '4', '5', '6', '7', '8',
+			'9', '0', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', 'a',
+			'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+			'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A',
+			'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+			'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '-',
+			'_', '=', '+', '\\', '|', '[', ']', ';', ':', '\'', '"', ',', '<',
+			'.', '>', '/', '?' };
 
 	/**
-	 * Double byte character set
+	 * Double byte char
 	 */
-	private static final char[] DBC_CASE = { '１', '２', '３', '４', '５', '６', '７',
-			'８', '９', '０', '！', '＠', '＃', '＄', '％', '︿', '＆', '＊', '（', '）',
-			'ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ',
-			'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｗ', 'ｘ', 'ｙ', 'ｚ',
-			'Ａ', 'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ',
-			'Ｎ', 'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｗ', 'Ｘ', 'Ｙ', 'Ｚ',
-			'－', '＿', '＝', '＋', '＼', '｜', '【', '】', '；', '：', '‘', '“', '，',
-			'《', '。', '》', '／', '？' };
+	private static final char[] DBC = { '１', '２', '３', '４', '５', '６', '７', '８',
+			'９', '０', '！', '＠', '＃', '＄', '％', '︿', '＆', '＊', '（', '）', 'ａ',
+			'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ',
+			'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｗ', 'ｘ', 'ｙ', 'ｚ', 'Ａ',
+			'Ｂ', 'Ｃ', 'Ｄ', 'Ｅ', 'Ｆ', 'Ｇ', 'Ｈ', 'Ｉ', 'Ｊ', 'Ｋ', 'Ｌ', 'Ｍ', 'Ｎ',
+			'Ｏ', 'Ｐ', 'Ｑ', 'Ｒ', 'Ｓ', 'Ｔ', 'Ｕ', 'Ｖ', 'Ｗ', 'Ｘ', 'Ｙ', 'Ｚ', '－',
+			'＿', '＝', '＋', '＼', '｜', '【', '】', '；', '：', '‘', '“', '，', '《',
+			'。', '》', '／', '？' };
 	/**
 	 * WEEK DAYS
 	 */
-	private static final String[] WEEK_DAYS = {"SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
+	private static final String[] WEEK_DAYS = { "SUNDAY", "MONDAY", "TUESDAY",
+			"WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
 
 	// ~ Constructors ==================================================
 
@@ -135,7 +136,7 @@ public class CommUtil extends StringUtils {
 	 */
 	public static String lastMask(String name) {
 
-		if (!StringUtils.isBlank(name) && name.indexOf("*") < 0) {
+		if (!isBlank(name) && name.indexOf("*") < 0) {
 
 			return name.substring(0, name.length() - 1) + '*';
 		}
@@ -165,14 +166,14 @@ public class CommUtil extends StringUtils {
 	 * @return boolean
 	 */
 	public static boolean hasSpecialChar(String src) {
+		String regex = "[a-zA-Z0-9_\\-]*";
 
-		String regEx = "[`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]";
-		Pattern pattern = Pattern.compile(regEx);
+		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(src);
 		if (matcher.matches()) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	/**
@@ -216,7 +217,7 @@ public class CommUtil extends StringUtils {
 		} else if (number.matches(tel)) {
 			flag = 4;
 		} else {
-			// TODO
+			// XXX
 		}
 		return flag;
 	}
@@ -309,7 +310,7 @@ public class CommUtil extends StringUtils {
 	 * @return next day begin
 	 */
 	public static Date nextDayBegin(Date date) {
-		Calendar cal =getCalendar(date);
+		Calendar cal = getCalendar(date);
 		cal.add(Calendar.DATE, 1); // next day's am O0:00:00
 		cal.set(Calendar.AM_PM, Calendar.AM);
 		cal.set(Calendar.HOUR, 0);
@@ -355,7 +356,7 @@ public class CommUtil extends StringUtils {
 	 * @return next day
 	 */
 	public static Date nextDay(Date date) {
-		Calendar cal =getCalendar(date);
+		Calendar cal = getCalendar(date);
 		cal.add(Calendar.DAY_OF_MONTH, 1);
 		return cal.getTime();
 	}
@@ -379,7 +380,7 @@ public class CommUtil extends StringUtils {
 	 * @return current year
 	 */
 	public static int getCurrentYear(Date date) {
-		Calendar cal =getCalendar(date);
+		Calendar cal = getCalendar(date);
 		return cal.get(Calendar.YEAR);
 	}
 
@@ -390,55 +391,58 @@ public class CommUtil extends StringUtils {
 	 * @return month of year (1~12)
 	 */
 	public static int getCurrentMonthOfYear(Date date) {
-		Calendar cal =getCalendar(date);
+		Calendar cal = getCalendar(date);
 		return cal.get(Calendar.MONTH) + 1;
 	}
-	
+
 	/**
-	 * Return the current week of year 
+	 * Return the current week of year
 	 * 
 	 * @param date
-	 * @return current week of year 
+	 * @return current week of year
 	 */
 	public static int getCurrentWeekOfYear(Date date) {
 		Calendar cal = getCalendar(date);
 		return cal.get(Calendar.WEEK_OF_YEAR);
 	}
+
 	/**
-	 * Return the current week of month 
+	 * Return the current week of month
 	 * 
 	 * @param date
-	 * @return current week of month 
+	 * @return current week of month
 	 */
 	public static int getCurrentWeekOfMonth(Date date) {
 		Calendar cal = getCalendar(date);
 		return cal.get(Calendar.WEEK_OF_MONTH);
 	}
-	
-	 /**
-     * Get the current day of the week<br>
-     * 
-     * @param date Date
-     * @return current day of week String. e.g:SUNDAY,MONDAY...
-     */
-    public static String getCurrentDayOfWeekS(Date date) {
-        Calendar cal =getCalendar(date);
 
-        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
-        if (w < 0)
-            w = 0;
-        return WEEK_DAYS[w];
-    }
-	
+	/**
+	 * Get the current day of the week<br>
+	 * 
+	 * @param date
+	 *            Date
+	 * @return current day of week String. e.g:SUNDAY,MONDAY...
+	 */
+	public static String getCurrentDayOfWeekS(Date date) {
+		Calendar cal = getCalendar(date);
+
+		int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+		if (w < 0)
+			w = 0;
+		return WEEK_DAYS[w];
+	}
+
 	/**
 	 * Get Calendar if date is null ,return new Date
+	 * 
 	 * @param date
 	 * @return calendar
 	 */
-	public static Calendar getCalendar(Date date){
+	public static Calendar getCalendar(Date date) {
 		Calendar cal = Calendar.getInstance();
-		if(date==null){
-			date=new Date();
+		if (date == null) {
+			date = new Date();
 		}
 		cal.setTime(date);
 		return cal;
@@ -455,6 +459,7 @@ public class CommUtil extends StringUtils {
 		cal.setTime(date);
 		return cal.get(Calendar.DAY_OF_MONTH);
 	}
+
 	/**
 	 * Return the current day of week
 	 * 
@@ -541,7 +546,7 @@ public class CommUtil extends StringUtils {
 	 */
 	public static String subPostfix(String str, int startIndex, int endIndex,
 			String postfix) {
-		if (StringUtils.isBlank(str))
+		if (isBlank(str))
 			return "";
 		int length = str.length();
 		if (length <= startIndex) {
@@ -890,8 +895,8 @@ public class CommUtil extends StringUtils {
 	 * @param str
 	 * @return string
 	 */
-	public static Map<String, String> toMap(String outRegex,
-			String innerRegex, String str) {
+	public static Map<String, String> toMap(String outRegex, String innerRegex,
+			String str) {
 		if (isBlank(str)) {
 			return null;
 		}
@@ -918,38 +923,20 @@ public class CommUtil extends StringUtils {
 	}
 
 	/**
-	 * Generate len same chars
+	 * Change double byte characters to single byte characters
 	 * 
-	 * @param cs
-	 * @param len
-	 * @return String
-	 */
-	public static String genSameChars(String cs, int len) {
-		if (isBlank(cs) || len < 1)
-			return cs;
-
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < len; i++) {
-			sb.append(cs);
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * Change double byte character set String to Single byte character set
-	 * 
-	 * @param dbcString
-	 * @return single byte character set string
+	 * @param double byte characters string
+	 * @return single byte characters string
 	 */
 	public static String toSBC(String dbcString) {
 		StringBuffer sb = new StringBuffer();
 
 		for (int i = 0; i < dbcString.length(); i++) {
 
-			int index = ArrayUtil.indexOf(DBC_CASE, dbcString.charAt(i));
+			int index = ArrayUtil.indexOf(DBC, dbcString.charAt(i));
 
 			if (index != -1) {
-				sb.append(SBC_CASE[index]);
+				sb.append(SBC[index]);
 			} else {
 				sb.append(dbcString.charAt(i));
 			}
@@ -959,26 +946,152 @@ public class CommUtil extends StringUtils {
 	}
 
 	/**
-	 * Change single byte character set String to double byte character set
+	 * Change single byte characters to double byte characters
 	 * 
-	 * @param sbcString
-	 * @return double byte character set string
+	 * @param single
+	 *            byte characters string
+	 * @return double byte characters string
 	 */
 	public static String toDBC(String sbcString) {
 		StringBuffer sb = new StringBuffer();
 
 		for (int i = 0; i < sbcString.length(); i++) {
 
-			int index = ArrayUtil.indexOf(SBC_CASE, sbcString.charAt(i));
+			int index = ArrayUtil.indexOf(SBC, sbcString.charAt(i));
 
 			if (index != -1) {
-				sb.append(DBC_CASE[index]);
+				sb.append(DBC[index]);
 			} else {
 				sb.append(sbcString.charAt(i));
 			}
 		}
 		return sb.toString();
 
+	}
+
+	/**
+	 * A table style
+	 * <p>
+	 * for example:
+	 * </p>
+	 * 
+	 * <pre>
+	 * <code>
+	 * String[] headers={"num","name","age","where"};
+	 * 
+	 * Object[][] values=
+	 * {
+	 *  {1,"tom",22,"USA"},
+	 *  {2,"joe",40,"USA"}
+	 *  {3,"vai",38,"USA","bar"}
+	 * };
+	 *  </code>
+	 *  
+	 *  <code>prettyTable(headers,values)</code>
+	 *  
+	 *  +-----+------+-----+-------+
+	 *  | num | name | age | where |
+	 *  +-----+------+-----+-------+
+	 *  | 1   | tom  | 22  | USA   |
+	 *  | 2   | joe  | 40  | USA   |
+	 *  | 3   | vai  | 38  | USA   |
+	 *  +-----+------+-----+-------+
+	 * </pre>
+	 * <p>
+	 * <b>Note: Non-ASCII characters can not guarantee a good format.</b>
+	 * </p>
+	 * 
+	 * @param headers
+	 *            table header
+	 * @param values
+	 *            table values
+	 * @return Formatted string
+	 */
+	public static String prettyTable(Object[] headers, Object[][] values) {
+
+		if (headers == null || headers.length < 1)
+			return "headers must not be null or empty.";
+
+		if (values == null)
+			return "values must not be null.";
+
+		int headlen = headers.length;
+
+		int[] maxlen = new int[headlen];
+
+		// initialize maxlen value
+		for (int i = 0; i < headlen; i++)
+			maxlen[i] = String.valueOf(headers[i]).getBytes().length;
+
+		String[][] effectvalue = new String[values.length][headlen];
+
+		// copy effect values and get the per column max length
+		for (int i = 0; i < values.length; i++) {
+			if (values[i] == null) {
+				continue;
+			}
+			for (int j = 0; j < headlen; j++) {
+				if (j >= values[i].length) {
+					// initialize ""
+					effectvalue[i][j] = "";
+					continue;
+				}
+				effectvalue[i][j] = String.valueOf(values[i][j]);
+				int currBytelen = effectvalue[i][j].getBytes().length;
+				if (currBytelen > maxlen[j]) {
+					maxlen[j] = currBytelen;
+				}
+			}
+		}
+
+		StringBuffer result = new StringBuffer();
+		StringBuffer slb = new StringBuffer();
+		slb.append('+');
+		for (int i = 0; i < maxlen.length; i++)
+			slb.append(repeatChar('-', maxlen[i] + 2) + '+');
+
+		String sl = slb.append(String.format("%n")).toString();
+
+		result.append(sl);
+		result.append('|');
+		for (int i = 0; i < headlen; i++) {
+			byte[] temp = String.valueOf(headers[i]).getBytes();
+			result.append(' ' + new String(temp)
+					+ repeatChar(' ', maxlen[i] - temp.length) + " |");
+		}
+		result.append(String.format("%n"));
+		result.append(sl);
+
+		for (int i = 0; i < effectvalue.length; i++) {
+			result.append('|');
+			for (int j = 0; j < headlen; j++) {
+				byte[] temp = effectvalue[i][j].getBytes();
+				result.append(' ' + new String(temp)
+						+ repeatChar(' ', maxlen[j] - temp.length) + " |");
+			}
+			result.append(String.format("%n"));
+		}
+
+		result.append(sl);
+		return result.toString();
+
+	}
+
+	/**
+	 * Generating a specified length of the same characters
+	 * 
+	 * @param cha
+	 *            Character
+	 * @param len
+	 *            length
+	 * @return new String
+	 */
+	public static String repeatChar(char cha, int len) {
+		len = len < 0 ? 0 : len;
+		char[] c = new char[len];
+		for (int i = 0; i < len; i++)
+			c[i] = cha;
+		return new String(c);
 	}
 
 }

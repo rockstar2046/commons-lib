@@ -53,10 +53,13 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 
+import com.rockagen.commons.util.CharsetUtil;
 import com.rockagen.commons.util.CommUtil;
 
 /**
@@ -73,18 +76,17 @@ public class HttpConn {
 	/** */
 	private static final Log log = LogFactory.getLog(HttpConn.class);
 
-	/**
-	 * Default encoding
-	 */
-	private final static String ENCODING = "UTF-8";
-	/**
-	 * MaxTotal
-	 */
-	private final static int MAXTOTAL = 100;
-	/** Singleton */
-	private static DefaultHttpClient HTTPCLIENT;
-	// authCache
-	private static AuthCache AUTHCACHE;
+	public final static int MAX_TOTAL_CONNECTIONS = 1000;
+
+	public final static int MAX_ROUTE_CONNECTIONS = 1000;
+
+	public final static int CONNECT_TIMEOUT = 3000;
+
+	public final static int SO_TIMEOUT = 20000;
+
+	private final static String ENCODING = CharsetUtil.UTF_8.name();
+
+	private static final ThreadLocal<DefaultHttpClient> threadClient = new ThreadLocal<DefaultHttpClient>();
 
 	// ~ Constructors ==================================================
 
@@ -102,15 +104,34 @@ public class HttpConn {
 	 * @return DefaultHttpClient
 	 */
 	public static DefaultHttpClient getHttpClient() {
-		if (null == HTTPCLIENT) {
-			// Create an HttpClient with the ThreadSafeClientConnManager.
-	        // This connection manager must be used if more than one thread will
-	        // be using the HttpClient.
-			PoolingClientConnectionManager cm = new PoolingClientConnectionManager();
-	        cm.setMaxTotal(MAXTOTAL);
-			HTTPCLIENT = getNewHttpClient(cm);
+		DefaultHttpClient hc = threadClient.get();
+		if (hc == null) {
+			hc = initialize();
+			threadClient.set(hc);
+
 		}
-		return HTTPCLIENT;
+		return hc;
+	}
+
+	/**
+	 * initialize
+	 * 
+	 * @return DefaultHttpClient
+	 */
+	private static DefaultHttpClient initialize() {
+		PoolingClientConnectionManager cm = new PoolingClientConnectionManager();
+		cm.setDefaultMaxPerRoute(MAX_ROUTE_CONNECTIONS);
+		cm.setMaxTotal(MAX_TOTAL_CONNECTIONS);
+
+		DefaultHttpClient hc = new DefaultHttpClient(cm);
+
+		hc.setHttpRequestRetryHandler(new StandardHttpRequestRetryHandler());
+		hc.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+				CONNECT_TIMEOUT);
+		hc.getParams()
+				.setParameter(CoreConnectionPNames.SO_TIMEOUT, SO_TIMEOUT);
+
+		return hc;
 	}
 
 	/**
@@ -120,10 +141,11 @@ public class HttpConn {
 	 */
 	public static DefaultHttpClient getNewHttpClient(ClientConnectionManager cm) {
 		DefaultHttpClient httpClient = new DefaultHttpClient(cm);
-		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler());
+		httpClient
+				.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler());
 		return httpClient;
 	}
-	
+
 	/**
 	 * Get new HttpClient
 	 * 
@@ -131,23 +153,12 @@ public class HttpConn {
 	 */
 	public static DefaultHttpClient getNewHttpClient() {
 		DefaultHttpClient httpClient = new DefaultHttpClient();
-		httpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler());
+		httpClient
+				.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler());
 		return httpClient;
 	}
 
 	/**
-	 * Get auth cache
-	 * 
-	 * @return BasicAuthCache
-	 */
-	public static AuthCache getAuthCache() {
-		if (null == AUTHCACHE) {
-			AUTHCACHE = new BasicAuthCache();
-		}
-		return AUTHCACHE;
-	}
-
-	/**
 	 * send HTTP POST request
 	 * 
 	 * @param targetHost
@@ -157,8 +168,9 @@ public class HttpConn {
 	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(HttpHost targetHost, String uri,Header... headers) throws IOException {
-		return sendPost(targetHost, uri, "",headers);
+	public static String sendPost(HttpHost targetHost, String uri,
+			Header... headers) throws IOException {
+		return sendPost(targetHost, uri, "", headers);
 	}
 
 	/**
@@ -173,27 +185,30 @@ public class HttpConn {
 	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri,Header... headers) throws IOException {
-		return sendPost(upc, targetHost, uri, "",headers);
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param upc
-	 *            basic
-	 * @param targetHost
-	 *            HttpHost
-	 * @param proxy
-	 *            HttpHost
-	 * @param uri
-	 *            URI
-	 * @return result String
-	 * @throws IOException
-	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,Header... headers)
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, String uri, Header... headers)
 			throws IOException {
-		return sendPost(upc, targetHost, proxy, uri, "",headers);
+		return sendPost(upc, targetHost, uri, "", headers);
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param upc
+	 *            basic
+	 * @param targetHost
+	 *            HttpHost
+	 * @param proxy
+	 *            HttpHost
+	 * @param uri
+	 *            URI
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, HttpHost proxy, String uri, Header... headers)
+			throws IOException {
+		return sendPost(upc, targetHost, proxy, uri, "", headers);
 	}
 
 	/**
@@ -205,13 +220,13 @@ public class HttpConn {
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri,Header... headers) throws IOException {
-		return sendPost(targetHost, proxy, uri, "",headers);
+	public static String sendPost(HttpHost targetHost, HttpHost proxy,
+			String uri, Header... headers) throws IOException {
+		return sendPost(targetHost, proxy, uri, "", headers);
 	}
-
 
 	/**
 	 * send HTTP POST request
@@ -224,11 +239,12 @@ public class HttpConn {
 	 *            postParameters
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(HttpHost targetHost, String uri, ArrayList<NameValuePair> postParameters,
-			Header... headers) throws IOException {
+	public static String sendPost(HttpHost targetHost, String uri,
+			ArrayList<NameValuePair> postParameters, Header... headers)
+			throws IOException {
 		return sendPost(targetHost, uri, ENCODING, postParameters, headers);
 	}
 
@@ -248,9 +264,11 @@ public class HttpConn {
 	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri,
-			ArrayList<NameValuePair> postParameters, Header... headers) throws IOException {
-		return sendPost(targetHost, proxy, uri, ENCODING, postParameters, headers);
+	public static String sendPost(HttpHost targetHost, HttpHost proxy,
+			String uri, ArrayList<NameValuePair> postParameters,
+			Header... headers) throws IOException {
+		return sendPost(targetHost, proxy, uri, ENCODING, postParameters,
+				headers);
 	}
 
 	/**
@@ -266,11 +284,13 @@ public class HttpConn {
 	 *            postParameters
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri,
-			ArrayList<NameValuePair> postParameters, Header... headers) throws IOException {
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, String uri,
+			ArrayList<NameValuePair> postParameters, Header... headers)
+			throws IOException {
 		return sendPost(upc, targetHost, uri, ENCODING, postParameters, headers);
 	}
 
@@ -289,123 +309,15 @@ public class HttpConn {
 	 *            postParameters
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
-			ArrayList<NameValuePair> postParameters, Header... headers) throws IOException {
-		return sendPost(upc, targetHost, proxy, uri, ENCODING, postParameters, headers);
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param targetHost
-	 *            HttpHost
-	 * @param uri
-	 *            URI
-	 * @param encoding
-	 *            (default UTF-8)
-	 * @param postParameters
-	 * 
-	 * @param headers
-	 * 
-	 * @return  result String
-	 * @throws IOException
-	 */
-	public static String sendPost(HttpHost targetHost, String uri, String encoding,
-			ArrayList<NameValuePair> postParameters, Header... headers) throws IOException {
-		return sendPost(false, null, targetHost, uri, encoding, null, postParameters, headers);
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param targetHost
-	 *            HttpHost
-	 * @param proxy
-	 *            HttpHost
-	 * @param uri
-	 *            URI
-	 * @param encoding
-	 *            (default UTF-8)
-	 * @param postParameters
-	 * 
-	 * @param headers
-	 * 
-	 * @return  result String
-	 * @throws IOException
-	 */
-	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri, String encoding,
-			ArrayList<NameValuePair> postParameters, Header... headers) throws IOException {
-		return sendPost(false, null, targetHost, proxy, uri, encoding, null, postParameters, headers);
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param upc
-	 *            basicUsernamePasswordCredentials
-	 * @param targetHost
-	 *            HttpHost
-	 * @param uri
-	 *            URI
-	 * @param encoding
-	 *            (default UTF-8)
-	 * @param postParameters
-	 * 
-	 * @param headers
-	 * 
-	 * @return  result String
-	 * @throws IOException
-	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri, String encoding,
-			ArrayList<NameValuePair> postParameters, Header... headers) throws IOException {
-		return sendPost(true, upc, targetHost, uri, encoding, null, postParameters, headers);
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param upc
-	 *            basicUsernamePasswordCredentials
-	 * @param targetHost
-	 *            HttpHost
-	 * @param proxy
-	 *            HttpHost
-	 * @param uri
-	 *            URI
-	 * @param encoding
-	 *            (default UTF-8)
-	 * @param postParameters
-	 * 
-	 * @param headers
-	 * 
-	 * @return  result String
-	 * @throws IOException
-	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
-			String encoding, ArrayList<NameValuePair> postParameters, Header... headers) throws IOException {
-		return sendPost(true, upc, targetHost, proxy, uri, encoding, null, postParameters, headers);
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param targetHost
-	 *            HttpHost
-	 * @param uri
-	 *            URI
-	 * @param message
-	 *            requestbody
-	 * @param headers
-	 * 
-	 * @return  result String
-	 * @throws IOException
-	 */
-	public static String sendPost(HttpHost targetHost, String uri, String message, Header... headers)
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, HttpHost proxy, String uri,
+			ArrayList<NameValuePair> postParameters, Header... headers)
 			throws IOException {
-		return sendPost(false, null, targetHost, uri, ENCODING, message, null, headers);
+		return sendPost(upc, targetHost, proxy, uri, ENCODING, postParameters,
+				headers);
 	}
 
 	/**
@@ -413,110 +325,48 @@ public class HttpConn {
 	 * 
 	 * @param targetHost
 	 *            HttpHost
-	 * @param proxy
-	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @param message
-	 *            requestbody
+	 * @param encoding
+	 *            (default UTF-8)
+	 * @param postParameters
+	 * 
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri, String message, Header... headers)
-			throws IOException {
-		return sendPost(false, null, targetHost, proxy, uri, ENCODING, message, null, headers);
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param upc
-	 *            basicUsernamePasswordCredentials
-	 * @param targetHost
-	 *            HttpHost
-	 * @param uri
-	 *            URI
-	 * @param message
-	 *            requestbody
-	 * @param headers
-	 * 
-	 * @return  result String
-	 * @throws IOException
-	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri, String message,
+	public static String sendPost(HttpHost targetHost, String uri,
+			String encoding, ArrayList<NameValuePair> postParameters,
 			Header... headers) throws IOException {
-		return sendPost(true, upc, targetHost, uri, ENCODING, message, null, headers);
-
+		return sendPost(false, null, targetHost, uri, encoding, null,
+				postParameters, headers);
 	}
 
 	/**
 	 * send HTTP POST request
 	 * 
-	 * @param upc
-	 *            basicUsernamePasswordCredentials
 	 * @param targetHost
 	 *            HttpHost
 	 * @param proxy
 	 *            HttpHost
 	 * @param uri
 	 *            URI
-	 * @param message
-	 *            requestbody
-	 * @param headers
-	 * 
-	 * @return  result String
-	 * @throws IOException
-	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
-			String message, Header... headers) throws IOException {
-		return sendPost(true, upc, targetHost, proxy, uri, ENCODING, message, null, headers);
-
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param targetHost
-	 *            HttpHost
-	 * @param uri
-	 *            URI
 	 * @param encoding
 	 *            (default UTF-8)
-	 * @param message
-	 *            requestbody
+	 * @param postParameters
+	 * 
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(HttpHost targetHost, String uri, String encoding, String message, Header... headers)
+	public static String sendPost(HttpHost targetHost, HttpHost proxy,
+			String uri, String encoding,
+			ArrayList<NameValuePair> postParameters, Header... headers)
 			throws IOException {
-		return sendPost(false, null, targetHost, uri, encoding, message, null, headers);
-	}
-
-	/**
-	 * send HTTP POST request
-	 * 
-	 * @param targetHost
-	 *            HttpHost
-	 * @param proxy
-	 *            HttpHost
-	 * @param uri
-	 *            URI
-	 * @param encoding
-	 *            (default UTF-8)
-	 * @param message
-	 *            requestbody
-	 * @param headers
-	 * 
-	 * @return  result String
-	 * @throws IOException
-	 */
-	public static String sendPost(HttpHost targetHost, HttpHost proxy, String uri, String encoding, String message,
-			Header... headers) throws IOException {
-		return sendPost(false, null, targetHost, proxy, uri, encoding, message, null, headers);
+		return sendPost(false, null, targetHost, proxy, uri, encoding, null,
+				postParameters, headers);
 	}
 
 	/**
@@ -530,16 +380,212 @@ public class HttpConn {
 	 *            URI
 	 * @param encoding
 	 *            (default UTF-8)
+	 * @param postParameters
+	 * 
+	 * @param headers
+	 * 
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, String uri, String encoding,
+			ArrayList<NameValuePair> postParameters, Header... headers)
+			throws IOException {
+		return sendPost(true, upc, targetHost, uri, encoding, null,
+				postParameters, headers);
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param upc
+	 *            basicUsernamePasswordCredentials
+	 * @param targetHost
+	 *            HttpHost
+	 * @param proxy
+	 *            HttpHost
+	 * @param uri
+	 *            URI
+	 * @param encoding
+	 *            (default UTF-8)
+	 * @param postParameters
+	 * 
+	 * @param headers
+	 * 
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, HttpHost proxy, String uri, String encoding,
+			ArrayList<NameValuePair> postParameters, Header... headers)
+			throws IOException {
+		return sendPost(true, upc, targetHost, proxy, uri, encoding, null,
+				postParameters, headers);
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param targetHost
+	 *            HttpHost
+	 * @param uri
+	 *            URI
 	 * @param message
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, String uri, String encoding,
+	public static String sendPost(HttpHost targetHost, String uri,
 			String message, Header... headers) throws IOException {
-		return sendPost(true, upc, targetHost, uri, encoding, message, null, headers);
+		return sendPost(false, null, targetHost, uri, ENCODING, message, null,
+				headers);
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param targetHost
+	 *            HttpHost
+	 * @param proxy
+	 *            HttpHost
+	 * @param uri
+	 *            URI
+	 * @param message
+	 *            requestbody
+	 * @param headers
+	 * 
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(HttpHost targetHost, HttpHost proxy,
+			String uri, String message, Header... headers) throws IOException {
+		return sendPost(false, null, targetHost, proxy, uri, ENCODING, message,
+				null, headers);
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param upc
+	 *            basicUsernamePasswordCredentials
+	 * @param targetHost
+	 *            HttpHost
+	 * @param uri
+	 *            URI
+	 * @param message
+	 *            requestbody
+	 * @param headers
+	 * 
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, String uri, String message, Header... headers)
+			throws IOException {
+		return sendPost(true, upc, targetHost, uri, ENCODING, message, null,
+				headers);
+
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param upc
+	 *            basicUsernamePasswordCredentials
+	 * @param targetHost
+	 *            HttpHost
+	 * @param proxy
+	 *            HttpHost
+	 * @param uri
+	 *            URI
+	 * @param message
+	 *            requestbody
+	 * @param headers
+	 * 
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, HttpHost proxy, String uri, String message,
+			Header... headers) throws IOException {
+		return sendPost(true, upc, targetHost, proxy, uri, ENCODING, message,
+				null, headers);
+
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param targetHost
+	 *            HttpHost
+	 * @param uri
+	 *            URI
+	 * @param encoding
+	 *            (default UTF-8)
+	 * @param message
+	 *            requestbody
+	 * @param headers
+	 * 
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(HttpHost targetHost, String uri,
+			String encoding, String message, Header... headers)
+			throws IOException {
+		return sendPost(false, null, targetHost, uri, encoding, message, null,
+				headers);
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param targetHost
+	 *            HttpHost
+	 * @param proxy
+	 *            HttpHost
+	 * @param uri
+	 *            URI
+	 * @param encoding
+	 *            (default UTF-8)
+	 * @param message
+	 *            requestbody
+	 * @param headers
+	 * 
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(HttpHost targetHost, HttpHost proxy,
+			String uri, String encoding, String message, Header... headers)
+			throws IOException {
+		return sendPost(false, null, targetHost, proxy, uri, encoding, message,
+				null, headers);
+	}
+
+	/**
+	 * send HTTP POST request
+	 * 
+	 * @param upc
+	 *            basicUsernamePasswordCredentials
+	 * @param targetHost
+	 *            HttpHost
+	 * @param uri
+	 *            URI
+	 * @param encoding
+	 *            (default UTF-8)
+	 * @param message
+	 *            requestbody
+	 * @param headers
+	 * 
+	 * @return result String
+	 * @throws IOException
+	 */
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, String uri, String encoding, String message,
+			Header... headers) throws IOException {
+		return sendPost(true, upc, targetHost, uri, encoding, message, null,
+				headers);
 	}
 
 	/**
@@ -559,12 +605,14 @@ public class HttpConn {
 	 *            requestbody
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
-			String encoding, String message, Header... headers) throws IOException {
-		return sendPost(true, upc, targetHost, proxy, uri, encoding, message, null, headers);
+	public static String sendPost(UsernamePasswordCredentials upc,
+			HttpHost targetHost, HttpHost proxy, String uri, String encoding,
+			String message, Header... headers) throws IOException {
+		return sendPost(true, upc, targetHost, proxy, uri, encoding, message,
+				null, headers);
 	}
 
 	/**
@@ -587,19 +635,20 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(boolean basicAuth, UsernamePasswordCredentials upc, HttpHost targetHost, String uri,
-			String encoding, String message, ArrayList<NameValuePair> postParameters, Header... headers)
+	public static String sendPost(boolean basicAuth,
+			UsernamePasswordCredentials upc, HttpHost targetHost, String uri,
+			String encoding, String message,
+			ArrayList<NameValuePair> postParameters, Header... headers)
 			throws IOException {
 
-		return sendPost(basicAuth, upc, targetHost, null, uri, encoding, message, postParameters, headers);
+		return sendPost(basicAuth, upc, targetHost, null, uri, encoding,
+				message, postParameters, headers);
 
 	}
-	
-	
-	
+
 	/**
 	 * send HTTP POST request
 	 * 
@@ -622,12 +671,14 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(boolean basicAuth, UsernamePasswordCredentials upc,HttpHost targetHost,
-			HttpHost proxy, String uri, String encoding, String message, ArrayList<NameValuePair> postParameters,
-			Header... headers) throws IOException {
+	public static String sendPost(boolean basicAuth,
+			UsernamePasswordCredentials upc, HttpHost targetHost,
+			HttpHost proxy, String uri, String encoding, String message,
+			ArrayList<NameValuePair> postParameters, Header... headers)
+			throws IOException {
 
 		if (!uri.startsWith("/")) {
 			uri = "/" + uri;
@@ -642,9 +693,11 @@ public class HttpConn {
 		if (postParameters != null && postParameters.size() > 0) {
 			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 		}
-		log.info("url: " + getURL(targetHost, uri) + " method: POST");
-		
-		return sendPost(basicAuth,upc,false,null,null,targetHost, proxy, uri, encoding,message,postParameters,headers);
+		if (log.isDebugEnabled()) {
+			log.debug("url: " + getURL(targetHost, uri) + " method: POST");
+		}
+		return sendPost(basicAuth, upc, false, null, null, targetHost, proxy,
+				uri, encoding, message, postParameters, headers);
 
 	}
 
@@ -676,12 +729,14 @@ public class HttpConn {
 	 * 
 	 * @param headers
 	 * 
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendPost(boolean basicAuth, UsernamePasswordCredentials upc, boolean customSSL,
-			InputStream keyStoreInputStream, char[] password, HttpHost targetHost,
-			HttpHost proxy, String uri, String encoding, String message, ArrayList<NameValuePair> postParameters,
+	public static String sendPost(boolean basicAuth,
+			UsernamePasswordCredentials upc, boolean customSSL,
+			InputStream keyStoreInputStream, char[] password,
+			HttpHost targetHost, HttpHost proxy, String uri, String encoding,
+			String message, ArrayList<NameValuePair> postParameters,
 			Header... headers) throws IOException {
 
 		if (!uri.startsWith("/")) {
@@ -697,9 +752,11 @@ public class HttpConn {
 		if (postParameters != null && postParameters.size() > 0) {
 			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 		}
-		log.info("url: " + getURL(targetHost, uri) + " method: POST");
-
-		return execute(targetHost, proxy, httpPost, encoding, basicAuth, upc,customSSL,keyStoreInputStream,password);
+		if (log.isDebugEnabled()) {
+			log.debug("url: " + getURL(targetHost, uri) + " method: POST");
+		}
+		return execute(targetHost, proxy, httpPost, encoding, basicAuth, upc,
+				customSSL, keyStoreInputStream, password);
 
 	}
 
@@ -715,7 +772,8 @@ public class HttpConn {
 	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(HttpHost targetHost, String uri, Header... headers) throws IOException {
+	public static String sendGet(HttpHost targetHost, String uri,
+			Header... headers) throws IOException {
 
 		return sendGet(targetHost, uri, ENCODING, headers);
 	}
@@ -731,10 +789,11 @@ public class HttpConn {
 	 *            URI
 	 * @param headers
 	 *            (optional)
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(HttpHost targetHost, HttpHost proxy, String uri, Header... headers) throws IOException {
+	public static String sendGet(HttpHost targetHost, HttpHost proxy,
+			String uri, Header... headers) throws IOException {
 
 		return sendGet(targetHost, proxy, uri, ENCODING, headers);
 	}
@@ -750,10 +809,11 @@ public class HttpConn {
 	 *            URI
 	 * @param headers
 	 *            (optional)
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(UsernamePasswordCredentials upc, HttpHost targetHost, String uri, Header... headers)
+	public static String sendGet(UsernamePasswordCredentials upc,
+			HttpHost targetHost, String uri, Header... headers)
 			throws IOException {
 
 		return sendGet(true, upc, targetHost, uri, ENCODING, headers);
@@ -775,8 +835,9 @@ public class HttpConn {
 	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(UsernamePasswordCredentials upc, HttpHost targetHost, HttpHost proxy, String uri,
-			Header... headers) throws IOException {
+	public static String sendGet(UsernamePasswordCredentials upc,
+			HttpHost targetHost, HttpHost proxy, String uri, Header... headers)
+			throws IOException {
 
 		return sendGet(true, upc, targetHost, proxy, uri, ENCODING, headers);
 	}
@@ -792,11 +853,11 @@ public class HttpConn {
 	 *            (optional)
 	 * @param encoding
 	 *            (default UTF-8)
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(HttpHost targetHost, String uri, String encoding, Header... headers)
-			throws IOException {
+	public static String sendGet(HttpHost targetHost, String uri,
+			String encoding, Header... headers) throws IOException {
 
 		return sendGet(false, null, targetHost, uri, encoding, headers);
 	}
@@ -814,11 +875,11 @@ public class HttpConn {
 	 *            (optional)
 	 * @param encoding
 	 *            (default UTF-8)
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(HttpHost targetHost, HttpHost proxy, String uri, String encoding, Header... headers)
-			throws IOException {
+	public static String sendGet(HttpHost targetHost, HttpHost proxy,
+			String uri, String encoding, Header... headers) throws IOException {
 
 		return sendGet(false, null, targetHost, proxy, uri, encoding, headers);
 	}
@@ -838,10 +899,11 @@ public class HttpConn {
 	 *            (default UTF-8)
 	 * @param headers
 	 *            (optional)
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(boolean basicAuth, UsernamePasswordCredentials upc, HttpHost targetHost, String uri,
+	public static String sendGet(boolean basicAuth,
+			UsernamePasswordCredentials upc, HttpHost targetHost, String uri,
 			String encoding, Header... headers) throws IOException {
 
 		return sendGet(basicAuth, upc, targetHost, null, uri, encoding, headers);
@@ -864,13 +926,16 @@ public class HttpConn {
 	 *            (default UTF-8)
 	 * @param headers
 	 *            (optional)
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(boolean basicAuth, UsernamePasswordCredentials upc, HttpHost targetHost,
-			HttpHost proxy, String uri, String encoding, Header... headers) throws IOException {
+	public static String sendGet(boolean basicAuth,
+			UsernamePasswordCredentials upc, HttpHost targetHost,
+			HttpHost proxy, String uri, String encoding, Header... headers)
+			throws IOException {
 
-		return sendGet(basicAuth,upc,false,null,null,targetHost, proxy, uri, encoding,headers);
+		return sendGet(basicAuth, upc, false, null, null, targetHost, proxy,
+				uri, encoding, headers);
 	}
 
 	/**
@@ -896,12 +961,14 @@ public class HttpConn {
 	 *            (default UTF-8)
 	 * @param headers
 	 *            (optional)
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String sendGet(boolean basicAuth, UsernamePasswordCredentials upc, boolean customSSL,
-			InputStream keyStoreInputStream, char[] password, HttpHost targetHost, HttpHost proxy, String uri, String encoding, Header... headers)
-			throws IOException {
+	public static String sendGet(boolean basicAuth,
+			UsernamePasswordCredentials upc, boolean customSSL,
+			InputStream keyStoreInputStream, char[] password,
+			HttpHost targetHost, HttpHost proxy, String uri, String encoding,
+			Header... headers) throws IOException {
 
 		if (!uri.startsWith("/")) {
 			uri = "/" + uri;
@@ -910,9 +977,12 @@ public class HttpConn {
 		if (headers.length > 0) {
 			httpGet.setHeaders(headers);
 		}
-		log.info("url: " + getURL(targetHost, uri) + " method: GET");
+		if (log.isDebugEnabled()) {
+			log.debug("url: " + getURL(targetHost, uri) + " method: GET");
+		}
 
-		return execute(targetHost, proxy, httpGet, encoding, basicAuth, upc,customSSL,keyStoreInputStream,password);
+		return execute(targetHost, proxy, httpGet, encoding, basicAuth, upc,
+				customSSL, keyStoreInputStream, password);
 	}
 
 	/**
@@ -927,33 +997,33 @@ public class HttpConn {
 	 * @param customSSL
 	 * @param keyStoreInputStream
 	 * @param password
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 * @throws KeyStoreException
 	 * 
 	 */
-	protected static String execute(HttpHost targetHost, HttpHost proxy, HttpRequestBase httpRequestMethod,
-			String encoding, boolean basicAuth, UsernamePasswordCredentials upc, boolean customSSL,
-			InputStream keyStoreInputStream, char[] password) throws IOException {
-		DefaultHttpClient httpClient;
+	protected static String execute(HttpHost targetHost, HttpHost proxy,
+			HttpRequestBase httpRequestMethod, String encoding,
+			boolean basicAuth, UsernamePasswordCredentials upc,
+			boolean customSSL, InputStream keyStoreInputStream, char[] password)
+			throws IOException {
+		DefaultHttpClient httpClient = getHttpClient();
 		if (proxy != null) {
-			httpClient = getNewHttpClient();
-			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-		} else {
-			httpClient = getHttpClient();
+			httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,
+					proxy);
 		}
 		if (customSSL) {
-			
-			if (httpClient == HTTPCLIENT) {
-				httpClient = getNewHttpClient();
-			}
-			
+
 			try {
-				KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+				KeyStore trustStore = KeyStore.getInstance(KeyStore
+						.getDefaultType());
 				trustStore.load(keyStoreInputStream, password);
-				SSLSocketFactory socketFactory = new SSLSocketFactory(trustStore);
-				Scheme sch = new Scheme(targetHost.getSchemeName(), targetHost.getPort(), socketFactory);
-				httpClient.getConnectionManager().getSchemeRegistry().register(sch);
+				SSLSocketFactory socketFactory = new SSLSocketFactory(
+						trustStore);
+				Scheme sch = new Scheme(targetHost.getSchemeName(),
+						targetHost.getPort(), socketFactory);
+				httpClient.getConnectionManager().getSchemeRegistry()
+						.register(sch);
 			} catch (KeyStoreException e) {
 				log.error(e);
 			} catch (NoSuchAlgorithmException e) {
@@ -965,6 +1035,7 @@ public class HttpConn {
 			} catch (UnrecoverableKeyException e) {
 				log.error(e);
 			} finally {
+
 				keyStoreInputStream.close();
 			}
 
@@ -975,9 +1046,10 @@ public class HttpConn {
 		if (basicAuth) {
 
 			httpClient.getCredentialsProvider().setCredentials(
-					new AuthScope(targetHost.getHostName(), targetHost.getPort()), upc);
+					new AuthScope(targetHost.getHostName(),
+							targetHost.getPort()), upc);
 			// Get AuthCache instance
-			AuthCache authCache = getAuthCache();
+			AuthCache authCache = new BasicAuthCache();
 
 			// Generate BASIC scheme object and add it to the local
 			if (authCache.get(targetHost) == null) {
@@ -987,7 +1059,8 @@ public class HttpConn {
 			BasicHttpContext localcontext = new BasicHttpContext();
 			localcontext.setAttribute(ClientContext.AUTH_CACHE, authCache);
 
-			response = httpClient.execute(targetHost, httpRequestMethod, localcontext);
+			response = httpClient.execute(targetHost, httpRequestMethod,
+					localcontext);
 
 		}
 
@@ -1005,11 +1078,14 @@ public class HttpConn {
 	 * @param httpClient
 	 * @param response
 	 * @param encoding
-	 * @return  result String
+	 * @return result String
 	 * @throws IOException
 	 */
-	public static String getResponse(HttpClient httpClient, HttpResponse response, String encoding) throws IOException {
-		log.info("status: " + response.getStatusLine().getStatusCode());
+	public static String getResponse(HttpClient httpClient,
+			HttpResponse response, String encoding) throws IOException {
+		if (log.isDebugEnabled()) {
+			log.debug("status: " + response.getStatusLine().getStatusCode());
+		}
 		HttpEntity entity = response.getEntity();
 		StringBuffer buf = new StringBuffer();
 		if (entity != null) {
@@ -1020,7 +1096,8 @@ public class HttpConn {
 					encoding = ENCODING;
 				}
 
-				BufferedReader br = new BufferedReader(new InputStreamReader(instream, encoding));
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+						instream, encoding));
 				String line;
 				while (null != (line = br.readLine())) {
 					buf.append(line).append("\n");
@@ -1028,12 +1105,6 @@ public class HttpConn {
 
 			} finally {
 				EntityUtils.consume(entity);
-				// When HttpClient instance is no longer needed,
-				// shut down the connection manager to ensure
-				// immediate deallocation of all system resources
-				if (httpClient != HTTPCLIENT) {
-					shutdown(httpClient);
-				}
 
 			}
 		}
@@ -1041,37 +1112,16 @@ public class HttpConn {
 	}
 
 	/**
-	 * shutdown
-	 * 
-	 * @param httpClient
-	 */
-	public static void shutdown(HttpClient httpClient) {
-		if (httpClient != null) {
-			httpClient.getConnectionManager().shutdown();
-		}
-	}
-
-	/**
-	 * shutdown
-	 */
-	public static void shutdown() {
-		if (HTTPCLIENT != null) {
-			shutdown(HTTPCLIENT);
-		}
-	}
-
-	
-	//~ Methods ==================================================
-	
-	/**
 	 * Get url
+	 * 
 	 * @param targetHost
 	 * @param uri
 	 * @return new url string
 	 */
 	public static String getURL(HttpHost targetHost, String uri) {
 		if (targetHost != null && !CommUtil.isBlank(targetHost.getSchemeName())
-				&& !CommUtil.isBlank(targetHost.getHostName()) && targetHost.getPort() > 0) {
+				&& !CommUtil.isBlank(targetHost.getHostName())
+				&& targetHost.getPort() > 0) {
 			return targetHost + uri;
 		}
 		return "null" + uri;
@@ -1100,13 +1150,16 @@ public class HttpConn {
 			if (str.length() >= 10) {
 				String temp = str.substring(0, str.indexOf(":"));
 				if (!CommUtil.isBlank(temp)) {
-					if (temp.equalsIgnoreCase("HTTP") || temp.equalsIgnoreCase("HTTPS")) {
+					if (temp.equalsIgnoreCase("HTTP")
+							|| temp.equalsIgnoreCase("HTTPS")) {
 						String temp1 = str.substring(temp.length() + 3);
 						if (temp1.indexOf("/") > 0) {
-							String temp2 = temp1.substring(0, temp1.indexOf("/"));
+							String temp2 = temp1.substring(0,
+									temp1.indexOf("/"));
 							if (temp2.indexOf(":") > 0) {
 								String[] temp3 = temp2.split(":");
-								if (temp3.length > 1 && temp3[1].matches("[0-9]*")) {
+								if (temp3.length > 1
+										&& temp3[1].matches("[0-9]*")) {
 									port = Integer.parseInt(temp3[1]);
 									host = temp3[0];
 								}
@@ -1155,27 +1208,27 @@ public class HttpConn {
 		obj[0] = targetHost;
 		obj[1] = uri;
 		log.warn("Your HttpHost has been resolved,but may not be correct,please use new HttpHost(host,port,scheme) instead.");
-		log.info("The parsed Object Array " + Arrays.toString(obj));
+		if (log.isDebugEnabled()) {
+			log.debug("The parsed Object Array " + Arrays.toString(obj));
+		}
 		return obj;
 	}
-	
-	
-	
+
 	/**
 	 * Get UsernamePasswordCredentials
+	 * 
 	 * @param username
 	 * @param password
 	 * @return UsernamePasswordCredentials
 	 */
-	public static UsernamePasswordCredentials getUPC(String username,String password){
-		if(CommUtil.isBlank(username) && CommUtil.isBlank(password)){
+	public static UsernamePasswordCredentials getUPC(String username,
+			String password) {
+		if (CommUtil.isBlank(username) && CommUtil.isBlank(password)) {
 			return null;
 		}
-		return new UsernamePasswordCredentials(username,password);
+		return new UsernamePasswordCredentials(username, password);
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * Get UsernamePasswordCredentials
@@ -1183,8 +1236,8 @@ public class HttpConn {
 	 * @param usernameSamePassword
 	 * @return UsernamePasswordCredentials
 	 */
-	public static  UsernamePasswordCredentials getUPC(String usernameSamePassword){
-		if(CommUtil.isBlank(usernameSamePassword)){
+	public static UsernamePasswordCredentials getUPC(String usernameSamePassword) {
+		if (CommUtil.isBlank(usernameSamePassword)) {
 			return null;
 		}
 		return new UsernamePasswordCredentials(usernameSamePassword);

@@ -52,15 +52,11 @@ public class HttpConnTest {
 	
 	@Test
 	public void testSendGet() throws IOException {
-		
-		HttpHost httpHost = new HttpHost("www.rockagen.com", 80, "http");
-		Object[] obj=HttpConn.resolveString("http://www.rockagen.com");
-		Object[] obj2=HttpConn.resolveString("https://www.rockagen.com");
-
 //		System.out.println(HttpConn.sendGet(httpHost, "/"));
 //		System.out.println(HttpConn.sendGet((HttpHost)obj[0], (String)obj[1]));
 //		System.out.println(HttpConn.sendGet((HttpHost)obj2[0], (String)obj2[1]));
 //		System.out.println(HttpConn.sendGet((HttpHost)obj2[0], (String)obj2[1],headers));
+		
 	}
 	@Test
 	public void testSendGetProxy() throws IOException{
