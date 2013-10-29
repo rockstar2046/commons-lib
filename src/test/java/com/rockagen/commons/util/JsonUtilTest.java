@@ -43,6 +43,39 @@ public class JsonUtilTest {
 		 
 	}
 	@Test
+	public void testJsonThreadSafe() throws InterruptedException{
+		
+		final String jsonStr1="[{\"city\":\"CHINA 0\",\"testVo\":{\"name\":\"ROCKAGEN 0\",\"age\":0,\"email\":\"agen@rockagen.com 0\"}},"
+				+ "{\"city\":\"Beijing 0\",\"testVo\":{\"name\":\"ROCKAGEN2 0\",\"age\":0,\"email\":\"agen@rockagen.com2 0\"}}]";
+		Thread a=new Thread() {
+			@Override
+			public void run() {
+				System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
+				System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
+				for(TestVo4 tv : JsonUtil.toBean(jsonStr1, TestVo4[].class))
+					System.out.println(tv.getTestVo().getName()+" "+tv.getTestVo().getAge()+" "+tv.getTestVo().getEmail()+" "+tv.getCity());
+				System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
+				System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
+				
+			
+			}
+		};
+		a.start();
+		
+		System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
+		System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
+		TestVo4[] tvs=JsonUtil.toBean(jsonStr1, TestVo4[].class);
+		
+		
+		System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
+		System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
+		
+		
+		Thread.currentThread().sleep(Integer.MAX_VALUE);
+		
+		
+	}
+	@Test
 	public void testToJson(){
 		for(int i=0; i<10;i++){
 		TestVo vo1=new TestVo();

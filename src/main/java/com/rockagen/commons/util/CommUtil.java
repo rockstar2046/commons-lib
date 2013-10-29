@@ -17,6 +17,7 @@ package com.rockagen.commons.util;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,6 +50,12 @@ public class CommUtil extends StringUtils {
 			'7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
 			'X', 'Y', 'Z' };
+	
+	
+	/**
+	 * Hex array
+	 */
+	 private final  static char[] HEXARRAY = "0123456789ABCDEF".toCharArray();
 
 	/**
 	 * Single byte char
@@ -78,6 +85,11 @@ public class CommUtil extends StringUtils {
 	 */
 	private static final String[] WEEK_DAYS = { "SUNDAY", "MONDAY", "TUESDAY",
 			"WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
+	
+	/**
+	 * Line separator
+	 */
+	private static final String NEWLINE=String.format("%n");
 
 	// ~ Constructors ==================================================
 
@@ -1050,7 +1062,7 @@ public class CommUtil extends StringUtils {
 		for (int i = 0; i < maxlen.length; i++)
 			slb.append(repeatChar('-', maxlen[i] + 2) + '+');
 
-		String sl = slb.append(String.format("%n")).toString();
+		String sl = slb.append(NEWLINE).toString();
 
 		result.append(sl);
 		result.append('|');
@@ -1059,7 +1071,7 @@ public class CommUtil extends StringUtils {
 			result.append(' ' + new String(temp)
 					+ repeatChar(' ', maxlen[i] - temp.length) + " |");
 		}
-		result.append(String.format("%n"));
+		result.append(NEWLINE);
 		result.append(sl);
 
 		for (int i = 0; i < effectvalue.length; i++) {
@@ -1069,12 +1081,87 @@ public class CommUtil extends StringUtils {
 				result.append(' ' + new String(temp)
 						+ repeatChar(' ', maxlen[j] - temp.length) + " |");
 			}
-			result.append(String.format("%n"));
+			result.append(NEWLINE);
 		}
 
 		result.append(sl);
 		return result.toString();
 
+	}
+	
+	
+	/**
+	 * A hex dump style
+	 * <p>just like:
+	 * <pre>
+	 *          +-------------------------------------------------+
+     *          |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F |
+	 * +--------+-------------------------------------------------+----------------+
+	 * |00000000| 30 32 35 36 2E 2E 2E                            |0256...         |
+	 * +--------+-------------------------------------------------+----------------+
+	 *
+	 * </pre>
+	 * </p>
+	 * <p>
+	 * <b>Note: Non-ASCII characters will be replace to <code>"."</code>  (46)</b>
+	 * </p>
+	 * @param bytes
+	 * @return format hex string
+	 */
+	public static String hexdump(final byte[] bytes) {
+
+		if (bytes == null || bytes.length < 1)
+			return "[no data]";
+		int length = bytes.length;
+		int row = (int) Math.ceil(length / 16.0);
+
+		StringBuffer dump = new StringBuffer();
+		dump.append(NEWLINE
+				+ "         +-------------------------------------------------+"
+				+ NEWLINE
+				+ "         |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F |"
+				+ NEWLINE
+				+ "+--------+-------------------------------------------------+----------------+");
+
+		int temp;
+		char[] hex = new char[49];
+		char[] value = new char[16];
+		for (int i = 0; i < row; i++) {
+
+			int ridx = i * 16;
+
+			// initialize arrays
+			Arrays.fill(hex, ' ');
+			Arrays.fill(value, ' ');
+			for (int j = 0; j < 16; j++) {
+				if (ridx + j >= length)
+					break;
+		           
+				temp = bytes[ridx + j];
+				
+				if (temp <= 0x1f || temp >= 0x7f) 
+		               temp=46;
+				
+				//UnsignedByte
+				temp=temp & 0xFF;
+				
+				hex[j * 3 + 1] = HEXARRAY[temp >>> 4];
+				hex[j * 3 + 2] = HEXARRAY[temp & 0x0F];
+
+				value[j] = (char)temp;
+
+			}
+			String offset0 = Integer.toHexString(ridx);
+			dump.append(NEWLINE + '|'
+					+ new String(repeatChar('0', 8 - offset0.length()))
+					+ offset0 + '|' + new String(hex) + '|' + new String(value)
+					+ '|');
+
+		}
+		dump.append(NEWLINE
+				+ "+--------+-------------------------------------------------+----------------+"+NEWLINE);
+
+		return dump.toString();
 	}
 
 	/**
@@ -1093,5 +1180,8 @@ public class CommUtil extends StringUtils {
 			c[i] = cha;
 		return new String(c);
 	}
+	
+	
+	
 
 }

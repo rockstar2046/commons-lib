@@ -24,8 +24,8 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -39,6 +39,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * JSON UTILS
+ * 
  * @author AGEN
  * @since JDK1.6
  * @since JACKSON 2.2.0
@@ -50,16 +51,15 @@ public class JsonUtil {
 	/**
 	 * 
 	 */
-	private static final Log log = LogFactory.getLog(JsonUtil.class);
-
+	private static final Logger log = LoggerFactory.getLogger(JsonUtil.class);
 	/**
-	 * ObjectMapper Single instance
+	 * ObjectMapper
 	 */
-	private static volatile ObjectMapper MAPPER;
+	private static final ThreadLocal<ObjectMapper> threadMapper = new ThreadLocal<ObjectMapper>();
 	/**
 	 * JsonFactory
 	 */
-	private static volatile JsonFactory JSONFACTORY;
+	private static final ThreadLocal<JsonFactory> threadJsonFactory = new ThreadLocal<JsonFactory>();
 
 	// ~ Constructors ==================================================
 
@@ -77,45 +77,54 @@ public class JsonUtil {
 	 * @return ObjectMapper
 	 */
 	public static ObjectMapper getMapper() {
-		if (MAPPER == null) {
-			synchronized (ObjectMapper.class) {
-				MAPPER = new ObjectMapper();
-				initMapper();
-			}
+
+		ObjectMapper mapper = threadMapper.get();
+		if (mapper == null) {
+			mapper = initMapper();
+			threadMapper.set(mapper);
+
 		}
-		return MAPPER;
+		return mapper;
 	}
-	
-	protected static synchronized void initMapper(){
-		if(MAPPER!=null){
-			// to enable standard indentation ("pretty-printing"):
-			MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
-			// to allow serialization of "empty" POJOs (no properties to serialize)
-			// (without this setting, an exception is thrown in those cases)
-			MAPPER.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-			// set writer flush after writer value
-			MAPPER.enable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
-			//ObjectMapper will call close() and root values that implement java.io.Closeable;
-			//including cases where exception is thrown and serialization does not completely succeed.
-			MAPPER.enable(SerializationFeature.CLOSE_CLOSEABLE);
-			// to write java.util.Date, Calendar as number (timestamp):
-			MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-			// disable default date to timestamp
-			MAPPER.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
 
-			// DeserializationFeature for changing how JSON is read as POJOs:
+	/**
+	 * Initialize mapper
+	 * @return
+	 */
+	private static ObjectMapper initMapper() {
 
-			// to prevent exception when encountering unknown property:
-			MAPPER.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-			// disable default date to timestamp
-			MAPPER.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
-			// to allow coercion of JSON empty String ("") to null Object value:
-			MAPPER.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-			DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-			// Set Default date fromat
-			MAPPER.setDateFormat(df);
-			
-		}
+		ObjectMapper mapper = new ObjectMapper();
+		// to enable standard indentation ("pretty-printing"):
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		// to allow serialization of "empty" POJOs (no properties to serialize)
+		// (without this setting, an exception is thrown in those cases)
+		mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		// set writer flush after writer value
+		mapper.enable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+		// ObjectMapper will call close() and root values that implement
+		// java.io.Closeable;
+		// including cases where exception is thrown and serialization does not
+		// completely succeed.
+		mapper.enable(SerializationFeature.CLOSE_CLOSEABLE);
+		// to write java.util.Date, Calendar as number (timestamp):
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		// disable default date to timestamp
+		mapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+
+		// DeserializationFeature for changing how JSON is read as POJOs:
+
+		// to prevent exception when encountering unknown property:
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		// disable default date to timestamp
+		mapper.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+		// to allow coercion of JSON empty String ("") to null Object value:
+		mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		// Set Default date fromat
+		mapper.setDateFormat(df);
+
+		return mapper;
+
 	}
 
 	/**
@@ -124,22 +133,28 @@ public class JsonUtil {
 	 * @return JsonFactory
 	 */
 	public static JsonFactory getJsonFactory() {
-		if (JSONFACTORY == null) {
-			JSONFACTORY = new JsonFactory();
+		
+		
+		JsonFactory jsonFactory = threadJsonFactory.get();
+		if (jsonFactory == null) {
+			jsonFactory = new JsonFactory();
 			// JsonParser.Feature for configuring parsing settings:
-			// to allow C/C++ style comments in JSON (non-standard, disabled by default)
-			JSONFACTORY.enable(JsonParser.Feature.ALLOW_COMMENTS);
+			// to allow C/C++ style comments in JSON (non-standard, disabled by
+			// default)
+			jsonFactory.enable(JsonParser.Feature.ALLOW_COMMENTS);
 			// to allow (non-standard) unquoted field names in JSON:
-			JSONFACTORY.disable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+			jsonFactory.disable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
 			// to allow use of apostrophes (single quotes), non standard
-			JSONFACTORY.disable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+			jsonFactory.disable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
 
 			// JsonGenerator.Feature for configuring low-level JSON generation:
 
 			// no escaping of non-ASCII characters:
-			JSONFACTORY.disable(JsonGenerator.Feature.ESCAPE_NON_ASCII);
+			jsonFactory.disable(JsonGenerator.Feature.ESCAPE_NON_ASCII);
+			threadJsonFactory.set(jsonFactory);
+
 		}
-		return JSONFACTORY;
+		return jsonFactory;
 	}
 
 	/**
@@ -324,11 +339,11 @@ public class JsonUtil {
 		try {
 			obj = getMapper().readValue(jsonParser, valueTypeRef);
 		} catch (JsonParseException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (JsonMappingException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (IOException e) {
-			log.error(e);
+			log.error("", e);
 		} finally {
 			if (jsonParser != null) {
 				try {
@@ -496,11 +511,11 @@ public class JsonUtil {
 		try {
 			obj = getMapper().readValue(jsonParser, clazz);
 		} catch (JsonParseException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (JsonMappingException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (IOException e) {
-			log.error(e);
+			log.error("", e);
 		} finally {
 			if (jsonParser != null) {
 				try {
@@ -516,7 +531,8 @@ public class JsonUtil {
 	/**
 	 * Bean to json string
 	 * 
-	 * @param obj bean object
+	 * @param obj
+	 *            bean object
 	 * @return json string
 	 */
 	public static <T> String toJson(T obj) {
@@ -530,7 +546,7 @@ public class JsonUtil {
 			jsonStr = writer.toString();
 
 		} catch (IOException e) {
-			log.error(e);
+			log.error("", e);
 		} finally {
 			if (gen != null) {
 				try {
@@ -542,7 +558,6 @@ public class JsonUtil {
 		}
 		return jsonStr;
 	}
-
 
 	/**
 	 * JsonParser Helper</br> provide to
@@ -569,9 +584,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
@@ -584,9 +599,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
@@ -599,9 +614,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
@@ -614,9 +629,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
@@ -629,9 +644,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
@@ -644,9 +659,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 

@@ -60,9 +60,9 @@ public class HttpConnTest {
 	}
 	@Test
 	public void testSendGetProxy() throws IOException{
-//		HttpHost httpHost = new HttpHost("www.sex.com", 80, "http");
-//		HttpHost proxy = new HttpHost("localhost", 8087, "http");
-//		System.out.println(HttpConn.sendGet(httpHost,proxy, "/"));
+		HttpHost httpHost = new HttpHost("www.sex.com", 80, "http");
+		HttpHost proxy = new HttpHost("localhost", 8087, "http");
+		System.out.println(HttpConn.sendGet(httpHost,proxy, "/"));
 	}
 	
 	@Test

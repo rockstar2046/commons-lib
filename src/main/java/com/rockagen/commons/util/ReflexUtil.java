@@ -24,8 +24,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reflex Utils
@@ -40,7 +40,7 @@ public class ReflexUtil {
 	/**
 	 * 
 	 */
-	private static final Log log = LogFactory.getLog(ReflexUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(ReflexUtil.class);
 
 	// ~ Constructors ==================================================
 
@@ -71,8 +71,8 @@ public class ReflexUtil {
 		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,
 				recursively);
 		if (field == null) {
-			log.warn("Could not find field [" + fieldName + "] on target ["
-					+ object + "]");
+			log.warn("Could not find field [ {} ] on target [ {} ]", fieldName,
+					object);
 			return result;
 		}
 
@@ -85,8 +85,8 @@ public class ReflexUtil {
 				result = method.invoke(object);
 				return result;
 			} catch (InvocationTargetException e) {
-				log.warn("Could not find method [" + methodName
-						+ "] on target [" + object + "]");
+				log.warn("Could not find method [ {} ] on target [ {} ]",
+						methodName, object);
 			} catch (IllegalArgumentException e) {
 			} catch (IllegalAccessException e) {
 				// Will not happen
@@ -120,25 +120,26 @@ public class ReflexUtil {
 				recursively);
 
 		if (field == null) {
-			log.warn("Could not find field [" + fieldName + "] on target ["
-					+ object + "]");
+			log.warn("Could not find field [ {} ] on target [ {} ]", fieldName,
+					object);
 			return;
 		}
 
 		String methodName = "set" + CommUtil.capitalize(fieldName);
 
 		Method method = ClassUtil.getDeclaredMethod(object.getClass(),
-				recursively, methodName, value==null?Object.class:value.getClass());
+				recursively, methodName,
+				value == null ? Object.class : value.getClass());
 		if (method != null) {
 			try {
 				makeAccessible(method);
 				method.invoke(object, value);
 				return;
 			} catch (InvocationTargetException e) {
-				log.warn("Could not find method [" + methodName
-						+ "] on target [" + object + "]");
+				log.warn("Could not find method [ {} ] on target [ {} ]",
+						methodName, object);
 			} catch (NullPointerException e) {
-				log.warn(object + " field: [" + fieldName + "] is null.");
+				log.warn("{} field: [ {} ] is null", object, fieldName);
 			} catch (IllegalArgumentException e) {
 			} catch (IllegalAccessException e) {
 				// Will not happen
@@ -152,7 +153,7 @@ public class ReflexUtil {
 			field.set(object, value);
 		} catch (IllegalArgumentException e) {
 		} catch (NullPointerException e) {
-			log.warn(object + " field: [" + fieldName + "] is null.");
+			log.warn("{} field: [ {} ] is null", object, fieldName);
 		} catch (IllegalAccessException e) {
 			// Will not happen
 		}
@@ -221,8 +222,10 @@ public class ReflexUtil {
 			return params;
 
 		} else {
-			log.warn(clazz.getSimpleName()
-					+ "'s superclass not ParameterizedType");
+			log.warn(
+					"{} 's superclass not ParameterizedType",
+					clazz == null ? Object.class.getSimpleName() : clazz
+							.getSimpleName());
 			return temp;
 		}
 	}
@@ -244,12 +247,16 @@ public class ReflexUtil {
 	public static Type getSuperClassGenricType(final Class<?> clazz, int index) {
 		Type[] types = getSuperClassGenricTypes(clazz);
 		if (index < 0) {
-			log.warn(clazz.getSimpleName()
-					+ "'s index must be greater than 0,return the 0");
+			log.warn(
+					"{}'s index must be greater than 0,return the 0",
+					clazz == null ? Object.class.getSimpleName() : clazz
+							.getSimpleName());
 			return types[0];
 		} else if (index > types.length) {
-			log.warn(clazz.getSimpleName() + "'s index in " + index
-					+ "not found,return the last");
+			log.warn(
+					"{}'s index in {} not found,return the last",
+					clazz == null ? Object.class.getSimpleName() : clazz
+							.getSimpleName(), index);
 			return types[types.length - 1];
 		} else {
 			return types[index];
@@ -314,9 +321,6 @@ public class ReflexUtil {
 		if (clazz != null && paramsMap != null && paramsMap.size() > 0) {
 
 			T instance = ClassUtil.getInstance(clazz, accessible);
-			// No automatic processing attributes
-			StringBuffer bufnp = new StringBuffer(
-					"No automatic processing attributes: [");
 
 			for (Map.Entry<String, Object> entry : paramsMap.entrySet()) {
 				String key = entry.getKey();
@@ -328,8 +332,6 @@ public class ReflexUtil {
 				setFieldValue(instance, key, entry.getValue(), false);
 
 			}
-			bufnp.append("]");
-			log.warn(CommUtil.removeEnd(bufnp.toString(), ","));
 			return instance;
 		} else {
 			return null;

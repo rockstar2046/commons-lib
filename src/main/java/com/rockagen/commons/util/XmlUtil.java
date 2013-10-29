@@ -19,13 +19,13 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -44,7 +44,7 @@ public class XmlUtil {
 	/**
 	 * 
 	 */
-	private static final Log log = LogFactory.getLog(XmlUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(XmlUtil.class);
 	/**
 	 * Default Encoding
 	 */
@@ -68,8 +68,9 @@ public class XmlUtil {
 	 * @return pretty String
 	 */
 	public static String formatPretty(String xmlStr, String enc) {
-		return formatPretty(xmlStr,enc,false);
+		return formatPretty(xmlStr, enc, false);
 	}
+
 	/**
 	 * Format xml {@link OutputFormat#createPrettyPrint()}
 	 * 
@@ -78,14 +79,15 @@ public class XmlUtil {
 	 * @param isSuppressDeclaration
 	 * @return pretty String
 	 */
-	public static String formatPretty(String xmlStr, String enc,boolean isSuppressDeclaration) {
-		
+	public static String formatPretty(String xmlStr, String enc,
+			boolean isSuppressDeclaration) {
+
 		if (CommUtil.isBlank(xmlStr))
 			return xmlStr;
-		
+
 		if (enc == null)
 			enc = ENCODING;
-		
+
 		OutputFormat formater = OutputFormat.createPrettyPrint();
 		formater.setEncoding(enc);
 		formater.setSuppressDeclaration(isSuppressDeclaration);
@@ -100,8 +102,9 @@ public class XmlUtil {
 	 * @return Compact xml String
 	 */
 	public static String formatCompact(String xmlStr, String enc) {
-		return formatCompact(xmlStr,enc,false);
+		return formatCompact(xmlStr, enc, false);
 	}
+
 	/**
 	 * Format xml {@link OutputFormat#createCompactFormat()}
 	 * 
@@ -110,14 +113,15 @@ public class XmlUtil {
 	 * @param isSuppressDeclaration
 	 * @return Compact xml String
 	 */
-	public static String formatCompact(String xmlStr, String enc,boolean isSuppressDeclaration) {
-		
+	public static String formatCompact(String xmlStr, String enc,
+			boolean isSuppressDeclaration) {
+
 		if (CommUtil.isBlank(xmlStr))
 			return xmlStr;
-		
+
 		if (enc == null)
 			enc = ENCODING;
-		
+
 		OutputFormat formater = OutputFormat.createCompactFormat();
 		formater.setEncoding(enc);
 		formater.setSuppressDeclaration(isSuppressDeclaration);
@@ -145,16 +149,16 @@ public class XmlUtil {
 
 		Document doc = null;
 		XMLWriter writer = null;
-		StringWriter sw=new StringWriter();
+		StringWriter sw = new StringWriter();
 		try {
 			doc = reader.read(sr);
-			writer = new XMLWriter(sw,formater);
+			writer = new XMLWriter(sw, formater);
 			writer.write(doc);
 			return sw.toString();
 		} catch (DocumentException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (IOException e) {
-			log.error(e);
+			log.error("", e);
 		} finally {
 			if (writer != null) {
 				try {
@@ -222,7 +226,9 @@ public class XmlUtil {
 	 * <P>
 	 * Using XStream library to serialize objects to XML.
 	 * </P>
-	 * <p>example:</p>
+	 * <p>
+	 * example:
+	 * </p>
 	 * <code><pre>
 	 * 
 	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
@@ -232,8 +238,8 @@ public class XmlUtil {
 	 *  then,
 	 *  
 	 * 	toXml(bean,xa,xaf,xaa);
-	 * </pre></code>
-	 * <b>Note: XStream Mode is {@link XStream#NO_REFERENCES}
+	 * </pre></code> <b>Note: XStream Mode is {@link XStream#NO_REFERENCES}
+	 * 
 	 * @param obj
 	 *            bean
 	 * @param xAlias
@@ -254,10 +260,11 @@ public class XmlUtil {
 
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);
-		aliasXstream(xstream,xAlias,xAliasFields,xAliasAttributes);
+		aliasXstream(xstream, xAlias, xAliasFields, xAliasAttributes);
 
 		return xstream.toXML(obj);
 	}
+
 	/**
 	 * <P>
 	 * Bean to xml.
@@ -265,7 +272,9 @@ public class XmlUtil {
 	 * <P>
 	 * Using XStream library to serialize objects to XML.
 	 * </P>
-	 * <p>example:</p>
+	 * <p>
+	 * example:
+	 * </p>
 	 * <code><pre>
 	 * 
 	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
@@ -275,8 +284,8 @@ public class XmlUtil {
 	 *  then,
 	 *  
 	 * 	toBean(xmlStr,xa,xaf,xaa);
-	 * </pre></code>
-	 * <b>Note: XStream Mode is {@link XStream#NO_REFERENCES}
+	 * </pre></code> <b>Note: XStream Mode is {@link XStream#NO_REFERENCES}
+	 * 
 	 * @param xmlStr
 	 *            xml String
 	 * @param xAlias
@@ -291,27 +300,27 @@ public class XmlUtil {
 	 */
 	public static Object toBean(String xmlStr, XAlias[] xAlias,
 			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes) {
-		
-		if(CommUtil.isBlank(xmlStr)) return null;
-		
+
+		if (CommUtil.isBlank(xmlStr))
+			return null;
+
 		XStream xstream = new XStream();
 		xstream.setMode(XStream.NO_REFERENCES);
-		aliasXstream(xstream,xAlias,xAliasFields,xAliasAttributes);
-		
+		aliasXstream(xstream, xAlias, xAliasFields, xAliasAttributes);
+
 		return xstream.fromXML(xmlStr);
 	}
-	
-	
-	
+
 	/**
-	 * XStream Alias 
+	 * XStream Alias
+	 * 
 	 * @param xstream
 	 * @param xAlias
 	 * @param xAliasFields
 	 * @param xAliasAttributes
 	 */
-	protected static void aliasXstream(XStream xstream,XAlias[] xAlias,
-	XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes){
+	protected static void aliasXstream(XStream xstream, XAlias[] xAlias,
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes) {
 		if (xAlias != null) {
 			for (XAlias xa : xAlias) {
 				xstream.alias(xa.aliasName, xa.classType);

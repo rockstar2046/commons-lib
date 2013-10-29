@@ -87,4 +87,8 @@ public class CommUtilTest {
 		println(CommUtil.prettyTable(headers,values));
 	}
 
+	@Test
+	public void testHexDump(){
+		println(CommUtil.hexdump("0256艹".getBytes()));
+	}
 }

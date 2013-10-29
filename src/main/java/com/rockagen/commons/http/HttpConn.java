@@ -28,8 +28,6 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
@@ -58,6 +56,8 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.rockagen.commons.util.CharsetUtil;
 import com.rockagen.commons.util.CommUtil;
@@ -74,7 +74,7 @@ public class HttpConn {
 	// ~ Instance fields ==================================================
 
 	/** */
-	private static final Log log = LogFactory.getLog(HttpConn.class);
+	private static final Logger log = LoggerFactory.getLogger(HttpConn.class);
 
 	public final static int MAX_TOTAL_CONNECTIONS = 1000;
 
@@ -693,9 +693,7 @@ public class HttpConn {
 		if (postParameters != null && postParameters.size() > 0) {
 			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("url: " + getURL(targetHost, uri) + " method: POST");
-		}
+		log.debug("url: {} method: POST", getURL(targetHost, uri));
 		return sendPost(basicAuth, upc, false, null, null, targetHost, proxy,
 				uri, encoding, message, postParameters, headers);
 
@@ -752,9 +750,7 @@ public class HttpConn {
 		if (postParameters != null && postParameters.size() > 0) {
 			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("url: " + getURL(targetHost, uri) + " method: POST");
-		}
+		log.debug("url: {} method: POST", getURL(targetHost, uri));
 		return execute(targetHost, proxy, httpPost, encoding, basicAuth, upc,
 				customSSL, keyStoreInputStream, password);
 
@@ -977,9 +973,7 @@ public class HttpConn {
 		if (headers.length > 0) {
 			httpGet.setHeaders(headers);
 		}
-		if (log.isDebugEnabled()) {
-			log.debug("url: " + getURL(targetHost, uri) + " method: GET");
-		}
+		log.debug("url: {} method: GET", getURL(targetHost, uri));
 
 		return execute(targetHost, proxy, httpGet, encoding, basicAuth, upc,
 				customSSL, keyStoreInputStream, password);
@@ -1025,15 +1019,15 @@ public class HttpConn {
 				httpClient.getConnectionManager().getSchemeRegistry()
 						.register(sch);
 			} catch (KeyStoreException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (NoSuchAlgorithmException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (CertificateException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (KeyManagementException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (UnrecoverableKeyException e) {
-				log.error(e);
+				log.error("", e);
 			} finally {
 
 				keyStoreInputStream.close();
@@ -1083,9 +1077,7 @@ public class HttpConn {
 	 */
 	public static String getResponse(HttpClient httpClient,
 			HttpResponse response, String encoding) throws IOException {
-		if (log.isDebugEnabled()) {
-			log.debug("status: " + response.getStatusLine().getStatusCode());
-		}
+		log.debug("status: {}", response.getStatusLine().getStatusCode());
 		HttpEntity entity = response.getEntity();
 		StringBuffer buf = new StringBuffer();
 		if (entity != null) {
@@ -1208,9 +1200,7 @@ public class HttpConn {
 		obj[0] = targetHost;
 		obj[1] = uri;
 		log.warn("Your HttpHost has been resolved,but may not be correct,please use new HttpHost(host,port,scheme) instead.");
-		if (log.isDebugEnabled()) {
-			log.debug("The parsed Object Array " + Arrays.toString(obj));
-		}
+		log.debug("The parsed Object Array {}", Arrays.toString(obj));
 		return obj;
 	}
 
