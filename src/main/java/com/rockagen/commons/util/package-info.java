@@ -13,27 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.rockagen.commons.util;
-
-import org.apache.commons.lang3.ArrayUtils;
-
 /**
- * Array Utils
- * 
+ * <b>Some commons functions packaging</b>
+ * <p>apache.commons.lang3 must required</p>
+ * <p>note: can not to new instance</p>
  * @author AGEN
  * @since JDK1.6
- * @since COMMONS.LANG3
  */
-public class ArrayUtil extends ArrayUtils{
-	
-	
-	//~ Constructors ==================================================
-	
-	/**
-	 */
-	private ArrayUtil(){}
-	
-	
-	// wait add more
-
-}
+package com.rockagen.commons.util;

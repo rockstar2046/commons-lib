@@ -23,51 +23,72 @@ import org.junit.Test;
  */
 public class CommUtilTest {
 
+	
+	private void println(Object o){
+		System.out.println(o);
+	}
 	@Test
 	public void testEscape() {
-		System.out.print(CommUtil.escapeJava("中国"));
+		println(CommUtil.escapeJava("中国"));
+		println(CommUtil.hasSpecialChar("d$3d"));
+		println(CommUtil.hasSpecialChar(""));
 	}
 
 	@Test
 	public void testString() {
-		System.out.println(CommUtil.subPostfix(CommUtil.generateRandomCode(12),
+		println(CommUtil.subPostfix(CommUtil.generateRandomCode(12),
 				0, 4, "*"));
-		System.out.println(CommUtil.extractNumber(CommUtil
+		println(CommUtil.extractNumber(CommUtil
 				.generateRandomCode(12)));
-		System.out.println(CommUtil.extractNumber(CommUtil.subPostfix(
+		println(CommUtil.extractNumber(CommUtil.subPostfix(
 				CommUtil.generateRandomCode(12), 0, 4, "*")));
 
-		System.out.println(CommUtil.toCommaDelimitedString(new String[] {
+		println(CommUtil.toCommaDelimitedString(new String[] {
 				"tom", "jack", "axl", "duff", "slash", "Izzy", " Adler" }));
 	}
 
 	@Test
 	public void testRandomString() {
-		System.out.println(CommUtil.generateRandomCode(12));
-		System.out.println(CommUtil.getRandomNumber(6));
+		println(CommUtil.generateRandomCode(12));
+		println(CommUtil.getRandomNumber(6));
 	}
 
 	@Test
 	public void testDigest() {
-		System.out.println(MDUtil.sha1Hex("hello"));
-		System.out.println(MDUtil.md5Hex("hello"));
-		System.out.println(MDUtil.md5("hello"));
+		println(MDUtil.sha1Hex("hello"));
+		println(MDUtil.md5Hex("hello"));
+		println(MDUtil.md5("hello"));
 	}
 
 	@Test
 	public void testSameChars() {
-		System.out.println(CommUtil.genSameChars("B", 10));
-		System.out.println(CommUtil.genSameChars("B", 1));
-		System.out.println(CommUtil.genSameChars("B", 0));
-		System.out.println(CommUtil.genSameChars("B", -1));
+		println(CommUtil.repeatChar('b', 10));
+		println(CommUtil.repeatChar('b', 1));
+		println(CommUtil.repeatChar('b', 0));
+		println(CommUtil.repeatChar('b', -1));
 
 	}
 
 	@Test
 	public void testBC() {
-		System.out.println(CommUtil.toDBC("!?<>\"'D"));
-		System.out.println(CommUtil.toSBC(".<@《“”"));
+		println(CommUtil.toDBC("!?<>\"'D"));
+		println(CommUtil.toSBC("。<@《%“"));
 
 	}
+	
+	@Test
+	public void testPrettyTable(){
+		  String[] headers={"num","name","age","where"};
+		  Object[][] values=
+		{
+		  {1,Integer.MAX_VALUE,22,"USA"},
+		  {2,"joe",40,"USA","ddd"},
+		};		
+		println(CommUtil.prettyTable(headers,values));
+	}
 
+	@Test
+	public void testHexDump(){
+		println(CommUtil.hexdump("0256艹".getBytes()));
+	}
 }

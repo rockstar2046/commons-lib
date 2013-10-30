@@ -15,24 +15,24 @@
  */
 package com.rockagen.commons.util;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
- * Array Utils
- * 
+ * IO UTILS
  * @author AGEN
  * @since JDK1.6
- * @since COMMONS.LANG3
+ * @since COMMONS-IO 2.4
  */
-public class ArrayUtil extends ArrayUtils{
+public class IOUtil extends IOUtils{
 	
 	
 	//~ Constructors ==================================================
 	
 	/**
 	 */
-	private ArrayUtil(){}
-	
+	private IOUtil(){
+		
+	}
 	
 	// wait add more
 

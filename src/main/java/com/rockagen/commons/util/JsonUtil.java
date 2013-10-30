@@ -21,22 +21,28 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
+ * JSON UTILS
  * 
  * @author AGEN
  * @since JDK1.6
- * @see JACKSON 1.9.13
+ * @since JACKSON 2.2.0
  */
 public class JsonUtil {
 
@@ -45,16 +51,15 @@ public class JsonUtil {
 	/**
 	 * 
 	 */
-	private static final Log log = LogFactory.getLog(JsonUtil.class);
-
+	private static final Logger log = LoggerFactory.getLogger(JsonUtil.class);
 	/**
-	 * ObjectMapper Single instance
+	 * ObjectMapper
 	 */
-	private static volatile ObjectMapper MAPPER;
+	private static final ThreadLocal<ObjectMapper> threadMapper = new ThreadLocal<ObjectMapper>();
 	/**
 	 * JsonFactory
 	 */
-	private static volatile JsonFactory JSONFACTORY;
+	private static final ThreadLocal<JsonFactory> threadJsonFactory = new ThreadLocal<JsonFactory>();
 
 	// ~ Constructors ==================================================
 
@@ -72,21 +77,54 @@ public class JsonUtil {
 	 * @return ObjectMapper
 	 */
 	public static ObjectMapper getMapper() {
-		if (MAPPER == null) {
-			synchronized (ObjectMapper.class) {
-				MAPPER = new ObjectMapper();
-				MAPPER.configure(
-						org.codehaus.jackson.map.DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
-						false);
-				MAPPER.configure(
-						org.codehaus.jackson.map.SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS,
-						false);
-				MAPPER.configure(
-						org.codehaus.jackson.map.SerializationConfig.Feature.FLUSH_AFTER_WRITE_VALUE,
-						true);
-			}
+
+		ObjectMapper mapper = threadMapper.get();
+		if (mapper == null) {
+			mapper = initMapper();
+			threadMapper.set(mapper);
+
 		}
-		return MAPPER;
+		return mapper;
+	}
+
+	/**
+	 * Initialize mapper
+	 * @return
+	 */
+	private static ObjectMapper initMapper() {
+
+		ObjectMapper mapper = new ObjectMapper();
+		// to enable standard indentation ("pretty-printing"):
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		// to allow serialization of "empty" POJOs (no properties to serialize)
+		// (without this setting, an exception is thrown in those cases)
+		mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		// set writer flush after writer value
+		mapper.enable(SerializationFeature.FLUSH_AFTER_WRITE_VALUE);
+		// ObjectMapper will call close() and root values that implement
+		// java.io.Closeable;
+		// including cases where exception is thrown and serialization does not
+		// completely succeed.
+		mapper.enable(SerializationFeature.CLOSE_CLOSEABLE);
+		// to write java.util.Date, Calendar as number (timestamp):
+		mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+		// disable default date to timestamp
+		mapper.disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS);
+
+		// DeserializationFeature for changing how JSON is read as POJOs:
+
+		// to prevent exception when encountering unknown property:
+		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		// disable default date to timestamp
+		mapper.disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS);
+		// to allow coercion of JSON empty String ("") to null Object value:
+		mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+		DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		// Set Default date fromat
+		mapper.setDateFormat(df);
+
+		return mapper;
+
 	}
 
 	/**
@@ -95,10 +133,28 @@ public class JsonUtil {
 	 * @return JsonFactory
 	 */
 	public static JsonFactory getJsonFactory() {
-		if (JSONFACTORY == null) {
-			JSONFACTORY = new JsonFactory();
+		
+		
+		JsonFactory jsonFactory = threadJsonFactory.get();
+		if (jsonFactory == null) {
+			jsonFactory = new JsonFactory();
+			// JsonParser.Feature for configuring parsing settings:
+			// to allow C/C++ style comments in JSON (non-standard, disabled by
+			// default)
+			jsonFactory.enable(JsonParser.Feature.ALLOW_COMMENTS);
+			// to allow (non-standard) unquoted field names in JSON:
+			jsonFactory.disable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+			// to allow use of apostrophes (single quotes), non standard
+			jsonFactory.disable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+
+			// JsonGenerator.Feature for configuring low-level JSON generation:
+
+			// no escaping of non-ASCII characters:
+			jsonFactory.disable(JsonGenerator.Feature.ESCAPE_NON_ASCII);
+			threadJsonFactory.set(jsonFactory);
+
 		}
-		return JSONFACTORY;
+		return jsonFactory;
 	}
 
 	/**
@@ -283,11 +339,11 @@ public class JsonUtil {
 		try {
 			obj = getMapper().readValue(jsonParser, valueTypeRef);
 		} catch (JsonParseException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (JsonMappingException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (IOException e) {
-			log.error(e);
+			log.error("", e);
 		} finally {
 			if (jsonParser != null) {
 				try {
@@ -455,11 +511,11 @@ public class JsonUtil {
 		try {
 			obj = getMapper().readValue(jsonParser, clazz);
 		} catch (JsonParseException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (JsonMappingException e) {
-			log.error(e);
+			log.error("", e);
 		} catch (IOException e) {
-			log.error(e);
+			log.error("", e);
 		} finally {
 			if (jsonParser != null) {
 				try {
@@ -476,6 +532,7 @@ public class JsonUtil {
 	 * Bean to json string
 	 * 
 	 * @param obj
+	 *            bean object
 	 * @return json string
 	 */
 	public static <T> String toJson(T obj) {
@@ -483,13 +540,13 @@ public class JsonUtil {
 		String jsonStr = "";
 		JsonGenerator gen = null;
 		try {
-			gen = getJsonFactory().createJsonGenerator(writer);
+			gen = getJsonFactory().createGenerator(writer);
 			getMapper().writeValue(gen, obj);
 			writer.flush();
 			jsonStr = writer.toString();
 
 		} catch (IOException e) {
-			log.error(e);
+			log.error("", e);
 		} finally {
 			if (gen != null) {
 				try {
@@ -519,92 +576,92 @@ public class JsonUtil {
 		// ~ Constructors ==================================================
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(File)}
+		 * Set jsonParser from {@link JsonFactory#createParser(File)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(File obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(Reader)}
+		 * Set jsonParser from {@link JsonFactory#createParser(Reader)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(Reader obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(byte[])}
+		 * Set jsonParser from {@link JsonFactory#createParser(byte[])}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(byte[] obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(String)}
+		 * Set jsonParser from {@link JsonFactory#createParser(String)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(String obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(URL)}
+		 * Set jsonParser from {@link JsonFactory#createParser(URL)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(URL obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 
 		/**
-		 * Set jsonParser from {@link JsonFactory#createJsonParser(InputStream)}
+		 * Set jsonParser from {@link JsonFactory#createParser(InputStream)}
 		 * 
 		 * @param obj
 		 */
 		public MyJsonParser(InputStream obj) {
 			try {
-				this.jsonParser = getJsonFactory().createJsonParser(obj);
+				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error(e);
+				log.error("", e);
 			} catch (IOException e) {
-				log.error(e);
+				log.error("", e);
 			}
 		}
 

@@ -4,9 +4,15 @@
 .project
 .settings/
 
+# Eclipse Files
+.settings/
+.project
+.classpath
+
 # Package Files #
 *.jar
 *.war
 *.ear
-
+# build dir
 target/
+
