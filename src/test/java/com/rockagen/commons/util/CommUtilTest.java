@@ -15,6 +15,8 @@
  */
 package com.rockagen.commons.util;
 
+import java.util.BitSet;
+
 import org.junit.Test;
 
 /**
@@ -88,7 +90,23 @@ public class CommUtilTest {
 	}
 
 	@Test
-	public void testHexDump(){
+	public void testPrettyHexDump(){
+		println(CommUtil.prettyHexdump("0256~".getBytes()));
+	}
+	@Test
+	public void testHex(){
 		println(CommUtil.hexdump("0256艹".getBytes()));
+	}
+	@Test
+	public void testBitSet(){
+		println(CommUtil.bitSet("0256".getBytes()));
+	}
+	@Test
+	public void testBitValue(){
+		String bs="0256";
+		BitSet b=CommUtil.bitSet(bs.getBytes());
+		println(b.toString());
+		println(CommUtil.hexdump(bs.getBytes()));
+		println(CommUtil.hexdump(CommUtil.bitValue(b)));
 	}
 }

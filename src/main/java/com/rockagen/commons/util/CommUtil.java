@@ -18,6 +18,7 @@ package com.rockagen.commons.util;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -1108,7 +1109,7 @@ public class CommUtil extends StringUtils {
 	 * @param bytes
 	 * @return format hex string
 	 */
-	public static String hexdump(final byte[] bytes) {
+	public static String prettyHexdump(final byte[] bytes) {
 
 		if (bytes == null || bytes.length < 1)
 			return "[no data]";
@@ -1139,16 +1140,19 @@ public class CommUtil extends StringUtils {
 		           
 				temp = bytes[ridx + j];
 				
-				if (temp <= 0x1f || temp >= 0x7f) 
-		               temp=46;
-				
 				//UnsignedByte
 				temp=temp & 0xFF;
 				
 				hex[j * 3 + 1] = HEXARRAY[temp >>> 4];
 				hex[j * 3 + 2] = HEXARRAY[temp & 0x0F];
 
-				value[j] = (char)temp;
+				if (temp <= 0x1f || temp >= 0x7f) {
+					value[j]=(char)46;
+				}else{
+					value[j] = (char)temp;
+				}
+					
+				
 
 			}
 			String offset0 = Integer.toHexString(ridx);
@@ -1163,6 +1167,31 @@ public class CommUtil extends StringUtils {
 
 		return dump.toString();
 	}
+	
+	/**
+	 * Format bytes to hex byte
+	 * @param bytes
+	 * @return hex string
+	 */
+	public static String hexdump(final byte[] bytes){
+		if (bytes == null || bytes.length < 1)
+			return "[no data]";
+		int length = bytes.length;
+		
+		int temp;
+		char[] hex = new char[length*2];
+		for (int i = 0; i < length; i++) {
+			
+			//UnsignedByte
+			temp=bytes[i] & 0xFF;
+			
+			hex[i*2 ] = HEXARRAY[temp >>> 4];
+			hex[i*2+1] = HEXARRAY[temp & 0x0F];
+
+		}
+		return new String(hex);
+	}
+	
 
 	/**
 	 * Generating a specified length of the same characters
@@ -1181,6 +1210,76 @@ public class CommUtil extends StringUtils {
 		return new String(c);
 	}
 	
+	
+	/**
+	 * Create a BitSet instance,start index is 0
+	 * <p>example:
+	 * <pre>
+	 *    byte:   50
+	 *    binary: 0b110010
+	 *    
+	 *    +--------+---+---+---+---+---+---+---+---+
+	 *    |  bits  | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 |
+	 *    +--------+---+---+---+---+---+---+---+---+
+	 *    | bitset | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+	 *    +--------+---+---+---+---+---+---+-------+
+	 *    
+	 *    bitSet.toString(): {2, 3, 6}
+	 * </pre>
+	 * </p>
+	 * @param bytes
+	 * @return bitSet
+	 */
+	public static BitSet bitSet(byte[] bytes){
+		if(bytes==null){
+			return null;
+		}
+		BitSet bit = new BitSet();
+		int index = 0;
+		for (int i = 0; i < bytes.length; i++) {
+			for (int j=7;j>=0;j--) {
+				bit.set(index++, (bytes[i] & (1 << j)) >>> j == 1);
+				
+			}
+		}
+		return bit;
+	}
+	
+	/**
+	 * Create a BitSet instance,start index is 0
+	 * <p>example:
+	 * <pre>
+	 *    byte:   50
+	 *    binary: 0b110010
+	 *    bitSet.toString(): {2, 3, 6}
+	 *    
+	 *    +--------+---+---+---+---+---+---+---+---+
+	 *    | bitset | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+	 *    +--------+---+---+---+---+---+---+---+---+
+	 *    |  bits  | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 |
+	 *    +--------+---+---+---+---+---+---+---+---+
+	 *    
+	 * </pre>
+	 * </p>
+	 * @param bitSet
+	 * @return bytes
+	 */
+	public static byte[] bitValue(BitSet bitSet){
+		if(bitSet ==null){
+			return null;
+		}
+		
+		byte[] bytes = new byte[bitSet.size() / 8];
+		
+		int index=0;
+		int offset=0;
+		for (int i = 0; i < bitSet.size(); i++) {
+			index = i / 8;
+			offset = 7 - i % 8;
+			bytes[index] |= (bitSet.get(i)?1:0) << offset;
+		}
+		return bytes;
+	}
 	
 	
 
