@@ -339,11 +339,11 @@ public class JsonUtil {
 		try {
 			obj = getMapper().readValue(jsonParser, valueTypeRef);
 		} catch (JsonParseException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (JsonMappingException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (IOException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} finally {
 			if (jsonParser != null) {
 				try {
@@ -511,11 +511,11 @@ public class JsonUtil {
 		try {
 			obj = getMapper().readValue(jsonParser, clazz);
 		} catch (JsonParseException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (JsonMappingException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (IOException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} finally {
 			if (jsonParser != null) {
 				try {
@@ -546,7 +546,7 @@ public class JsonUtil {
 			jsonStr = writer.toString();
 
 		} catch (IOException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} finally {
 			if (gen != null) {
 				try {
@@ -584,9 +584,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (IOException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			}
 		}
 
@@ -599,9 +599,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (IOException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			}
 		}
 
@@ -614,9 +614,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (IOException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			}
 		}
 
@@ -629,9 +629,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (IOException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			}
 		}
 
@@ -644,9 +644,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (IOException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			}
 		}
 
@@ -659,9 +659,9 @@ public class JsonUtil {
 			try {
 				this.jsonParser = getJsonFactory().createParser(obj);
 			} catch (JsonParseException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (IOException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			}
 		}
 

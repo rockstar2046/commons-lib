@@ -1019,15 +1019,15 @@ public class HttpConn {
 				httpClient.getConnectionManager().getSchemeRegistry()
 						.register(sch);
 			} catch (KeyStoreException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (NoSuchAlgorithmException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (CertificateException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (KeyManagementException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} catch (UnrecoverableKeyException e) {
-				log.error("", e);
+				log.error("{}",e.getMessage(),e);
 			} finally {
 
 				keyStoreInputStream.close();
@@ -1193,7 +1193,7 @@ public class HttpConn {
 
 			}
 		} catch (Exception e) {
-			// do not
+			log.error("{}",e.getMessage(),e);
 		}
 
 		HttpHost targetHost = new HttpHost(host, port, scheme);

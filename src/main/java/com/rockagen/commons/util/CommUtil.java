@@ -51,12 +51,11 @@ public class CommUtil extends StringUtils {
 			'7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
 			'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
 			'X', 'Y', 'Z' };
-	
-	
+
 	/**
 	 * Hex array
 	 */
-	 private final  static char[] HEXARRAY = "0123456789ABCDEF".toCharArray();
+	private final static char[] HEXARRAY = "0123456789ABCDEF".toCharArray();
 
 	/**
 	 * Single byte char
@@ -86,11 +85,11 @@ public class CommUtil extends StringUtils {
 	 */
 	private static final String[] WEEK_DAYS = { "SUNDAY", "MONDAY", "TUESDAY",
 			"WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" };
-	
+
 	/**
 	 * Line separator
 	 */
-	private static final String NEWLINE=String.format("%n");
+	private static final String NEWLINE = String.format("%n");
 
 	// ~ Constructors ==================================================
 
@@ -1089,23 +1088,27 @@ public class CommUtil extends StringUtils {
 		return result.toString();
 
 	}
-	
-	
+
 	/**
 	 * A hex dump style
-	 * <p>just like:
+	 * <p>
+	 * just like:
+	 * 
 	 * <pre>
 	 *          +-------------------------------------------------+
-     *          |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F |
+	 *          |  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F |
 	 * +--------+-------------------------------------------------+----------------+
 	 * |00000000| 30 32 35 36 2E 2E 2E                            |0256...         |
 	 * +--------+-------------------------------------------------+----------------+
-	 *
+	 * 
 	 * </pre>
+	 * 
 	 * </p>
 	 * <p>
-	 * <b>Note: Non-ASCII characters will be replace to <code>"."</code>  (46)</b>
+	 * <b>Note: Non-ASCII characters will be replace to <code>"."</code>
+	 * (46)</b>
 	 * </p>
+	 * 
 	 * @param bytes
 	 * @return format hex string
 	 */
@@ -1137,22 +1140,20 @@ public class CommUtil extends StringUtils {
 			for (int j = 0; j < 16; j++) {
 				if (ridx + j >= length)
 					break;
-		           
+
 				temp = bytes[ridx + j];
-				
-				//UnsignedByte
-				temp=temp & 0xFF;
-				
+
+				// UnsignedByte
+				temp = temp & 0xFF;
+
 				hex[j * 3 + 1] = HEXARRAY[temp >>> 4];
 				hex[j * 3 + 2] = HEXARRAY[temp & 0x0F];
 
 				if (temp <= 0x1f || temp >= 0x7f) {
-					value[j]=(char)46;
-				}else{
-					value[j] = (char)temp;
+					value[j] = (char) 46;
+				} else {
+					value[j] = (char) temp;
 				}
-					
-				
 
 			}
 			String offset0 = Integer.toHexString(ridx);
@@ -1163,35 +1164,66 @@ public class CommUtil extends StringUtils {
 
 		}
 		dump.append(NEWLINE
-				+ "+--------+-------------------------------------------------+----------------+"+NEWLINE);
+				+ "+--------+-------------------------------------------------+----------------+"
+				+ NEWLINE);
 
 		return dump.toString();
 	}
-	
+
 	/**
 	 * Format bytes to hex byte
+	 * 
 	 * @param bytes
 	 * @return hex string
 	 */
-	public static String hexdump(final byte[] bytes){
+	public static String hexdump(final byte[] bytes) {
 		if (bytes == null || bytes.length < 1)
 			return "[no data]";
 		int length = bytes.length;
-		
+
 		int temp;
-		char[] hex = new char[length*2];
+		char[] hex = new char[length * 2];
 		for (int i = 0; i < length; i++) {
-			
-			//UnsignedByte
-			temp=bytes[i] & 0xFF;
-			
-			hex[i*2 ] = HEXARRAY[temp >>> 4];
-			hex[i*2+1] = HEXARRAY[temp & 0x0F];
+
+			// UnsignedByte
+			temp = bytes[i] & 0xFF;
+
+			hex[i * 2] = HEXARRAY[temp >>> 4];
+			hex[i * 2 + 1] = HEXARRAY[temp & 0x0F];
 
 		}
 		return new String(hex);
 	}
+
+	/**
+	 * Decode hex string
+	 * 
+	 * @param hex
+	 *            string
+	 * @return decode bytes
+	 */
+	public static byte[] hexdecode(String hex) {
+
+		if (hex == null || hex.equals("")) {
+			return new byte[0];
+		}
+		
+		char[] orig=hex.toCharArray();
+		int len=orig.length;
+		//Adjust odd-length
+		if((len & 1) ==1 ){
+			len++;
+		}
+		char[] hexc=new char[len];
+		System.arraycopy(orig, 0, hexc, 0, orig.length);
+		
+		byte[] bytes=new byte[len/2];
+		for (int i = 0; i < len; i += 2) {
+			bytes[i / 2] = (byte) ((Character.digit(hexc[i], 16) << 4) | Character.digit(hexc[i+1], 16));
+	    }
+		return bytes;
 	
+	}
 
 	/**
 	 * Generating a specified length of the same characters
@@ -1209,11 +1241,12 @@ public class CommUtil extends StringUtils {
 			c[i] = cha;
 		return new String(c);
 	}
-	
-	
+
 	/**
 	 * Create a BitSet instance,start index is 0
-	 * <p>example:
+	 * <p>
+	 * example:
+	 * 
 	 * <pre>
 	 *    byte:   50
 	 *    binary: 0b110010
@@ -1226,28 +1259,32 @@ public class CommUtil extends StringUtils {
 	 *    
 	 *    bitSet.toString(): {2, 3, 6}
 	 * </pre>
+	 * 
 	 * </p>
+	 * 
 	 * @param bytes
 	 * @return bitSet
 	 */
-	public static BitSet bitSet(byte[] bytes){
-		if(bytes==null){
+	public static BitSet bitSet(byte[] bytes) {
+		if (bytes == null) {
 			return null;
 		}
 		BitSet bit = new BitSet();
 		int index = 0;
 		for (int i = 0; i < bytes.length; i++) {
-			for (int j=7;j>=0;j--) {
+			for (int j = 7; j >= 0; j--) {
 				bit.set(index++, (bytes[i] & (1 << j)) >>> j == 1);
-				
+
 			}
 		}
 		return bit;
 	}
-	
+
 	/**
 	 * Create a BitSet instance,start index is 0
-	 * <p>example:
+	 * <p>
+	 * example:
+	 * 
 	 * <pre>
 	 *    byte:   50
 	 *    binary: 0b110010
@@ -1258,29 +1295,29 @@ public class CommUtil extends StringUtils {
 	 *    +--------+---+---+---+---+---+---+---+---+
 	 *    |  bits  | 0 | 0 | 1 | 1 | 0 | 0 | 1 | 0 |
 	 *    +--------+---+---+---+---+---+---+---+---+
-	 *    
+	 * 
 	 * </pre>
+	 * 
 	 * </p>
+	 * 
 	 * @param bitSet
 	 * @return bytes
 	 */
-	public static byte[] bitValue(BitSet bitSet){
-		if(bitSet ==null){
+	public static byte[] bitValue(BitSet bitSet) {
+		if (bitSet == null) {
 			return null;
 		}
-		
+
 		byte[] bytes = new byte[bitSet.size() / 8];
-		
-		int index=0;
-		int offset=0;
+
+		int index = 0;
+		int offset = 0;
 		for (int i = 0; i < bitSet.size(); i++) {
 			index = i / 8;
 			offset = 7 - i % 8;
-			bytes[index] |= (bitSet.get(i)?1:0) << offset;
+			bytes[index] |= (bitSet.get(i) ? 1 : 0) << offset;
 		}
 		return bytes;
 	}
-	
-	
 
 }

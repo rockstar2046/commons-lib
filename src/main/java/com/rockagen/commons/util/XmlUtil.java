@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.Converter;
 
 /**
  * XML UTIL
@@ -35,7 +36,7 @@ import com.thoughtworks.xstream.XStream;
  * @author AGEN
  * @since JDK1.6
  * @since DOM4J 1.6.1
- * @since XSTREAM 1.2.2
+ * @since XSTREAM 1.4.5
  */
 public class XmlUtil {
 
@@ -156,9 +157,9 @@ public class XmlUtil {
 			writer.write(doc);
 			return sw.toString();
 		} catch (DocumentException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (IOException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} finally {
 			if (writer != null) {
 				try {
@@ -234,10 +235,11 @@ public class XmlUtil {
 	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
 	 *  XAliasField[] xaf={new XAliasField("Bar",Bar.class,"bar")};
 	 *  XAliasAttribute[] xaa={new XAliasAttribute("Name",User.class,"name")};
+	 *  XOmitField[] xf={new XOmitField(V.class,"v")}
 	 *  
 	 *  then,
 	 *  
-	 * 	toXml(bean,xa,xaf,xaa);
+	 * 	toXml(bean,xa,xaf,xaa,xf);
 	 * </pre></code> <b>Note: XStream Mode is {@link XStream#NO_REFERENCES}
 	 * 
 	 * @param obj
@@ -248,21 +250,17 @@ public class XmlUtil {
 	 *            Create an alias for a field name.
 	 * @param xAliasAttributes
 	 *            Create an alias for an attribute.
-	 * @since XStream 1.2.2
-	 * 
+	 * @param xOmitFields
+	 *            Prevents a field from being serialized.
 	 * @return xml String
+	 * @since XSTREAM 1.4.5
 	 */
 	public static <T> String toXml(T obj, XAlias[] xAlias,
-			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes) {
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields) {
 
-		if (obj == null)
-			return null;
-
-		XStream xstream = new XStream();
-		xstream.setMode(XStream.NO_REFERENCES);
-		aliasXstream(xstream, xAlias, xAliasFields, xAliasAttributes);
-
-		return xstream.toXML(obj);
+		return toXml(obj, xAlias, xAliasFields, xAliasAttributes, xOmitFields,
+				null, null, null);
 	}
 
 	/**
@@ -280,10 +278,168 @@ public class XmlUtil {
 	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
 	 *  XAliasField[] xaf={new XAliasField("Bar",Bar.class,"bar")};
 	 *  XAliasAttribute[] xaa={new XAliasAttribute("Name",User.class,"name")};
+	 *  XOmitField[] xf={new XOmitField(V.class,"v")}
 	 *  
 	 *  then,
 	 *  
-	 * 	toBean(xmlStr,xa,xaf,xaa);
+	 * 	toXml(bean,xa,xaf,xaa,xf);
+	 * </pre></code> <b>Note: XStream Mode is {@link XStream#ID_REFERENCES}
+	 * 
+	 * @param obj
+	 *            bean
+	 * @param xAlias
+	 *            Alias a Class to a shorter name to be used in XML elements.
+	 * @param xAliasFields
+	 *            Create an alias for a field name.
+	 * @param xAliasAttributes
+	 *            Create an alias for an attribute.
+	 * @param xOmitFields
+	 *            Prevents a field from being serialized.
+	 * @return xml String
+	 * @since XSTREAM 1.4.5
+	 */
+	public static <T> String toXmlWithIdRef(T obj, XAlias[] xAlias,
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields) {
+
+		return toXmlWithIdRef(obj, xAlias, xAliasFields, xAliasAttributes,
+				xOmitFields, null, null, null);
+	}
+
+	/**
+	 * <P>
+	 * Bean to xml.
+	 * <P>
+	 * <P>
+	 * Using XStream library to serialize objects to XML.
+	 * </P>
+	 * <p>
+	 * example:
+	 * </p>
+	 * <code><pre>
+	 * 
+	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
+	 *  XAliasField[] xaf={new XAliasField("Bar",Bar.class,"bar")};
+	 *  XAliasAttribute[] xaa={new XAliasAttribute("Name",User.class,"name")};
+	 *  XOmitField[] xf={new XOmitField(V.class,"v")}
+	 *  XImplicitCollection[] xic=null;
+	 *  XImmutableType[] xit=null;
+	 *  XConverter[] xc=null;
+	 *  then,
+	 *  
+	 * 	toXml(bean,xa,xaf,xaa,xf,xic,xit,xc);
+	 * </pre></code> <b>Note: XStream Mode is {@link XStream#NO_REFERENCES}
+	 * 
+	 * @param obj
+	 *            bean
+	 * @param xAlias
+	 *            Alias a Class to a shorter name to be used in XML elements.
+	 * @param xAliasFields
+	 *            Create an alias for a field name.
+	 * @param xAliasAttributes
+	 *            Create an alias for an attribute.
+	 * @param xOmitFields
+	 *            Prevents a field from being serialized.
+	 * @param xImplicitCollection
+	 *            Adds implicit collection which is used for all items of the
+	 *            given element name defined by itemFieldName.
+	 * @param xImmutableTypes
+	 *            Add immutable types. The value of the instances of these types
+	 *            will always be written into the stream even if they appear
+	 *            multiple times.
+	 * @param xConverters
+	 *            register converter
+	 * @return xml String
+	 * @since XSTREAM 1.4.5
+	 */
+	public static <T> String toXml(T obj, XAlias[] xAlias,
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields,
+			XImplicitCollection[] xImplicitCollection,
+			XImmutableType[] xImmutableTypes, XConverter[] xConverters) {
+		return (String) parse(0, XStream.NO_REFERENCES, obj, xAlias,
+				xAliasFields, xAliasAttributes, xOmitFields,
+				xImplicitCollection, xImmutableTypes, xConverters);
+	}
+
+	/**
+	 * <P>
+	 * Bean to xml.
+	 * <P>
+	 * <P>
+	 * Using XStream library to serialize objects to XML.
+	 * </P>
+	 * <p>
+	 * example:
+	 * </p>
+	 * <code><pre>
+	 * 
+	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
+	 *  XAliasField[] xaf={new XAliasField("Bar",Bar.class,"bar")};
+	 *  XAliasAttribute[] xaa={new XAliasAttribute("Name",User.class,"name")};
+	 *  XOmitField[] xf={new XOmitField(V.class,"v")}
+	 *  XImplicitCollection[] xic=null;
+	 *  XImmutableType[] xit=null;
+	 *  XConverter[] xc=null;
+	 *  then,
+	 *  
+	 * 	toXml(bean,xa,xaf,xaa,xf,xic,xit,xc);
+	 * </pre></code> <b>Note: XStream Mode is {@link XStream#ID_REFERENCES}
+	 * 
+	 * @param obj
+	 *            bean
+	 * @param xAlias
+	 *            Alias a Class to a shorter name to be used in XML elements.
+	 * @param xAliasFields
+	 *            Create an alias for a field name.
+	 * @param xAliasAttributes
+	 *            Create an alias for an attribute.
+	 * @param xOmitFields
+	 *            Prevents a field from being serialized.
+	 * @param xImplicitCollection
+	 *            Adds implicit collection which is used for all items of the
+	 *            given element name defined by itemFieldName.
+	 * @param xImmutableTypes
+	 *            Add immutable types. The value of the instances of these types
+	 *            will always be written into the stream even if they appear
+	 *            multiple times.
+	 * @param xConverters
+	 *            register converter
+	 * @return xml String
+	 * @since XSTREAM 1.4.5
+	 */
+	public static String toXmlWithIdRef(Object obj, XAlias[] xAlias,
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields,
+			XImplicitCollection[] xImplicitCollection,
+			XImmutableType[] xImmutableTypes, XConverter[] xConverters) {
+
+		return (String) parse(0, XStream.ID_REFERENCES, obj, xAlias,
+				xAliasFields, xAliasAttributes, xOmitFields,
+				xImplicitCollection, xImmutableTypes, xConverters);
+	}
+
+	/**
+	 * <P>
+	 * Bean to xml.
+	 * <P>
+	 * <P>
+	 * Using XStream library to serialize objects to XML.
+	 * </P>
+	 * <p>
+	 * example:
+	 * </p>
+	 * <code><pre>
+	 * 
+	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
+	 *  XAliasField[] xaf={new XAliasField("Bar",Bar.class,"bar")};
+	 *  XAliasAttribute[] xaa={new XAliasAttribute("Name",User.class,"name")};
+	 *  XOmitField[] xf={new XOmitField(V.class,"v")}
+	 *  
+	 *  
+	 *  then,
+	 *  
+	 * 	toBean(xmlStr,xa,xaf,xaa,xf);
 	 * </pre></code> <b>Note: XStream Mode is {@link XStream#NO_REFERENCES}
 	 * 
 	 * @param xmlStr
@@ -294,21 +450,222 @@ public class XmlUtil {
 	 *            Create an alias for a field name.
 	 * @param xAliasAttributes
 	 *            Create an alias for an attribute.
-	 * @since XStream 1.2.2
+	 * @param xOmitFields
+	 *            Prevents a field from being serialized.
+	 * @since XSTREAM 1.4.5
 	 * 
 	 * @return Object
 	 */
 	public static Object toBean(String xmlStr, XAlias[] xAlias,
-			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes) {
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields) {
+		return toBean(xmlStr, xAlias, xAliasFields, xAliasAttributes,
+				xOmitFields, null, null, null);
+	}
 
-		if (CommUtil.isBlank(xmlStr))
+	/**
+	 * <P>
+	 * Bean to xml.
+	 * <P>
+	 * <P>
+	 * Using XStream library to serialize objects to XML.
+	 * </P>
+	 * <p>
+	 * example:
+	 * </p>
+	 * <code><pre>
+	 * 
+	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
+	 *  XAliasField[] xaf={new XAliasField("Bar",Bar.class,"bar")};
+	 *  XAliasAttribute[] xaa={new XAliasAttribute("Name",User.class,"name")};
+	 *  XOmitField[] xf={new XOmitField(V.class,"v")}
+	 *  
+	 *  
+	 *  then,
+	 *  
+	 * 	toBean(xmlStr,xa,xaf,xaa,xf);
+	 * </pre></code> <b>Note: XStream Mode is {@link XStream#ID_REFERENCES}
+	 * 
+	 * @param xmlStr
+	 *            xml String
+	 * @param xAlias
+	 *            Alias a Class to a shorter name to be used in XML elements.
+	 * @param xAliasFields
+	 *            Create an alias for a field name.
+	 * @param xAliasAttributes
+	 *            Create an alias for an attribute.
+	 * @param xOmitFields
+	 *            Prevents a field from being serialized.
+	 * @since XSTREAM 1.4.5
+	 * 
+	 * @return Object
+	 */
+	public static Object toBeanWithIdRef(String xmlStr, XAlias[] xAlias,
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields) {
+		return toBeanWithIdRef(xmlStr, xAlias, xAliasFields, xAliasAttributes,
+				xOmitFields, null, null, null);
+	}
+
+	/**
+	 * <P>
+	 * Bean to xml.
+	 * <P>
+	 * <P>
+	 * Using XStream library to serialize objects to XML.
+	 * </P>
+	 * <p>
+	 * example:
+	 * </p>
+	 * <code><pre>
+	 * 
+	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
+	 *  XAliasField[] xaf={new XAliasField("Bar",Bar.class,"bar")};
+	 *  XAliasAttribute[] xaa={new XAliasAttribute("Name",User.class,"name")};
+	 *  XOmitField[] xf={new XOmitField(V.class,"v")};
+	 *  XImplicitCollection[] xic=null;
+	 *  XImmutableType[] xit=null;
+	 *  XConverter[] xc=null;
+	 *  then,
+	 *  
+	 * 	toBean(xmlStr,xa,xaf,xaa,xf,xic,xit,xc);
+	 * </pre></code> <b>Note: XStream Mode is {@link XStream#NO_REFERENCES}
+	 * 
+	 * @param xmlStr
+	 *            xml String
+	 * @param xAlias
+	 *            Alias a Class to a shorter name to be used in XML elements.
+	 * @param xAliasFields
+	 *            Create an alias for a field name.
+	 * @param xAliasAttributes
+	 *            Create an alias for an attribute.
+	 * @param xOmitFields
+	 *            Prevents a field from being serialized.
+	 * @param xImplicitCollection
+	 *            Adds implicit collection which is used for all items of the
+	 *            given element name defined by itemFieldName.
+	 * @param xImmutableTypes
+	 *            Add immutable types. The value of the instances of these types
+	 *            will always be written into the stream even if they appear
+	 *            multiple times.
+	 * @param xConverters
+	 *            register converter
+	 * @since XSTREAM 1.4.5
+	 * 
+	 * @return Object
+	 */
+	public static Object toBean(String xmlStr, XAlias[] xAlias,
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields,
+			XImplicitCollection[] xImplicitCollection,
+			XImmutableType[] xImmutableTypes, XConverter[] xConverters) {
+		return parse(1, XStream.NO_REFERENCES, xmlStr, xAlias, xAliasFields,
+				xAliasAttributes, xOmitFields, xImplicitCollection,
+				xImmutableTypes, xConverters);
+	}
+
+	/**
+	 * <P>
+	 * Bean to xml.
+	 * <P>
+	 * <P>
+	 * Using XStream library to serialize objects to XML.
+	 * </P>
+	 * <p>
+	 * example:
+	 * </p>
+	 * <code><pre>
+	 * 
+	 *  XAlias[] xa={new XAlias("Foo",Foo.class)};
+	 *  XAliasField[] xaf={new XAliasField("Bar",Bar.class,"bar")};
+	 *  XAliasAttribute[] xaa={new XAliasAttribute("Name",User.class,"name")};
+	 *  XOmitField[] xf={new XOmitField(V.class,"v")};
+	 *  XImplicitCollection[] xic=null;
+	 *  XImmutableType[] xit=null;
+	 *  XConverter[] xc=null;
+	 *  then,
+	 *  
+	 * 	toBean(xmlStr,xa,xaf,xaa,xf,xic,xit,xc);
+	 * </pre></code> <b>Note: XStream Mode is {@link XStream#ID_REFERENCES}
+	 * 
+	 * @param xmlStr
+	 *            xml String
+	 * @param xAlias
+	 *            Alias a Class to a shorter name to be used in XML elements.
+	 * @param xAliasFields
+	 *            Create an alias for a field name.
+	 * @param xAliasAttributes
+	 *            Create an alias for an attribute.
+	 * @param xOmitFields
+	 *            Prevents a field from being serialized.
+	 * @param xImplicitCollection
+	 *            Adds implicit collection which is used for all items of the
+	 *            given element name defined by itemFieldName.
+	 * @param xImmutableTypes
+	 *            Add immutable types. The value of the instances of these types
+	 *            will always be written into the stream even if they appear
+	 *            multiple times.
+	 * @param xConverters
+	 *            register converter
+	 * @since XSTREAM 1.4.5
+	 * 
+	 * @return Object
+	 */
+	public static Object toBeanWithIdRef(String xmlStr, XAlias[] xAlias,
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields,
+			XImplicitCollection[] xImplicitCollection,
+			XImmutableType[] xImmutableTypes, XConverter[] xConverters) {
+
+		return parse(1, XStream.ID_REFERENCES, xmlStr, xAlias, xAliasFields,
+				xAliasAttributes, xOmitFields, xImplicitCollection,
+				xImmutableTypes, xConverters);
+	}
+
+	/**
+	 * Parser
+	 * 
+	 * @param parseMod
+	 *            0 is toXml
+	 * @param mode
+	 *            XStream.ID_REFERENCES or XStream.NO_REFERENCES
+	 * @param value
+	 * @param xAlias
+	 * @param xAliasFields
+	 * @param xAliasAttributes
+	 * @param xOmitFields
+	 * @param xImplicitCollection
+	 * @param xImmutableTypes
+	 * @param xConverters
+	 * @return
+	 */
+	private final static Object parse(int parseMod, int mode, Object value,
+			XAlias[] xAlias, XAliasField[] xAliasFields,
+			XAliasAttribute[] xAliasAttributes, XOmitField[] xOmitFields,
+			XImplicitCollection[] xImplicitCollection,
+			XImmutableType[] xImmutableTypes, XConverter[] xConverters) {
+
+		if (value == null) {
 			return null;
+		}
+		final Object src = value;
+		if (src instanceof String) {
+			if (src.equals("")) {
+				return null;
+			}
+		}
 
-		XStream xstream = new XStream();
-		xstream.setMode(XStream.NO_REFERENCES);
-		aliasXstream(xstream, xAlias, xAliasFields, xAliasAttributes);
+		final XStream xstream = new XStream();
+		xstream.setMode(mode);
+		initXstream(xstream, xAlias, xAliasFields, xAliasAttributes,
+				xOmitFields, xImplicitCollection, xImmutableTypes, xConverters);
 
-		return xstream.fromXML(xmlStr);
+		if (parseMod == 0) {
+			return xstream.toXML(src);
+		} else {
+			return xstream.fromXML((String) src);
+		}
+
 	}
 
 	/**
@@ -318,9 +675,40 @@ public class XmlUtil {
 	 * @param xAlias
 	 * @param xAliasFields
 	 * @param xAliasAttributes
+	 * @param xAliasAttributes
+	 * @param xOmitFields
+	 * @param xImplicitCollection
+	 * @param xImmutableTypes
+	 * @param xConverters
 	 */
-	protected static void aliasXstream(XStream xstream, XAlias[] xAlias,
-			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes) {
+	protected static void initXstream(XStream xstream, XAlias[] xAlias,
+			XAliasField[] xAliasFields, XAliasAttribute[] xAliasAttributes,
+			XOmitField[] xOmitFields,
+			XImplicitCollection[] xImplicitCollection,
+			XImmutableType[] xImmutableTypes, XConverter[] xConverters) {
+		
+		if (xOmitFields != null) {
+			for (XOmitField xof : xOmitFields) {
+				xstream.omitField(xof.classType, xof.fieldName);
+			}
+		}
+		if (xImplicitCollection != null) {
+			for (XImplicitCollection xic : xImplicitCollection) {
+				xstream.addImplicitCollection(xic.ownerType, xic.fieldName,
+						xic.itemFieldName, xic.itemType);
+			}
+		}
+		if (xImmutableTypes != null) {
+			for (XImmutableType xit : xImmutableTypes) {
+				xstream.addImmutableType(xit.type);
+			}
+		}
+		if (xConverters != null) {
+			for (XConverter xc : xConverters) {
+				xstream.registerConverter(xc.converter, xc.priority);
+			}
+		}
+		
 		if (xAlias != null) {
 			for (XAlias xa : xAlias) {
 				xstream.alias(xa.aliasName, xa.classType);
@@ -338,18 +726,15 @@ public class XmlUtil {
 						xaa.aliasName);
 			}
 		}
+
 	}
 
 	/**
-	 * Alias a Class to a shorter name to be used in XML elements. see
-	 * {@link XStream#alias(String, Class, Class)}
+	 * See {@link XStream#alias(String, Class, Class)}
 	 */
 	public static class XAlias {
-		private String aliasName;
-		private Class<?> classType;
-
-		public XAlias() {
-		}
+		private final String aliasName;
+		private final Class<?> classType;
 
 		public XAlias(String aliasName, Class<?> classType) {
 			this.aliasName = aliasName;
@@ -360,31 +745,117 @@ public class XmlUtil {
 			return aliasName;
 		}
 
-		public void setAliasName(String aliasName) {
-			this.aliasName = aliasName;
+		public Class<?> getClassType() {
+			return classType;
+		}
+
+	}
+
+	/**
+	 * See {@link XStream#omitField(Class, String)}
+	 */
+	public static class XOmitField {
+		private final String fieldName;
+		private final Class<?> classType;
+
+		public XOmitField(Class<?> classType, String fieldName) {
+			this.fieldName = fieldName;
+			this.classType = classType;
+		}
+
+		public String getFieldName() {
+			return fieldName;
 		}
 
 		public Class<?> getClassType() {
 			return classType;
 		}
 
-		public void setClassType(Class<?> classType) {
-			this.classType = classType;
-		}
 	}
 
 	/**
-	 * Create an alias for a field name. see
-	 * {@link XStream#aliasField(String, Class, String)}
+	 * See {@link XStream#addImmutableType(Class)}
+	 */
+	public static class XImmutableType {
+		private final Class<?> type;
+
+		public XImmutableType(Class<?> type) {
+			this.type = type;
+		}
+
+		public Class<?> getType() {
+			return type;
+		}
+
+	}
+
+	/**
+	 * See {@link XStream#registerConverter(Converter,int)}
+	 */
+	public static class XConverter {
+
+		private final Converter converter;
+		private final int priority;
+
+		public XConverter(Converter converter, int priority) {
+			this.converter = converter;
+			this.priority = priority;
+		}
+
+		public Converter getConverter() {
+			return converter;
+		}
+
+		public int getPriority() {
+			return priority;
+		}
+
+	}
+
+	/**
+	 * See {@link XStream#addImplicitCollection(Class, String , String , Class)}
+	 */
+	public static class XImplicitCollection {
+
+		private final Class<?> ownerType;
+		private final String fieldName;
+		private final String itemFieldName;
+		private final Class<?> itemType;
+
+		public XImplicitCollection(Class<?> ownerType, String fieldName,
+				String itemFieldName, Class<?> itemType) {
+			this.ownerType = ownerType;
+			this.fieldName = fieldName;
+			this.itemFieldName = itemFieldName;
+			this.itemType = itemType;
+		}
+
+		public Class<?> getOwnerType() {
+			return ownerType;
+		}
+
+		public String getFieldName() {
+			return fieldName;
+		}
+
+		public String getItemFieldName() {
+			return itemFieldName;
+		}
+
+		public Class<?> getItemType() {
+			return itemType;
+		}
+
+	}
+
+	/**
+	 * See {@link XStream#aliasField(String, Class, String)}
 	 */
 	public static class XAliasField {
 
-		private String aliasName;
-		private Class<?> fieldType;
-		private String fieldName;
-
-		public XAliasField() {
-		}
+		private final String aliasName;
+		private final Class<?> fieldType;
+		private final String fieldName;
 
 		public XAliasField(String aliasName, Class<?> fieldType,
 				String fieldName) {
@@ -397,40 +868,24 @@ public class XmlUtil {
 			return aliasName;
 		}
 
-		public void setAliasName(String aliasName) {
-			this.aliasName = aliasName;
-		}
-
 		public Class<?> getFieldType() {
 			return fieldType;
-		}
-
-		public void setFieldType(Class<?> fieldType) {
-			this.fieldType = fieldType;
 		}
 
 		public String getFieldName() {
 			return fieldName;
 		}
 
-		public void setFieldName(String fieldName) {
-			this.fieldName = fieldName;
-		}
-
 	}
 
 	/**
-	 * Create an alias for an attribute. see
-	 * {@link XStream#aliasAttribute(Class, String, String)}
+	 * See {@link XStream#aliasAttribute(Class, String, String)}
 	 */
 	public static class XAliasAttribute {
 
-		private String aliasName;
-		private Class<?> attributeType;
-		private String attributeName;
-
-		public XAliasAttribute() {
-		}
+		private final String aliasName;
+		private final Class<?> attributeType;
+		private final String attributeName;
 
 		public XAliasAttribute(String aliasName, Class<?> attributeType,
 				String attributeName) {
@@ -443,24 +898,12 @@ public class XmlUtil {
 			return aliasName;
 		}
 
-		public void setAliasName(String aliasName) {
-			this.aliasName = aliasName;
-		}
-
 		public Class<?> getAttributeType() {
 			return attributeType;
 		}
 
-		public void setAttributeType(Class<?> attributeType) {
-			this.attributeType = attributeType;
-		}
-
 		public String getAttributeName() {
 			return attributeName;
-		}
-
-		public void setAttributeName(String attributeName) {
-			this.attributeName = attributeName;
 		}
 
 	}
