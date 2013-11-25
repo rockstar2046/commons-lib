@@ -67,12 +67,13 @@ public class ReflexUtil {
 			boolean recursively) {
 
 		Object result = null;
+		if(object==null)return null;
 
 		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,
 				recursively);
 		if (field == null) {
-			log.warn("Could not find field [ {} ] on target [ {} ]", fieldName,
-					object);
+			log.debug("Could not find field [ {} ] on target [ {} ]", fieldName,
+					object.getClass().getSimpleName());
 			return result;
 		}
 
@@ -85,8 +86,8 @@ public class ReflexUtil {
 				result = method.invoke(object);
 				return result;
 			} catch (InvocationTargetException e) {
-				log.warn("Could not find method [ {} ] on target [ {} ]",
-						methodName, object);
+				log.debug("Could not find method [ {} ] on target [ {} ]",
+						methodName, object.getClass().getSimpleName());
 			} catch (IllegalArgumentException e) {
 			} catch (IllegalAccessException e) {
 				// Will not happen
@@ -116,12 +117,15 @@ public class ReflexUtil {
 	 */
 	public static void setFieldValue(final Object object, String fieldName,
 			final Object value, boolean recursively) {
+		
+		if (object==null) return;
+		
 		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,
 				recursively);
 
 		if (field == null) {
-			log.warn("Could not find field [ {} ] on target [ {} ]", fieldName,
-					object);
+			log.debug("Could not find field [ {} ] on target [ {} ]", fieldName,
+					object.getClass().getSimpleName());
 			return;
 		}
 
@@ -136,10 +140,10 @@ public class ReflexUtil {
 				method.invoke(object, value);
 				return;
 			} catch (InvocationTargetException e) {
-				log.warn("Could not find method [ {} ] on target [ {} ]",
-						methodName, object);
+				log.debug("Could not find method [ {} ] on target [ {} ]",
+						methodName, object.getClass().getSimpleName());
 			} catch (NullPointerException e) {
-				log.warn("{} field: [ {} ] is null", object, fieldName);
+				log.debug("{} field: [ {} ] is null", object.getClass().getSimpleName(), fieldName);
 			} catch (IllegalArgumentException e) {
 			} catch (IllegalAccessException e) {
 				// Will not happen
@@ -153,7 +157,7 @@ public class ReflexUtil {
 			field.set(object, value);
 		} catch (IllegalArgumentException e) {
 		} catch (NullPointerException e) {
-			log.warn("{} field: [ {} ] is null", object, fieldName);
+			log.debug("{} field: [ {} ] is null", object.getClass().getSimpleName(), fieldName);
 		} catch (IllegalAccessException e) {
 			// Will not happen
 		}

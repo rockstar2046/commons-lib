@@ -84,17 +84,17 @@ public class ClassUtil extends ClassUtils {
 			}
 
 		} catch (SecurityException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (NoSuchMethodException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (IllegalArgumentException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (InstantiationException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (IllegalAccessException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (InvocationTargetException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		}
 		;
 
@@ -119,17 +119,17 @@ public class ClassUtil extends ClassUtils {
 			constructor.setAccessible(accessible);
 			t = constructor.newInstance();
 		} catch (InstantiationException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (IllegalAccessException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (SecurityException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (NoSuchMethodException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (IllegalArgumentException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		} catch (InvocationTargetException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		}
 
 		return t;
@@ -194,7 +194,7 @@ public class ClassUtil extends ClassUtils {
 				return getDeclaredField(superClass, fieldName, recursively);
 			}
 		} catch (SecurityException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		}
 		return null;
 
@@ -251,7 +251,7 @@ public class ClassUtil extends ClassUtils {
 						parameterTypes);
 			}
 		} catch (SecurityException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		}
 		return null;
 	}
@@ -309,7 +309,7 @@ public class ClassUtil extends ClassUtils {
 						parameterTypes);
 			}
 		} catch (SecurityException e) {
-			log.error("", e);
+			log.error("{}",e.getMessage(),e);
 		}
 		return null;
 	}

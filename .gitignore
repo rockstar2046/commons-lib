@@ -14,5 +14,6 @@
 *.war
 *.ear
 # build dir
-target/
+target/*
 
+/target

@@ -74,7 +74,7 @@ public class XmlUtilTest {
 		XAliasAttribute[] xaa = { new XAliasAttribute("City", TestVo4.class,
 				"city") };
 		String xmlString = XmlUtil.formatPretty(XmlUtil.toXml(list, xa, null,
-				xaa));
+				xaa,null));
 		System.err.println(xmlString);
 		FileUtil.writeStringToFile(file, xmlString, true);
 	}
@@ -103,10 +103,10 @@ public class XmlUtilTest {
 		XAliasAttribute[] xaa = { new XAliasAttribute("City", TestVo4.class,
 				"city") };
 		String xmlString = XmlUtil.formatPretty(XmlUtil.toXml(list, xa, null,
-				xaa));
+				xaa,null));
 		System.err.println(xmlString);
 		List<TestVo4> list2 = (List<TestVo4>) XmlUtil.toBean(xmlString, xa,
-				null, xaa);
+				null, xaa,null);
 		for (TestVo4 tvl : list2) {
 			System.out.println(tvl);
 		}
