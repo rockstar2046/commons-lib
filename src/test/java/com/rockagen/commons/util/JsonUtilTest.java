@@ -16,12 +16,14 @@
 package com.rockagen.commons.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.type.TypeReference;
 import org.junit.Test;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  *
@@ -41,12 +43,46 @@ public class JsonUtilTest {
 		 
 	}
 	@Test
+	public void testJsonThreadSafe() throws InterruptedException{
+		
+		final String jsonStr1="[{\"city\":\"CHINA 0\",\"testVo\":{\"name\":\"ROCKAGEN 0\",\"age\":0,\"email\":\"agen@rockagen.com 0\"}},"
+				+ "{\"city\":\"Beijing 0\",\"testVo\":{\"name\":\"ROCKAGEN2 0\",\"age\":0,\"email\":\"agen@rockagen.com2 0\"}}]";
+		Thread a=new Thread() {
+			@Override
+			public void run() {
+				System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
+				System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
+				for(TestVo4 tv : JsonUtil.toBean(jsonStr1, TestVo4[].class))
+					System.out.println(tv.getTestVo().getName()+" "+tv.getTestVo().getAge()+" "+tv.getTestVo().getEmail()+" "+tv.getCity());
+				System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
+				System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
+				
+			
+			}
+		};
+		a.start();
+		
+		System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
+		System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
+		TestVo4[] tvs=JsonUtil.toBean(jsonStr1, TestVo4[].class);
+		
+		
+		System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
+		System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
+		
+		
+		Thread.currentThread().sleep(Integer.MAX_VALUE);
+		
+		
+	}
+	@Test
 	public void testToJson(){
 		for(int i=0; i<10;i++){
 		TestVo vo1=new TestVo();
 		vo1.setAge(i);
 		vo1.setName("ROCKAGEN "+i);
 		vo1.setEmail("agen@rockagen.com "+i);
+		vo1.setBir(new Date());
 		TestVo vo2=new TestVo();
 		vo2.setAge(i);
 		vo2.setName("ROCKAGEN2 "+i);
@@ -80,7 +116,7 @@ public class JsonUtilTest {
 			vo4.setTestVo(vo1);
 			
 			TestVo4 vo5=new TestVo4();
-			vo5.setCity("Beijing");
+			vo5.setCity("中国");
 			vo5.setTestVo(vo2);
 			List<TestVo4> list=new ArrayList<TestVo4>();
 			list.add(vo4);
@@ -107,6 +143,7 @@ public class JsonUtilTest {
 			   System.out.println( entry.getKey().toString()+" "+entry.getValue().getCity()+" "+entry.getValue().getTestVo().getEmail()+" "+entry.getValue().getTestVo().getEmail());
 		 }
 	}
+	
 		
 
 }

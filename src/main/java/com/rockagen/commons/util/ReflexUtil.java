@@ -24,8 +24,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Reflex Utils
@@ -35,196 +35,312 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ReflexUtil {
 
-	
-	
-	//~ Instance fields ==================================================
-	
+	// ~ Instance fields ==================================================
+
 	/**
 	 * 
 	 */
-	private static final  Log log = LogFactory.getLog(ReflexUtil.class);
+	private static final Logger log = LoggerFactory.getLogger(ReflexUtil.class);
 
-	
-	//~ Constructors ==================================================
-	
+	// ~ Constructors ==================================================
+
 	/**
 	 */
 	private ReflexUtil() {
 	}
 
-	//~ Methods ==================================================
-	
+	// ~ Methods ==================================================
+
 	/**
 	 * 
-	 * Direct reading the object attribute values,the private / protected modifiers will be ignoring.if getter function exist,return getter function value</br>
-	 * If recursively is true, will looking from all class hierarchy
+	 * Direct reading the object attribute values,the private / protected
+	 * modifiers will be ignoring.if getter function exist,return getter
+	 * function value</br> If recursively is true, will looking from all class
+	 * hierarchy
 	 * 
 	 * @param object
 	 * @param fieldName
 	 * @param recursively
-	 * @throws IllegalArgumentException 
-	 * @throws IllegalAccessException 
 	 * @return object
 	 */
-	public static Object getFieldValue(final Object object, String fieldName,boolean recursively) throws IllegalArgumentException, IllegalAccessException {
-		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,recursively);
-		if (field == null)
-			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
+	public static Object getFieldValue(final Object object, String fieldName,
+			boolean recursively) {
 
-		String methodName="get"+CommUtil.capitalize(fieldName);
-		Method method=ClassUtil.getDeclaredMethod(object.getClass(), recursively, methodName);
-		if(method!=null){
+		Object result = null;
+		if(object==null)return null;
+
+		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,
+				recursively);
+		if (field == null) {
+			log.debug("Could not find field [ {} ] on target [ {} ]", fieldName,
+					object.getClass().getSimpleName());
+			return result;
+		}
+
+		String methodName = "get" + CommUtil.capitalize(fieldName);
+		Method method = ClassUtil.getDeclaredMethod(object.getClass(),
+				recursively, methodName);
+		if (method != null) {
 			try {
 				makeAccessible(method);
-				return method.invoke(object);
+				result = method.invoke(object);
+				return result;
 			} catch (InvocationTargetException e) {
-				// do not
+				log.debug("Could not find method [ {} ] on target [ {} ]",
+						methodName, object.getClass().getSimpleName());
+			} catch (IllegalArgumentException e) {
+			} catch (IllegalAccessException e) {
+				// Will not happen
 			}
 		}
+
 		makeAccessible(field);
-		Object result = null;
-		result = field.get(object);
+		try {
+			result = field.get(object);
+		} catch (IllegalArgumentException e) {
+		} catch (IllegalAccessException e) {
+			// Will not happen
+		}
 		return result;
 	}
 
-	
 	/**
-	 * Direct writing the object attribute values, the private / protected modifiers will be ignoring,if setter function exist,return setter function value.</br>
-	 * If recursively is true, will looking from all class hierarchy
+	 * Direct writing the object attribute values, the private / protected
+	 * modifiers will be ignoring,if setter function exist,return setter
+	 * function value.</br> If recursively is true, will looking from all class
+	 * hierarchy
 	 * 
 	 * @param object
 	 * @param fieldName
 	 * @param value
 	 * @param recursively
-	 * @throws IllegalArgumentException
-	 * @throws IllegalAccessException 
 	 */
-	public static void setFieldValue(final Object object, String fieldName, final Object value,boolean recursively)throws IllegalArgumentException, IllegalAccessException {
-		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,recursively);
+	public static void setFieldValue(final Object object, String fieldName,
+			final Object value, boolean recursively) {
+		
+		if (object==null) return;
+		
+		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,
+				recursively);
 
-		if (field == null)
-			throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
+		if (field == null) {
+			log.debug("Could not find field [ {} ] on target [ {} ]", fieldName,
+					object.getClass().getSimpleName());
+			return;
+		}
 
-		String methodName="set"+CommUtil.capitalize(fieldName);
+		String methodName = "set" + CommUtil.capitalize(fieldName);
 
-		try {
-		Method method=ClassUtil.getDeclaredMethod(object.getClass(), recursively, methodName,value.getClass());
-		if(method!=null){
-			
+		Method method = ClassUtil.getDeclaredMethod(object.getClass(),
+				recursively, methodName,
+				value == null ? Object.class : value.getClass());
+		if (method != null) {
+			try {
 				makeAccessible(method);
-				method.invoke(object,value);
-				return ;
-			
+				method.invoke(object, value);
+				return;
+			} catch (InvocationTargetException e) {
+				log.debug("Could not find method [ {} ] on target [ {} ]",
+						methodName, object.getClass().getSimpleName());
+			} catch (NullPointerException e) {
+				log.debug("{} field: [ {} ] is null", object.getClass().getSimpleName(), fieldName);
+			} catch (IllegalArgumentException e) {
+			} catch (IllegalAccessException e) {
+				// Will not happen
+			}
+
 		}
-		} catch (InvocationTargetException e) {
-			// do not
-		}catch (NullPointerException e){
-			log.warn(object+" field: ["+fieldName+"] is null.");
-		}
+
 		makeAccessible(field);
 
-		field.set(object, value);
+		try {
+			field.set(object, value);
+		} catch (IllegalArgumentException e) {
+		} catch (NullPointerException e) {
+			log.debug("{} field: [ {} ] is null", object.getClass().getSimpleName(), fieldName);
+		} catch (IllegalAccessException e) {
+			// Will not happen
+		}
 	}
 
-
-	
 	/**
 	 * set attribute is accessible
+	 * 
 	 * @param field
 	 */
-	public static void makeAccessible(Field field) {
-		if (!Modifier.isPublic(field.getModifiers()) || !Modifier.isPublic(field.getDeclaringClass().getModifiers())) {
+	public static void makeAccessible(final Field field) {
+		if (!Modifier.isPublic(field.getModifiers())
+				|| !Modifier.isPublic(field.getDeclaringClass().getModifiers())) {
 			field.setAccessible(true);
 		}
 	}
+
 	/**
 	 * set method is accessible
+	 * 
 	 * @param method
 	 */
-	public static void makeAccessible(Method method) {
-		if (!Modifier.isPublic(method.getModifiers()) || !Modifier.isPublic(method.getDeclaringClass().getModifiers())) {
+	public static void makeAccessible(final Method method) {
+		if (!Modifier.isPublic(method.getModifiers())
+				|| !Modifier
+						.isPublic(method.getDeclaringClass().getModifiers())) {
 			method.setAccessible(true);
 		}
 	}
-	
+
 	/**
 	 * set constructor is accessible
+	 * 
 	 * @param constructor
 	 */
-	public static <T> void makeAccessible(Constructor<T> constructor) {
-		if (!Modifier.isPublic(constructor.getModifiers()) || !Modifier.isPublic(constructor.getDeclaringClass().getModifiers())) {
+	public static <T> void makeAccessible(final Constructor<T> constructor) {
+		if (!Modifier.isPublic(constructor.getModifiers())
+				|| !Modifier.isPublic(constructor.getDeclaringClass()
+						.getModifiers())) {
 			constructor.setAccessible(true);
 		}
 	}
-	
+
 	/**
 	 * obtained the parent class generic parameter types</br>
-	 * <p>for exmaple:</p>
+	 * <p>
+	 * for exmaple:
+	 * </p>
 	 * <code>
 	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
 	 * </code>
-	 * @param clazz 
-	 * @return Type
+	 * 
+	 * @param clazz
+	 * @return Types
 	 */
-	public static Type[] getSuperClassGenricType(final Class<?> clazz) {
+	public static Type[] getSuperClassGenricTypes(final Class<?> clazz) {
 
-		Type[] temp={Object.class};
+		Type[] temp = { Object.class };
 		// eg: ClassA<T>
 		Type type = clazz.getGenericSuperclass();
-		
+
 		if (type instanceof ParameterizedType) {
-			
+
 			Type[] params = ((ParameterizedType) type).getActualTypeArguments();
 
-			return  params;
-			
-		}else{
-			log.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
+			return params;
+
+		} else {
+			log.warn(
+					"{} 's superclass not ParameterizedType",
+					clazz == null ? Object.class.getSimpleName() : clazz
+							.getSimpleName());
 			return temp;
 		}
+	}
 
+	/**
+	 * obtained the parent class generic parameter type</br>
+	 * <p>
+	 * for exmaple:
+	 * </p>
+	 * <code>
+	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
+	 * </code>
+	 * 
+	 * @param clazz
+	 * @param index
+	 *            start 0
+	 * @return Type
+	 */
+	public static Type getSuperClassGenricType(final Class<?> clazz, int index) {
+		Type[] types = getSuperClassGenricTypes(clazz);
+		if (index < 0) {
+			log.warn(
+					"{}'s index must be greater than 0,return the 0",
+					clazz == null ? Object.class.getSimpleName() : clazz
+							.getSimpleName());
+			return types[0];
+		} else if (index > types.length) {
+			log.warn(
+					"{}'s index in {} not found,return the last",
+					clazz == null ? Object.class.getSimpleName() : clazz
+							.getSimpleName(), index);
+			return types[types.length - 1];
+		} else {
+			return types[index];
+		}
+	}
+
+	/**
+	 * obtained the parent class generic parameter classes</br>
+	 * <p>
+	 * for exmaple:
+	 * </p>
+	 * <code>
+	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
+	 * </code>
+	 * 
+	 * @param clazz
+	 * @return Classes
+	 */
+	public static Class<?>[] getSuperClassGenricClasses(final Class<?> clazz) {
+
+		Type[] types = getSuperClassGenricTypes(clazz);
+		Class<?>[] clazzs = new Class<?>[types.length];
+		for (int i = 0; i < types.length; i++) {
+			clazzs[i] = (Class<?>) types[i];
+		}
+		return clazzs;
 
 	}
-	
+
 	/**
-	 * Create new instance of specified class and type from a map</br>
-	 * <b>note: clazz must write setter</b>
+	 * obtained the parent class generic parameter class</br>
+	 * <p>
+	 * for exmaple:
+	 * </p>
+	 * <code>
+	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
+	 * </code>
+	 * 
 	 * @param clazz
-	 * @param paramsMap attributes
+	 * @param index
+	 *            start 0
+	 * @return Class
+	 */
+	public static Class<?> getSuperClassGenricClass(final Class<?> clazz,
+			int index) {
+		return (Class<?>) getSuperClassGenricType(clazz, index);
+	}
+
+	/**
+	 * Create new instance of specified class and type from a map</br> <b>note:
+	 * clazz must write setter</b>
+	 * 
+	 * @param clazz
+	 * @param paramsMap
+	 *            attributes
 	 * @param accessible
 	 * @return instance
 	 */
-	public static <T> T getBasicInstance(Class<T> clazz,Map<String,Object> paramsMap,boolean accessible){
-		
-		if(clazz !=null && paramsMap !=null && paramsMap.size()>0 ){
-			
-			T instance = ClassUtil.getInstance(clazz,accessible);
-			// No automatic processing attributes
-			StringBuffer bufnp = new StringBuffer("No automatic processing attributes: [");
-			
-			 for (Map.Entry<String, Object> entry : paramsMap.entrySet()) {
-				 String key =entry.getKey();
-				 if(CommUtil.isBlank(key)){
-					 continue;
-				 }
-				 key=CommUtil.uncapitalize(key);
-				 
-				 try {
-					setFieldValue(instance,key, entry.getValue(), false);
-				} catch (IllegalArgumentException e1) {
-					bufnp.append(key).append(',');
-				} catch (IllegalAccessException e1) {
-					bufnp.append(key).append(',');
+	public static <T> T getBasicInstance(final Class<T> clazz,
+			final Map<String, Object> paramsMap, boolean accessible) {
+
+		if (clazz != null && paramsMap != null && paramsMap.size() > 0) {
+
+			T instance = ClassUtil.getInstance(clazz, accessible);
+
+			for (Map.Entry<String, Object> entry : paramsMap.entrySet()) {
+				String key = entry.getKey();
+				if (CommUtil.isBlank(key)) {
+					continue;
 				}
-					
-			 }
-			 bufnp.append("]");
-			 log.warn(CommUtil.removeEnd(bufnp.toString(), ","));	
-			 return instance;
-		}else{
+				key = CommUtil.uncapitalize(key);
+
+				setFieldValue(instance, key, entry.getValue(), false);
+
+			}
+			return instance;
+		} else {
 			return null;
 		}
-			
-	}	
-	
+
+	}
+
 }

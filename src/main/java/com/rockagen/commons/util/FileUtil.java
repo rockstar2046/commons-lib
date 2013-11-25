@@ -15,24 +15,24 @@
  */
 package com.rockagen.commons.util;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.io.FileUtils;
 
 /**
- * Array Utils
- * 
+ * FILE UTILS
  * @author AGEN
  * @since JDK1.6
- * @since COMMONS.LANG3
+ * @since COMMONS-IO 2.4
  */
-public class ArrayUtil extends ArrayUtils{
+public class FileUtil extends FileUtils{
 	
 	
 	//~ Constructors ==================================================
 	
 	/**
 	 */
-	private ArrayUtil(){}
-	
+	private FileUtil(){
+		
+	}
 	
 	// wait add more
 

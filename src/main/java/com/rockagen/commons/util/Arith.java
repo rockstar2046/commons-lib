@@ -52,7 +52,7 @@ public class Arith {
      * @param v2
      * @return v1+v2
      */
-    public static double add(double v1,double v2){
+    public static double add(final double v1,final double v2){
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.add(b2).doubleValue();
@@ -63,7 +63,7 @@ public class Arith {
      * @param v2 
      * @return v1+v2
      */
-    public static float addF(float v1,float v2){
+    public static float addF(final float v1, final float v2){
         BigDecimal b1 = new BigDecimal(Float.toString(v1));
         BigDecimal b2 = new BigDecimal(Float.toString(v2));
         return b1.add(b2).floatValue();
@@ -74,7 +74,7 @@ public class Arith {
      * @param v2 
      * @return v1-v2
      */
-    public static double sub(double v1,double v2){
+    public static double sub(final double v1,final double v2){
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.subtract(b2).doubleValue();
@@ -85,7 +85,7 @@ public class Arith {
      * @param v2 
      * @return v1-v2
      */
-    public static float subF(float v1,float v2){
+    public static float subF(final float v1,final float v2){
         BigDecimal b1 = new BigDecimal(Float.toString(v1));
         BigDecimal b2 = new BigDecimal(Float.toString(v2));
         return b1.subtract(b2).floatValue();
@@ -97,7 +97,7 @@ public class Arith {
      * @param v2 
      * @return v1*v2
      */
-    public static double mul(double v1,double v2){
+    public static double mul(final double v1,final double v2){
         BigDecimal b1 = new BigDecimal(Double.toString(v1));
         BigDecimal b2 = new BigDecimal(Double.toString(v2));
         return b1.multiply(b2).doubleValue();
@@ -108,7 +108,7 @@ public class Arith {
      * @param v2 
      * @return v1*v2
      */
-    public static float mul(float v1,float v2){
+    public static float mul(final float v1,final float v2){
     	BigDecimal b1 = new BigDecimal(Float.toString(v1));
     	BigDecimal b2 = new BigDecimal(Float.toString(v2));
     	return b1.multiply(b2).floatValue();
@@ -120,7 +120,7 @@ public class Arith {
      * @param v2
      * @return v1/v2
      */
-    public static double div(double v1,double v2){
+    public static double div(final double v1,final double v2){
         return div(v1,v2,DIV_SCALE);
     }
     /**
@@ -129,7 +129,7 @@ public class Arith {
      * @param v2
      * @return v1/v2
      */
-    public static double div(double v1,double v2,int scale){
+    public static double div(final double v1,final double v2,int scale){
     	return div(v1,v2,scale,ROUNDING_MODE);
     }
     
@@ -139,7 +139,7 @@ public class Arith {
      * @param v2
      * @return v1/v2
      */
-    public static float div(float v1,float v2){
+    public static float div(final float v1,final float v2){
     	return div(v1,v2,DIV_SCALE);
     }
     /**
@@ -148,8 +148,8 @@ public class Arith {
      * @param v2
      * @return v1/v2
      */
-    public static float div(float v1,float v2,int scale){
-    	return div(v1,v2,scale);
+    public static float div(final float v1,final float v2,int scale){
+    	return div(v1,v2,scale,ROUNDING_MODE);
     }
  
     /**
@@ -160,7 +160,7 @@ public class Arith {
      * @param roundingMode default {@link #ROUNDING_MODE} 
      * @return v1/v2
      */
-    public static double div(double v1,double v2,int scale,int roundingMode){
+    public static double div(final double v1,final double v2,int scale,int roundingMode){
     	
         if(scale<0){
             scale=DIV_SCALE;
@@ -181,7 +181,7 @@ public class Arith {
      * @param roundingMode default {@link #ROUNDING_MODE} 
      * @return v1/v2
      */
-    public static float div(float v1,float v2,int scale,int roundingMode){
+    public static float div(final float v1,final float v2,int scale,int roundingMode){
     	
         if(scale<0){
             scale=DIV_SCALE;
@@ -200,7 +200,7 @@ public class Arith {
      * @param scale
      * @return double
      */
-    public static double round(double v,int scale){
+    public static double round(final double v,int scale){
     	return round(v,scale,ROUNDING_MODE);
     }
     /**
@@ -208,7 +208,7 @@ public class Arith {
      * @param v
      * @return double
      */
-    public static double round(double v){
+    public static double round(final double v){
     	return round(v,DIV_SCALE,ROUNDING_MODE);
     }
     
@@ -219,7 +219,7 @@ public class Arith {
      * @param roundingMode
      * @return double
      */
-    public static double round(double v,int scale,int roundingMode){
+    public static double round(final double v,int scale,int roundingMode){
     	   if(scale<0){
                scale=DIV_SCALE;
            }
@@ -237,7 +237,7 @@ public class Arith {
      * @param scale
      * @return round float 
      */
-    public static float round(float v,int scale){
+    public static float round(final float v,int scale){
     	return round(v,scale,ROUNDING_MODE);
     }
     /**
@@ -245,7 +245,7 @@ public class Arith {
      * @param v
      * @return round float
      */
-    public static float round(float v){
+    public static float round(final float v){
     	return round(v,DIV_SCALE,ROUNDING_MODE);
     }
     
@@ -256,7 +256,7 @@ public class Arith {
      * @param roundingMode
      * @return round float
      */
-    public static float round(float v,int scale,int roundingMode){
+    public static float round(final float v,int scale,int roundingMode){
     	if(scale<0){
     		scale=DIV_SCALE;
     	}
@@ -274,7 +274,7 @@ public class Arith {
      * @param d
      * @return double
      */
-    public static float toFloat(double d){
+    public static float toFloat(final double d){
     	BigDecimal b = new BigDecimal(Double.toString(d));
     	return b.floatValue();
     }
@@ -286,7 +286,7 @@ public class Arith {
      * @param f
      * @return double
      */
-    public static double toDouble(float f){
+    public static double toDouble(final float f){
     	BigDecimal b = new BigDecimal(Float.toString(f));
     	return b.doubleValue();
     }
