@@ -15,12 +15,15 @@
  */
 package com.rockagen.commons.util;
 
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1318,6 +1321,33 @@ public class CommUtil extends StringUtils {
 			bytes[index] |= (bitSet.get(i) ? 1 : 0) << offset;
 		}
 		return bytes;
+	}
+	
+	/**
+	 * Returns the hardware address (usually MAC) of the interface if it
+	 * has one and if it can be accessed given the current privileges.
+	 * 
+	 * @return a char array containing the first address or <code>null</code> if
+	 *         the address doesn't exist or is not accessible.
+	 * @throws SocketException
+	 *             if an I/O error occurs.
+	 * @since 1.6
+	 */
+	public static String[] getMacAddrs() throws SocketException {
+		Enumeration<NetworkInterface> e = NetworkInterface
+				.getNetworkInterfaces();
+		StringBuffer buf=new StringBuffer();
+		while (e.hasMoreElements()) {
+			NetworkInterface network = e.nextElement();
+			if (network != null) {
+				byte[] nmac = network.getHardwareAddress();
+				if (nmac != null) {
+					buf.append(hexdump(nmac));
+					buf.append("#");
+				}
+			}
+		}
+		return buf.toString().split("#");
 	}
 
 }

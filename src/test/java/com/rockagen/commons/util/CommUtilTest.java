@@ -15,6 +15,8 @@
  */
 package com.rockagen.commons.util;
 
+import java.net.SocketException;
+import java.util.Arrays;
 import java.util.BitSet;
 
 import org.junit.Test;
@@ -108,5 +110,10 @@ public class CommUtilTest {
 		println(b.toString());
 		println(CommUtil.hexdump(bs.getBytes()));
 		println(CommUtil.hexdump(CommUtil.bitValue(b)));
+	}
+	
+	@Test
+	public void testMacs() throws SocketException{
+		System.out.println(Arrays.toString(CommUtil.getMacAddrs()));
 	}
 }
