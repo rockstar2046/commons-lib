@@ -67,13 +67,14 @@ public class ReflexUtil {
 			boolean recursively) {
 
 		Object result = null;
-		if(object==null)return null;
+		if (object == null)
+			return null;
 
 		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,
 				recursively);
 		if (field == null) {
-			log.debug("Could not find field [ {} ] on target [ {} ]", fieldName,
-					object.getClass().getSimpleName());
+			log.debug("Could not find field [ {} ] on target [ {} ]",
+					fieldName, object.getClass().getSimpleName());
 			return result;
 		}
 
@@ -117,15 +118,16 @@ public class ReflexUtil {
 	 */
 	public static void setFieldValue(final Object object, String fieldName,
 			final Object value, boolean recursively) {
-		
-		if (object==null) return;
-		
+
+		if (object == null)
+			return;
+
 		Field field = ClassUtil.getDeclaredField(object.getClass(), fieldName,
 				recursively);
 
 		if (field == null) {
-			log.debug("Could not find field [ {} ] on target [ {} ]", fieldName,
-					object.getClass().getSimpleName());
+			log.debug("Could not find field [ {} ] on target [ {} ]",
+					fieldName, object.getClass().getSimpleName());
 			return;
 		}
 
@@ -143,7 +145,8 @@ public class ReflexUtil {
 				log.debug("Could not find method [ {} ] on target [ {} ]",
 						methodName, object.getClass().getSimpleName());
 			} catch (NullPointerException e) {
-				log.debug("{} field: [ {} ] is null", object.getClass().getSimpleName(), fieldName);
+				log.debug("{} field: [ {} ] is null", object.getClass()
+						.getSimpleName(), fieldName);
 			} catch (IllegalArgumentException e) {
 			} catch (IllegalAccessException e) {
 				// Will not happen
@@ -157,7 +160,8 @@ public class ReflexUtil {
 			field.set(object, value);
 		} catch (IllegalArgumentException e) {
 		} catch (NullPointerException e) {
-			log.debug("{} field: [ {} ] is null", object.getClass().getSimpleName(), fieldName);
+			log.debug("{} field: [ {} ] is null", object.getClass()
+					.getSimpleName(), fieldName);
 		} catch (IllegalAccessException e) {
 			// Will not happen
 		}
@@ -217,6 +221,8 @@ public class ReflexUtil {
 
 		Type[] temp = { Object.class };
 		// eg: ClassA<T>
+		if (clazz == null)
+			return null;
 		Type type = clazz.getGenericSuperclass();
 
 		if (type instanceof ParameterizedType) {
@@ -228,8 +234,7 @@ public class ReflexUtil {
 		} else {
 			log.warn(
 					"{} 's superclass not ParameterizedType",
-					clazz == null ? Object.class.getSimpleName() : clazz
-							.getSimpleName());
+					clazz);
 			return temp;
 		}
 	}
