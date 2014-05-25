@@ -945,7 +945,7 @@ public class CommUtil extends StringUtils {
 	/**
 	 * Change double byte characters to single byte characters
 	 * 
-	 * @param double byte characters string
+	 * @param dbcString double byte characters string
 	 * @return single byte characters string
 	 */
 	public static String toSBC(String dbcString) {
@@ -968,7 +968,7 @@ public class CommUtil extends StringUtils {
 	/**
 	 * Change single byte characters to double byte characters
 	 * 
-	 * @param single
+	 * @param sbcString single
 	 *            byte characters string
 	 * @return double byte characters string
 	 */

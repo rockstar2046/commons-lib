@@ -637,7 +637,7 @@ public class XmlUtil {
 	 * @param xImplicitCollection
 	 * @param xImmutableTypes
 	 * @param xConverters
-	 * @return
+	 * @return Object
 	 */
 	private final static Object parse(int parseMod, int mode, Object value,
 			XAlias[] xAlias, XAliasField[] xAliasFields,
@@ -674,7 +674,6 @@ public class XmlUtil {
 	 * @param xstream
 	 * @param xAlias
 	 * @param xAliasFields
-	 * @param xAliasAttributes
 	 * @param xAliasAttributes
 	 * @param xOmitFields
 	 * @param xImplicitCollection
