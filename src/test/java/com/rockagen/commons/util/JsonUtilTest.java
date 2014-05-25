@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -42,6 +43,7 @@ public class JsonUtilTest {
  		System.out.println(tv.getTestVo().getName()+" "+tv.getTestVo().getAge()+" "+tv.getTestVo().getEmail()+" "+tv.getCity());
 		 
 	}
+	@Ignore
 	@Test
 	public void testJsonThreadSafe() throws InterruptedException{
 		

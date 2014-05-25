@@ -1081,6 +1081,7 @@ public class HttpConn {
 		HttpEntity entity = response.getEntity();
 		StringBuffer buf = new StringBuffer();
 		if (entity != null) {
+			BufferedReader br=null;
 			try {
 				InputStream instream = entity.getContent();
 
@@ -1088,7 +1089,7 @@ public class HttpConn {
 					encoding = ENCODING;
 				}
 
-				BufferedReader br = new BufferedReader(new InputStreamReader(
+				 br= new BufferedReader(new InputStreamReader(
 						instream, encoding));
 				String line;
 				while (null != (line = br.readLine())) {
@@ -1096,6 +1097,9 @@ public class HttpConn {
 				}
 
 			} finally {
+				if(br!=null){
+					br.close();
+				}
 				EntityUtils.consume(entity);
 
 			}

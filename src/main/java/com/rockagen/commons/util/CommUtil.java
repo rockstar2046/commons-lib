@@ -17,6 +17,7 @@ package com.rockagen.commons.util;
 
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,6 +94,11 @@ public class CommUtil extends StringUtils {
 	 * Line separator
 	 */
 	private static final String NEWLINE = String.format("%n");
+	
+	/**
+	 * The default charset of this Java virtual machine.
+	 */
+	private static final Charset CHARSET = Charset.defaultCharset();
 
 	// ~ Constructors ==================================================
 
@@ -580,9 +586,8 @@ public class CommUtil extends StringUtils {
 	 * @return base64 string
 	 */
 	public static String encodeBase64(String plainText) {
-		byte[] b = Base64.encodeBase64(plainText.getBytes(), true);
-		;
-		String s = new String(b);
+		byte[] b = Base64.encodeBase64(plainText.getBytes(CHARSET), true);
+		String s = new String(b,CHARSET);
 		return s;
 	}
 
@@ -593,8 +598,8 @@ public class CommUtil extends StringUtils {
 	 * @return decode Base64 string
 	 */
 	public static String decodeBase64(String signature) {
-		byte[] b = Base64.decodeBase64(signature.getBytes());
-		String s = new String(b);
+		byte[] b = Base64.decodeBase64(signature.getBytes(CHARSET));
+		String s = new String(b,CHARSET);
 		return s;
 	}
 
@@ -1036,7 +1041,7 @@ public class CommUtil extends StringUtils {
 
 		// initialize maxlen value
 		for (int i = 0; i < headlen; i++)
-			maxlen[i] = String.valueOf(headers[i]).getBytes().length;
+			maxlen[i] = String.valueOf(headers[i]).getBytes(CHARSET).length;
 
 		String[][] effectvalue = new String[values.length][headlen];
 
@@ -1052,7 +1057,7 @@ public class CommUtil extends StringUtils {
 					continue;
 				}
 				effectvalue[i][j] = String.valueOf(values[i][j]);
-				int currBytelen = effectvalue[i][j].getBytes().length;
+				int currBytelen = effectvalue[i][j].getBytes(CHARSET).length;
 				if (currBytelen > maxlen[j]) {
 					maxlen[j] = currBytelen;
 				}
@@ -1070,8 +1075,8 @@ public class CommUtil extends StringUtils {
 		result.append(sl);
 		result.append('|');
 		for (int i = 0; i < headlen; i++) {
-			byte[] temp = String.valueOf(headers[i]).getBytes();
-			result.append(' ' + new String(temp)
+			byte[] temp = String.valueOf(headers[i]).getBytes(CHARSET);
+			result.append(' ' + new String(temp,CHARSET)
 					+ repeatChar(' ', maxlen[i] - temp.length) + " |");
 		}
 		result.append(NEWLINE);
@@ -1080,8 +1085,8 @@ public class CommUtil extends StringUtils {
 		for (int i = 0; i < effectvalue.length; i++) {
 			result.append('|');
 			for (int j = 0; j < headlen; j++) {
-				byte[] temp = effectvalue[i][j].getBytes();
-				result.append(' ' + new String(temp)
+				byte[] temp = effectvalue[i][j].getBytes(CHARSET);
+				result.append(' ' + new String(temp,CHARSET)
 						+ repeatChar(' ', maxlen[j] - temp.length) + " |");
 			}
 			result.append(NEWLINE);
@@ -1161,7 +1166,7 @@ public class CommUtil extends StringUtils {
 			}
 			String offset0 = Integer.toHexString(ridx);
 			dump.append(NEWLINE + '|'
-					+ new String(repeatChar('0', 8 - offset0.length()))
+					+ repeatChar('0', 8 - offset0.length())
 					+ offset0 + '|' + new String(hex) + '|' + new String(value)
 					+ '|');
 
