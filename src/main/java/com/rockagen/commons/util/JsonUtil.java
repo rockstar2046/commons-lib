@@ -90,7 +90,7 @@ public class JsonUtil {
 	/**
 	 * Initialize mapper
 	 * 
-	 * @return
+	 * @return initialized {@link ObjectMapper}
 	 */
 	private static ObjectMapper initMapper() {
 
