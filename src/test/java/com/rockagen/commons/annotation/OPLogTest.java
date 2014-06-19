@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,14 @@
  */
 package com.rockagen.commons.annotation;
 
-import java.lang.reflect.Method;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.rockagen.commons.util.ClassUtil;
-import com.rockagen.commons.util.CommUtil;
 
 /**
- *
- * @author AGEN
+ * Test
+ * @author RA
  * @since JDK1.6
  * 
  */
@@ -39,22 +37,12 @@ public class OPLogTest {
 	  public void testDescription()
 	    throws SecurityException, NoSuchMethodException
 	  {
-	    Class<?> classType = getClass();
-	    Method method = classType.getMethod("test", new Class[0]);
-	    boolean hasAnnotation = method.isAnnotationPresent(OPLog.class);
 
-	    if (hasAnnotation) {
 	      OPLog annotation = (OPLog)ClassUtil.getDeclaredMethod(getClass(), false, "test").getAnnotation(OPLog.class);
 	      String methodDescp = annotation.description();
-	      if(CommUtil.isBlank(methodDescp)){
-	    	  methodDescp=annotation.value();
-	      }
-	     
-	      System.out.println("Target method: [" + method.getName() + "]");
-	      System.out.println("Value: [" + methodDescp + "]");
-	    } else {
-	      System.out.println(method.getName());
-	    }
+	      String value=annotation.value();
+	      Assert.assertEquals("no description", methodDescp);
+	      Assert.assertEquals("Test", value);
 	  }
 
 }

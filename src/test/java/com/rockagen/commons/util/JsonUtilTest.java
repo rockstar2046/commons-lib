@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 /**
  *
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  */
 public class JsonUtilTest {
 	
 	@Test
+	@Ignore
 	public void testJson(){
 		
 		String jsonStr1="[{\"city\":\"CHINA 0\",\"testVo\":{\"name\":\"ROCKAGEN 0\",\"age\":0,\"email\":\"agen@rockagen.com 0\"}},"
@@ -43,41 +44,9 @@ public class JsonUtilTest {
  		System.out.println(tv.getTestVo().getName()+" "+tv.getTestVo().getAge()+" "+tv.getTestVo().getEmail()+" "+tv.getCity());
 		 
 	}
+	
+	@Test
 	@Ignore
-	@Test
-	public void testJsonThreadSafe() throws InterruptedException{
-		
-		final String jsonStr1="[{\"city\":\"CHINA 0\",\"testVo\":{\"name\":\"ROCKAGEN 0\",\"age\":0,\"email\":\"agen@rockagen.com 0\"}},"
-				+ "{\"city\":\"Beijing 0\",\"testVo\":{\"name\":\"ROCKAGEN2 0\",\"age\":0,\"email\":\"agen@rockagen.com2 0\"}}]";
-		Thread a=new Thread() {
-			@Override
-			public void run() {
-				System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
-				System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
-				for(TestVo4 tv : JsonUtil.toBean(jsonStr1, TestVo4[].class))
-					System.out.println(tv.getTestVo().getName()+" "+tv.getTestVo().getAge()+" "+tv.getTestVo().getEmail()+" "+tv.getCity());
-				System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
-				System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
-				
-			
-			}
-		};
-		a.start();
-		
-		System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
-		System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
-		TestVo4[] tvs=JsonUtil.toBean(jsonStr1, TestVo4[].class);
-		
-		
-		System.err.println(Thread.currentThread().getName()+JsonUtil.getMapper());
-		System.err.println(Thread.currentThread().getName()+JsonUtil.getJsonFactory());
-		
-		
-		Thread.currentThread().sleep(Integer.MAX_VALUE);
-		
-		
-	}
-	@Test
 	public void testToJson(){
 		for(int i=0; i<10;i++){
 		TestVo vo1=new TestVo();
@@ -101,7 +70,7 @@ public class JsonUtilTest {
 		}
 		
 	}
-	
+	@Ignore
 	@Test
 	public void testCollectionToJson(){
 			TestVo vo1=new TestVo();
@@ -132,6 +101,7 @@ public class JsonUtilTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testJsontoCollection(){
 		String jsonStr1="[{\"city\":\"CHINA 0\",\"testVo\":{\"name\":\"ROCKAGEN 0\",\"age\":0,\"email\":\"agen@rockagen.com 0\"}},"
 				+ "{\"city\":\"Beijing 0\",\"testVo\":{\"name\":\"ROCKAGEN2 0\",\"age\":0,\"email\":\"agen@rockagen.com2 0\"}}]";

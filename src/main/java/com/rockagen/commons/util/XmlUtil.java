@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import com.thoughtworks.xstream.converters.Converter;
 /**
  * XML UTIL
  * 
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  * @since DOM4J 1.6.1
  * @since XSTREAM 1.4.5

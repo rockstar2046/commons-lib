@@ -15,7 +15,7 @@
  */
 /**
  * <b>Some  commons annotation functions packaging</b>
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  */
 package com.rockagen.commons.annotation;

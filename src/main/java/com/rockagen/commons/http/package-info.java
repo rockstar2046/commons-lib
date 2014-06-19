@@ -17,7 +17,7 @@
  * <b>Some http commons functions packaging</b>
  * <p>apache.commons.httpclient must required</p>
  * <p>note: Dependency com.rockagen.commons.util</p>
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  */
 package com.rockagen.commons.http;

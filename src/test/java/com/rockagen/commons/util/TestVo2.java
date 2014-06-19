@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package com.rockagen.commons.util;
 
 /**
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  */
 public class TestVo2 {
@@ -36,11 +36,11 @@ public class TestVo2 {
 	}
 	
 	public String getEmail() {
-		return email+"  [getter] ";
+		return email;
 	}
 
 	public void setEmail(String email) {
-		this.email = email+"  [setter] ";
+		this.email = email;
 	}
 
 	public int getAge() {
@@ -52,11 +52,11 @@ public class TestVo2 {
 	}
 
 	private String getName() {
-		return name+"  [getter] ";
+		return name;
 	}
 
 	private void setName(String name) {
-		this.name = name+"  [setter] ";
+		this.name = name;
 	}
 
 	@Override
