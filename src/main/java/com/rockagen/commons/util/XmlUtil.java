@@ -225,7 +225,7 @@ public class XmlUtil {
 	 * Bean to xml.
 	 * <P>
 	 * <P>
-	 * Using XStream library to serialize objects to XML.
+	 * Using XStream library from serialize objects to XML.
 	 * </P>
 	 * <p>
 	 * example:
@@ -268,7 +268,7 @@ public class XmlUtil {
 	 * Bean to xml.
 	 * <P>
 	 * <P>
-	 * Using XStream library to serialize objects to XML.
+	 * Using XStream library from serialize objects to XML.
 	 * </P>
 	 * <p>
 	 * example:
@@ -311,7 +311,7 @@ public class XmlUtil {
 	 * Bean to xml.
 	 * <P>
 	 * <P>
-	 * Using XStream library to serialize objects to XML.
+	 * Using XStream library from serialize objects to XML.
 	 * </P>
 	 * <p>
 	 * example:
@@ -367,7 +367,7 @@ public class XmlUtil {
 	 * Bean to xml.
 	 * <P>
 	 * <P>
-	 * Using XStream library to serialize objects to XML.
+	 * Using XStream library from serialize objects to XML.
 	 * </P>
 	 * <p>
 	 * example:
@@ -424,7 +424,7 @@ public class XmlUtil {
 	 * Bean to xml.
 	 * <P>
 	 * <P>
-	 * Using XStream library to serialize objects to XML.
+	 * Using XStream library from xml to serialize objects.
 	 * </P>
 	 * <p>
 	 * example:
@@ -468,7 +468,7 @@ public class XmlUtil {
 	 * Bean to xml.
 	 * <P>
 	 * <P>
-	 * Using XStream library to serialize objects to XML.
+	 * Using XStream library from XML to serialize objects.
 	 * </P>
 	 * <p>
 	 * example:
@@ -512,7 +512,7 @@ public class XmlUtil {
 	 * Bean to xml.
 	 * <P>
 	 * <P>
-	 * Using XStream library to serialize objects to XML.
+	 * Using XStream library from XML to serialize objects.
 	 * </P>
 	 * <p>
 	 * example:
@@ -569,7 +569,7 @@ public class XmlUtil {
 	 * Bean to xml.
 	 * <P>
 	 * <P>
-	 * Using XStream library to serialize objects to XML.
+	 * Using XStream library from xml to serialize objects.
 	 * </P>
 	 * <p>
 	 * example:
