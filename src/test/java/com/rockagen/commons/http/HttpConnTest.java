@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,10 +25,11 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  */
 public class HttpConnTest {
@@ -49,16 +50,8 @@ public class HttpConnTest {
 		nvPairs.add(new BasicNameValuePair("password","shit"));
 	}
 	
-	
 	@Test
-	public void testSendGet() throws IOException {
-//		System.out.println(HttpConn.sendGet(httpHost, "/"));
-//		System.out.println(HttpConn.sendGet((HttpHost)obj[0], (String)obj[1]));
-//		System.out.println(HttpConn.sendGet((HttpHost)obj2[0], (String)obj2[1]));
-//		System.out.println(HttpConn.sendGet((HttpHost)obj2[0], (String)obj2[1],headers));
-		
-	}
-	@Test
+	@Ignore
 	public void testSendGetProxy() throws IOException{
 		HttpHost httpHost = new HttpHost("www.sex.com", 80, "http");
 		HttpHost proxy = new HttpHost("localhost", 8087, "http");
@@ -66,38 +59,41 @@ public class HttpConnTest {
 	}
 	
 	@Test
+	@Ignore
 	public void testSendGet4BasicAuth() throws IOException{
-//		HttpHost httpHost = new HttpHost("www.rockagen.com", 80, "http");
-//		System.out.println(HttpConn.sendGet(HttpConn.getUPC("admin","admin"),httpHost, "/NginxStatus"));
+		HttpHost httpHost = new HttpHost("www.rockagen.com", 80, "http");
+		System.out.println(HttpConn.sendGet(HttpConn.getUPC("admin","admin"),httpHost, "/NginxStatus"));
 	}
 	
 	
 	@Test
+	@Ignore
 	public void testSendPost() throws IOException {
 		
-//		HttpHost httpHost = new HttpHost("www.rockagen.com", 80, "http");
-//		Object[] obj=HttpConn.resolveString("http://www.rockagen.com");
-//		Object[] obj2=HttpConn.resolveString("https://www.rockagen.com");
-//		System.out.println(HttpConn.sendPost(httpHost, "/"));
-//		System.out.println(HttpConn.sendPost((HttpHost)obj[0], (String)obj[1]));
-//		System.out.println(HttpConn.sendPost((HttpHost)obj2[0], (String)obj2[1]));
-//		System.out.println(HttpConn.sendPost((HttpHost)obj2[0], (String)obj2[1],headers));
+		HttpHost httpHost = new HttpHost("www.rockagen.com", 80, "http");
+		Object[] obj=HttpConn.resolveString("http://www.rockagen.com");
+		Object[] obj2=HttpConn.resolveString("https://www.rockagen.com");
+		System.out.println(HttpConn.sendPost(httpHost, "/"));
+		System.out.println(HttpConn.sendPost((HttpHost)obj[0], (String)obj[1]));
+		System.out.println(HttpConn.sendPost((HttpHost)obj2[0], (String)obj2[1]));
+		System.out.println(HttpConn.sendPost((HttpHost)obj2[0], (String)obj2[1],headers));
 	}
 	
 	@Test
+	@Ignore
 	public void testSendPostProxy() throws IOException{
 		HttpHost httpHost = new HttpHost("www.sex.com", 80, "http");
 		HttpHost proxy = new HttpHost("localhost", 8087, "http");
-//		System.out.println(HttpConn.sendPost(httpHost,proxy, "/"));
+		System.out.println(HttpConn.sendPost(httpHost,proxy, "/"));
 	}
 	
 	@Test
+	@Ignore
 	public void testSendPost4BasicAuth() throws IOException{
-//		HttpHost httpHost = new HttpHost("localhost", 80, "http");
-//		System.out.println(HttpConn.sendPost(HttpConn.getUPC("admin","FUCK_TX_TEAM"),httpHost, "/ajax/open/orderExceptionTipAction.action"));
+		HttpHost httpHost = new HttpHost("localhost", 80, "http");
+		System.out.println(HttpConn.sendPost(HttpConn.getUPC("admin","FUCK_TX_TEAM"),httpHost, "/ajax/open/orderExceptionTipAction.action"));
 	}
 	
-	// ...
 
 
 

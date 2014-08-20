@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.rockagen.commons.util.XmlUtil.XAlias;
@@ -27,7 +28,7 @@ import com.rockagen.commons.util.XmlUtil.XAliasAttribute;
 
 /**
  * 
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  */
 public class XmlUtilTest {
@@ -39,6 +40,7 @@ public class XmlUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void testFromXml() throws IOException {
 
 		System.out.println(XmlUtil.getEncoding(getContent()));
@@ -48,6 +50,7 @@ public class XmlUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void testToXml() throws IOException {
 
 		File file = new File("/home/agen/a.xml");
@@ -80,6 +83,7 @@ public class XmlUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void testToBean() throws IOException {
 
 		TestVo tv = new TestVo();

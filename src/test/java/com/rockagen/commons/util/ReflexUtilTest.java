@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 the original author or authors.
+ * Copyright 2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,17 +19,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * 
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  * 
  */
 public class ReflexUtilTest {
 
 	@Test
+	@Ignore
 	public void testGetInstance() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", "ROCKAGEN");
@@ -41,6 +44,7 @@ public class ReflexUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void testGetInstance2() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", "ROCKAGEN");
@@ -59,30 +63,28 @@ public class ReflexUtilTest {
 		Class<?>[] clazz = new Class<?>[] { String.class, int.class,
 				String.class };
 		Object[] obj = new Object[] { "ROCKAGEN", 21, "agen@rockagen.com" };
-		Object[] obj2 = new Object[] { "ROCKAGEN", 21, "agen@rockagen.com",
-				"CHINA" };
-		System.out.println(ClassUtil.getInstance(TestVo2.class, true, clazz,
-				obj));
-		System.out.println(ClassUtil.getInstance(TestVo2.class, true, clazz,
-				obj2));
-		// System.out.println(ClassUtil.getInstance(TestVo2.class, false,
-		// clazz,obj));
 		TestVo2 vo2 = ClassUtil.getInstance(TestVo2.class, true, clazz, obj);
 
-		System.out.println(ReflexUtil.getFieldValue(vo2, "name", false));
-		System.out.println(ReflexUtil.getFieldValue(vo2, "email", false));
-		System.out.println(ReflexUtil.getFieldValue(vo2, "addr", false));
+		Assert.assertEquals("ROCKAGEN",
+				ReflexUtil.getFieldValue(vo2, "name", false));
+		Assert.assertEquals("agen@rockagen.com",
+				ReflexUtil.getFieldValue(vo2, "email", false));
+		Assert.assertEquals("CHINA",
+				ReflexUtil.getFieldValue(vo2, "addr", false));
 
 		ReflexUtil.setFieldValue(vo2, "name", "ROCKAGEN-USA", false);
 		ReflexUtil.setFieldValue(vo2, "email", "rockagen@gmail.com", false);
 		ReflexUtil.setFieldValue(vo2, "addr", "USA", false);
-		System.out.println("========================================");
-		System.out.println(ReflexUtil.getFieldValue(vo2, "name", false));
-		System.out.println(ReflexUtil.getFieldValue(vo2, "email", false));
-		System.out.println(ReflexUtil.getFieldValue(vo2, "addr", false));
+
+		Assert.assertEquals("ROCKAGEN-USA",
+				ReflexUtil.getFieldValue(vo2, "name", false));
+		Assert.assertEquals("rockagen@gmail.com",
+				ReflexUtil.getFieldValue(vo2, "email", false));
+		Assert.assertEquals("USA", ReflexUtil.getFieldValue(vo2, "addr", false));
 	}
 
 	@Test
+	@Ignore
 	public void testGetAnnotations() {
 		System.out.println("Method: "
 				+ Arrays.toString(ClassUtil.getAnnotatedDeclaredMethods(
@@ -96,6 +98,7 @@ public class ReflexUtilTest {
 	}
 
 	@Test
+	@Ignore
 	public void testClassUtils() {
 		System.out.println("Field: "
 				+ Arrays.toString(ClassUtil.getDeclaredFields(TestVo3.class,
@@ -115,6 +118,5 @@ public class ReflexUtilTest {
 				+ ClassUtil.getDeclaredMethod(TestVo3.class, true, "setName",
 						new Class[] { String.class }));
 	}
-	
 
 }

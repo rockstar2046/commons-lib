@@ -17,7 +17,7 @@
  * <b>Some commons functions packaging</b>
  * <p>apache.commons.lang3 must required</p>
  * <p>note: can not to new instance</p>
- * @author AGEN
+ * @author RA
  * @since JDK1.6
  */
 package com.rockagen.commons.util;
