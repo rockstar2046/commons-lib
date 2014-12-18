@@ -48,25 +48,25 @@ public class HttpConnTest {
 	@Test
 	@Ignore
 	public void testSendGet() throws IOException{
-		InputStream in=FileUtil.openInputStream(new File("/home/ra/cacerts"));
-		System.out.println(HttpConn.sendGet(in,"changeit".toCharArray(),"https://rooool.com"));
-		System.out.println(HttpConn.sendGet("https://www.google.com","http://127.0.0.1:8118"));
+		InputStream in=FileUtil.openInputStream(new File("/home/ra/var/cacerts"));
+		System.out.println(HttpConn.send(in, "changeit".toCharArray(), "https://rooool.com", RequestMethod.GET));
+		System.out.println(HttpConn.send("https://www.google.com", "http://127.0.0.1:8118",RequestMethod.GET));
 	}
 	
 	@Test
 	@Ignore
 	public void testSendGet4BasicAuth() throws IOException{
-		InputStream in=FileUtil.openInputStream(new File("/home/ra/cacerts"));
-		System.out.println(HttpConn.sendGet(HttpConn.getUPC("admin", "youseeajb"),in,"changeit".toCharArray(),"https://rooool.com/status"));
+		InputStream in=FileUtil.openInputStream(new File("/home/ra/var/cacerts"));
+		System.out.println(HttpConn.send(HttpConn.getUPC("admin", "youseeajb"), in, "changeit".toCharArray(), "https://rooool.com/status",RequestMethod.PUT));
 	}
 	
 	
 	@Test
 	@Ignore
 	public void testSendPost() throws IOException {
-		InputStream in=FileUtil.openInputStream(new File("/home/ra/cacerts"));
+		InputStream in=FileUtil.openInputStream(new File("/home/ra/var/cacerts"));
 		Map<String, String> map=new HashMap<String, String>();
-		System.out.println(HttpConn.sendPost(in,"changeit".toCharArray(),"https://rooool.com/api/",map));
+		System.out.println(HttpConn.sendBody(in, "changeit".toCharArray(), "https://rooool.com/api/", map,RequestMethod.POST));
 		//System.out.println(HttpConn.sendPost(in,"changeit".toCharArray(),"https://rooool.com/api/",map,"http://127.0.0.1:8118"));
 	}
 
