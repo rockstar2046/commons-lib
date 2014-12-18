@@ -3,6 +3,13 @@
 .project
 .classpath
 
+# Idea Files
+.idea/
+.iml/
+*.iml
+*.ipr
+*.iws
+
 # Package Files #
 *.jar
 *.war
