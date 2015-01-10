@@ -91,8 +91,9 @@ public class CharsetUtil {
         };
 
     /**
-     * Returns a cached thread-local {@link CharsetEncoder} for the specified
-     * <tt>charset</tt>.
+     * Returns a cached thread-local {@link CharsetEncoder} for the specified <tt>charset</tt>.
+     * @param charset {@link java.nio.charset.Charset}
+     * @return {@link java.nio.charset.CharsetEncoder}
      */
     public static CharsetEncoder getEncoder(Charset charset) {
         if (charset == null) {
@@ -116,8 +117,9 @@ public class CharsetUtil {
     }
 
     /**
-     * Returns a cached thread-local {@link CharsetDecoder} for the specified
-     * <tt>charset</tt>.
+     * Returns a cached thread-local {@link CharsetDecoder} for the specified <tt>charset</tt>.
+     * @param charset {@link java.nio.charset.Charset}
+     * @return {@link CharsetDecoder}
      */
     public static CharsetDecoder getDecoder(Charset charset) {
         if (charset == null) {

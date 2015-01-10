@@ -158,11 +158,11 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * List,Array,Map
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * clazz= new TypeReference&lt;List&lt;MyBean&gt;&gt;(){};
 	 * 
 	 * e.g:
@@ -171,10 +171,11 @@ public class JsonUtil {
 	 * toBean(jsonStr, MyBean[])
 	 * 
 	 * toBean(jsonStr, new TypeReference&lt;Map&lt;String, Map&lt;String, MyBean&gt;&gt;(){})
-	 * </code></p>
+	 * </pre>
 	 * 
-	 * @param jsonStr
-	 * @param valueTypeRef
+	 * @param jsonStr json String
+	 * @param valueTypeRef value type ref
+	 * @param <T> t    
 	 * @return bean
 	 */
 	public static <T> T toBean(String jsonStr, TypeReference<T> valueTypeRef) {
@@ -185,11 +186,11 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * List,Array,Map
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * clazz= new TypeReference&lt;List&lt;MyBean&gt;&gt;(){};
 	 * 
 	 * e.g:
@@ -198,10 +199,11 @@ public class JsonUtil {
 	 * toBean(jsonBytes, MyBean[])
 	 * 
 	 * toBean(jsonBytes, new TypeReference&lt;Map&lt;String, Map&lt;String, MyBean&gt;&gt;(){})
-	 * </code></p>
+	 * </pre>
 	 * 
-	 * @param jsonBytes
-	 * @param valueTypeRef
+	 * @param jsonBytes json bytes
+	 * @param valueTypeRef value type ref
+	 * @param <T> t                         
 	 * @return bean
 	 */
 	public static <T> T toBean(byte[] jsonBytes, TypeReference<T> valueTypeRef) {
@@ -212,11 +214,11 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * List,Array,Map
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * clazz= new TypeReference&lt;List&lt;MyBean&gt;&gt;(){};
 	 * 
 	 * e.g:
@@ -225,10 +227,11 @@ public class JsonUtil {
 	 * toBean(jsonReader, MyBean[])
 	 * 
 	 * toBean(jsonReader, new TypeReference&lt;Map&lt;String, Map&lt;String, MyBean&gt;&gt;(){})
-	 * </code></p>
+	 * </pre>
 	 * 
-	 * @param jsonReader
-	 * @param valueTypeRef
+	 * @param jsonReader json reader
+	 * @param valueTypeRef value type ref
+	 * @param <T> t                         
 	 * @return bean
 	 */
 	public static <T> T toBean(Reader jsonReader, TypeReference<T> valueTypeRef) {
@@ -239,11 +242,11 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * List,Array,Map
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * clazz= new TypeReference&lt;List&lt;MyBean&gt;&gt;(){};
 	 * 
 	 * e.g:
@@ -252,10 +255,11 @@ public class JsonUtil {
 	 * toBean(jsonURL, MyBean[])
 	 * 
 	 * toBean(jsonURL, new TypeReference&lt;Map&lt;String, Map&lt;String, MyBean&gt;&gt;(){})
-	 * </code></p>
+	 * </pre>
 	 * 
-	 * @param jsonURL
-	 * @param valueTypeRef
+	 * @param jsonURL json url
+	 * @param valueTypeRef value type ref
+	 * @param <T> t                         
 	 * @return bean
 	 */
 	public static <T> T toBean(URL jsonURL, TypeReference<T> valueTypeRef) {
@@ -266,11 +270,11 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * List,Array,Map
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * clazz= new TypeReference&lt;List&lt;MyBean&gt;&gt;(){};
 	 * 
 	 * e.g:
@@ -279,10 +283,11 @@ public class JsonUtil {
 	 * toBean(jsonFile, MyBean[])
 	 * 
 	 * toBean(jsonFile, new TypeReference&lt;Map&lt;String, Map&lt;String, MyBean&gt;&gt;(){})
-	 * </code></p>
+	 * </pre>
 	 * 
-	 * @param jsonFile
-	 * @param valueTypeRef
+	 * @param jsonFile josn file
+	 * @param valueTypeRef value type ref
+	 * @param <T> t                        
 	 * @return bean
 	 */
 	public static <T> T toBean(File jsonFile, TypeReference<T> valueTypeRef) {
@@ -293,14 +298,15 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * call {@link MyJsonParser#getJsonParser()} return a JsonParser
 	 * </p>
 	 * 
-	 * @param myJsonParser
-	 * @param valueTypeRef
+	 * @param myJsonParser custom json parser
+	 * @param valueTypeRef value type ref
 	 * @see #toBean(JsonParser, TypeReference)
+	 * @param <T> t  
 	 * @return bean
 	 */
 	protected static <T> T toBean(MyJsonParser myJsonParser,
@@ -311,11 +317,11 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * List,Array,Map
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * clazz= new TypeReference&lt;List&lt;MyBean&gt;&gt;(){};
 	 * 
 	 * e.g:
@@ -324,10 +330,11 @@ public class JsonUtil {
 	 * toBean(jsonParser, MyBean[])
 	 * 
 	 * toBean(jsonParser, new TypeReference&lt;Map&lt;String, Map&lt;String, MyBean&gt;&gt;(){})
-	 * </code></p>
+	 * </pre>
 	 * 
-	 * @param jsonParser
-	 * @param valueTypeRef
+	 * @param jsonParser json parser
+	 * @param valueTypeRef value type ref
+	 * @param <T> t                         
 	 * @return bean
 	 */
 	public static <T> T toBean(JsonParser jsonParser,
@@ -354,19 +361,20 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * e.g:
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * {"id" : idValue, "name" : nameValue, "aBean" : {"aBeanId" : aBeanIdValue, ...}} 
-	 * </pre></code>
+	 * </pre>
 	 * <p>
 	 * List,Array,Map... see {@link #toBean(String, TypeReference)}
 	 * </p>
 	 * 
-	 * @param jsonStr
-	 * @param clazz
+	 * @param jsonStr json String
+	 * @param clazz class
+	 * @param <T> t                  
 	 * @return bean
 	 */
 	public static <T> T toBean(String jsonStr, Class<T> clazz) {
@@ -377,19 +385,20 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * e.g:
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * {"id" : idValue, "name" : nameValue, "aBean" : {"aBeanId" : aBeanIdValue, ...}} 
-	 * </pre></code>
+	 * </pre>
 	 * <p>
 	 * List,Array,Map... see {@link #toBean(byte[], TypeReference)}
 	 * </p>
 	 * 
-	 * @param jsonBytes
-	 * @param clazz
+	 * @param jsonBytes josn bytes
+	 * @param clazz class
+	 * @param <T> t                  
 	 * @return bean
 	 */
 	public static <T> T toBean(byte[] jsonBytes, Class<T> clazz) {
@@ -400,19 +409,20 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * e.g:
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * {"id" : idValue, "name" : nameValue, "aBean" : {"aBeanId" : aBeanIdValue, ...}} 
-	 * </pre></code>
+	 * </pre>
 	 * <p>
 	 * List,Array,Map... see {@link #toBean(Reader, TypeReference)}
 	 * </p>
 	 * 
-	 * @param jsonReader
-	 * @param clazz
+	 * @param jsonReader json reader
+	 * @param clazz class
+	 * @param <T> t
 	 * @return bean
 	 */
 	public static <T> T toBean(Reader jsonReader, Class<T> clazz) {
@@ -423,19 +433,20 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * e.g:
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * {"id" : idValue, "name" : nameValue, "aBean" : {"aBeanId" : aBeanIdValue, ...}} 
-	 * </pre></code>
+	 * </pre>
 	 * <p>
 	 * List,Array,Map... see {@link #toBean(URL, TypeReference)}
 	 * </p>
 	 * 
-	 * @param jsonURL
-	 * @param clazz
+	 * @param jsonURL josn url
+	 * @param clazz class
+	 * @param <T> t                 
 	 * @return bean
 	 */
 	public static <T> T toBean(URL jsonURL, Class<T> clazz) {
@@ -446,19 +457,20 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * e.g:
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * {"id" : idValue, "name" : nameValue, "aBean" : {"aBeanId" : aBeanIdValue, ...}} 
-	 * </pre></code>
+	 * </pre>
 	 * <p>
 	 * List,Array,Map... see {@link #toBean(File, TypeReference)}
 	 * </p>
 	 * 
-	 * @param jsonFile
-	 * @param clazz
+	 * @param jsonFile json file
+	 * @param clazz class
+	 * @param <T> t                  
 	 * @return bean
 	 */
 	public static <T> T toBean(File jsonFile, Class<T> clazz) {
@@ -469,14 +481,15 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * call {@link MyJsonParser#getJsonParser()} return a JsonParser
 	 * </p>
 	 * 
-	 * @param myJsonParser
-	 * @param clazz
+	 * @param myJsonParser custom json parser
+	 * @param clazz class
 	 * @see #toBean(JsonParser, Class)
+	 * @param <T> t  
 	 * @return bean
 	 */
 	protected static <T> T toBean(MyJsonParser myJsonParser, Class<T> clazz) {
@@ -486,19 +499,20 @@ public class JsonUtil {
 	}
 
 	/**
-	 * Json string to java bean <br/>
+	 * Json string to java bean <br>
 	 * <p>
 	 * e.g:
 	 * </p>
-	 * <code><pre>
+	 * <pre>
 	 * {"id" : idValue, "name" : nameValue, "aBean" : {"aBeanId" : aBeanIdValue, ...}} 
-	 * </pre></code>
+	 * </pre>
 	 * <p>
 	 * List,Array,Map... see {@link #toBean(String, TypeReference)}
 	 * </p>
 	 * 
-	 * @param jsonParser
-	 * @param clazz
+	 * @param jsonParser json parser
+	 * @param clazz class
+	 * @param <T> t
 	 * @return bean
 	 */
 	public static <T> T toBean(JsonParser jsonParser, Class<T> clazz) {
@@ -527,8 +541,9 @@ public class JsonUtil {
 	/**
 	 * Bean to json string
 	 * 
-	 * @param obj
+	 * @param obj obj
 	 *            bean object
+	 * @param <T> t           
 	 * @return json string
 	 */
 	public static <T> String toJson(T obj) {
@@ -556,7 +571,7 @@ public class JsonUtil {
 	}
 
 	/**
-	 * JsonParser Helper</br> provide to
+	 * JsonParser Helper<br> provide to
 	 * {@link JsonUtil#toBean(MyJsonParser, Class)} and
 	 * {@link JsonUtil#toBean(MyJsonParser, TypeReference)}
 	 */
@@ -574,7 +589,7 @@ public class JsonUtil {
 		/**
 		 * Set jsonParser from {@link JsonFactory#createParser(File)}
 		 * 
-		 * @param obj
+		 * @param obj obj
 		 */
 		public MyJsonParser(File obj) {
 			try {
@@ -589,7 +604,7 @@ public class JsonUtil {
 		/**
 		 * Set jsonParser from {@link JsonFactory#createParser(Reader)}
 		 * 
-		 * @param obj
+		 * @param obj obj
 		 */
 		public MyJsonParser(Reader obj) {
 			try {
@@ -604,7 +619,7 @@ public class JsonUtil {
 		/**
 		 * Set jsonParser from {@link JsonFactory#createParser(byte[])}
 		 * 
-		 * @param obj
+		 * @param obj obj
 		 */
 		public MyJsonParser(byte[] obj) {
 			try {
@@ -619,7 +634,7 @@ public class JsonUtil {
 		/**
 		 * Set jsonParser from {@link JsonFactory#createParser(String)}
 		 * 
-		 * @param obj
+		 * @param obj obj
 		 */
 		public MyJsonParser(String obj) {
 			try {
@@ -634,7 +649,7 @@ public class JsonUtil {
 		/**
 		 * Set jsonParser from {@link JsonFactory#createParser(URL)}
 		 * 
-		 * @param obj
+		 * @param obj obj
 		 */
 		public MyJsonParser(URL obj) {
 			try {
@@ -649,7 +664,7 @@ public class JsonUtil {
 		/**
 		 * Set jsonParser from {@link JsonFactory#createParser(InputStream)}
 		 * 
-		 * @param obj
+		 * @param obj obj
 		 */
 		public MyJsonParser(InputStream obj) {
 			try {

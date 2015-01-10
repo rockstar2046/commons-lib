@@ -57,10 +57,11 @@ public class ClassUtil extends ClassUtils {
 	/**
 	 * Create new instance of specified class and type
 	 * 
-	 * @param clazz
-	 * @param accessible
-	 * @param parameterTypes
-	 * @param paramValue
+	 * @param clazz class
+	 * @param accessible accessible
+	 * @param parameterTypes parameter types
+	 * @param paramValue param value
+	 * @param <T> t
 	 * @return instance
 	 */
 	public static <T> T getInstance(Class<T> clazz, boolean accessible,
@@ -76,9 +77,7 @@ public class ClassUtil extends ClassUtils {
 						.getDeclaredConstructor(parameterTypes);
 				Object[] obj = new Object[parameterTypes.length];
 
-				for (int i = 0; i < parameterTypes.length; i++) {
-					obj[i] = paramValue[i];
-				}
+				System.arraycopy(paramValue, 0, obj, 0, parameterTypes.length);
 				constructor.setAccessible(accessible);
 				t = constructor.newInstance(obj);
 			}
@@ -96,7 +95,6 @@ public class ClassUtil extends ClassUtils {
 		} catch (InvocationTargetException e) {
 			log.error("{}",e.getMessage(),e);
 		}
-		;
 
 		return t;
 	}
@@ -104,8 +102,9 @@ public class ClassUtil extends ClassUtils {
 	/**
 	 * Create new instance of specified class and type
 	 * 
-	 * @param clazz
-	 * @param accessible
+	 * @param clazz class
+	 * @param accessible accessible
+	 * @param <T> t                      
 	 * @return instance
 	 */
 	public static <T> T getInstance(Class<T> clazz, boolean accessible) {
@@ -138,7 +137,8 @@ public class ClassUtil extends ClassUtils {
 	/**
 	 * Create new instance of specified class and type
 	 * 
-	 * @param clazz
+	 * @param clazz class
+	 * @param <T> t
 	 * @return instance
 	 */
 	public static <T> T getInstance(Class<T> clazz) {
@@ -149,7 +149,7 @@ public class ClassUtil extends ClassUtils {
 	 * obtain fields list of specified class If recursively is true, obtain
 	 * fields from all class hierarchy
 	 * 
-	 * @param clazz
+	 * @param clazz class
 	 *            where fields are searching
 	 * @param recursively
 	 *            param
@@ -164,7 +164,7 @@ public class ClassUtil extends ClassUtils {
 
 		if (superClass != null && recursively) {
 			Field[] declaredFieldsOfSuper = getDeclaredFields(superClass,
-					recursively);
+					true);
 			if (declaredFieldsOfSuper.length > 0)
 				Collections.addAll(fields, declaredFieldsOfSuper);
 		}
@@ -175,7 +175,7 @@ public class ClassUtil extends ClassUtils {
 	 * obtain field If recursively is true, obtain fields from all class
 	 * hierarchy
 	 * 
-	 * @param clazz
+	 * @param clazz class
 	 *            where fields are searching
 	 * @param fieldName
 	 *            field name
@@ -186,12 +186,11 @@ public class ClassUtil extends ClassUtils {
 	public static Field getDeclaredField(Class<?> clazz, String fieldName,
 			boolean recursively) {
 		try {
-			Field declaredField = clazz.getDeclaredField(fieldName);
-			return declaredField;
+			return clazz.getDeclaredField(fieldName);
 		} catch (NoSuchFieldException e) {
 			Class<?> superClass = clazz.getSuperclass();
 			if (superClass != null && recursively) {
-				return getDeclaredField(superClass, fieldName, recursively);
+				return getDeclaredField(superClass, fieldName, true);
 			}
 		} catch (SecurityException e) {
 			log.error("{}",e.getMessage(),e);
@@ -204,7 +203,7 @@ public class ClassUtil extends ClassUtils {
 	 * obtain methods list of specified class If recursively is true, obtain
 	 * methods from all class hierarchy
 	 * 
-	 * @param clazz
+	 * @param clazz class
 	 *            where fields are searching
 	 * @param recursively
 	 *            param
@@ -220,7 +219,7 @@ public class ClassUtil extends ClassUtils {
 
 		if (superClass != null && recursively) {
 			Method[] declaredMethodsOfSuper = getDeclaredMethods(superClass,
-					recursively);
+					true);
 			if (declaredMethodsOfSuper.length > 0)
 				Collections.addAll(methods, declaredMethodsOfSuper);
 		}
@@ -231,23 +230,22 @@ public class ClassUtil extends ClassUtils {
 	 * obtain method list of specified class If recursively is true, obtain
 	 * method from all class hierarchy
 	 * 
-	 * @param clazz
-	 * @param recursively
-	 * @param methodName
-	 * @param parameterTypes
+	 * @param clazz class
+	 * @param recursively recursively
+	 * @param methodName method name
+	 * @param parameterTypes parameter types
 	 * @return method
 	 */
 	public static Method getDeclaredMethod(Class<?> clazz, boolean recursively,
 			String methodName, Class<?>... parameterTypes) {
 
 		try {
-			Method declaredMethod = clazz.getDeclaredMethod(methodName,
+			return clazz.getDeclaredMethod(methodName,
 					parameterTypes);
-			return declaredMethod;
 		} catch (NoSuchMethodException e) {
 			Class<?> superClass = clazz.getSuperclass();
 			if (superClass != null && recursively) {
-				return getDeclaredMethod(superClass, recursively, methodName,
+				return getDeclaredMethod(superClass, true, methodName,
 						parameterTypes);
 			}
 		} catch (SecurityException e) {
@@ -261,7 +259,7 @@ public class ClassUtil extends ClassUtils {
 	 * constructor from all class hierarchy
 	 * 
 	 * 
-	 * @param clazz
+	 * @param clazz class
 	 *            where fields are searching
 	 * @param recursively
 	 *            param
@@ -277,7 +275,7 @@ public class ClassUtil extends ClassUtils {
 
 		if (superClass != null && recursively) {
 			Constructor<?>[] declaredConstructorsOfSuper = getDeclaredConstructors(
-					superClass, recursively);
+					superClass, true);
 			if (declaredConstructorsOfSuper.length > 0)
 				Collections.addAll(constructors, declaredConstructorsOfSuper);
 		}
@@ -289,23 +287,23 @@ public class ClassUtil extends ClassUtils {
 	 * constructor from all class hierarchy
 	 * 
 	 * 
-	 * @param clazz
+	 * @param clazz class
 	 *            where fields are searching
 	 * @param recursively
 	 *            param
+	 * @param parameterTypes parameter types
 	 * @return constructor
 	 */
 	public static Constructor<?> getDeclaredConstructor(Class<?> clazz,
 			boolean recursively, Class<?>... parameterTypes) {
 
 		try {
-			Constructor<?> declaredConstructor = clazz
+			return clazz
 					.getDeclaredConstructor(parameterTypes);
-			return declaredConstructor;
 		} catch (NoSuchMethodException e) {
 			Class<?> superClass = clazz.getSuperclass();
 			if (superClass != null && recursively) {
-				return getDeclaredConstructor(superClass, recursively,
+				return getDeclaredConstructor(superClass, true,
 						parameterTypes);
 			}
 		} catch (SecurityException e) {
@@ -319,7 +317,7 @@ public class ClassUtil extends ClassUtils {
 	 * annotation class If recursively is true, obtain fields from all class
 	 * hierarchy
 	 * 
-	 * @param clazz
+	 * @param clazz class
 	 *            - where fields are searching
 	 * @param annotationClass
 	 *            - specified annotation class
@@ -345,7 +343,7 @@ public class ClassUtil extends ClassUtils {
 	 * incoming annotation class If recursively is true, obtain methods from all
 	 * class hierarchy
 	 * 
-	 * @param clazz
+	 * @param clazz class
 	 *            - where methods are searching
 	 * @param annotationClass
 	 *            - specified annotation class
@@ -371,7 +369,7 @@ public class ClassUtil extends ClassUtils {
 	 * incoming annotation class If recursively is true, obtain constructors
 	 * from all class hierarchy
 	 * 
-	 * @param clazz
+	 * @param clazz class
 	 *            - where constructors are searching
 	 * @param annotationClass
 	 *            - specified annotation class

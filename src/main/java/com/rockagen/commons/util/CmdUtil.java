@@ -220,6 +220,7 @@ public class CmdUtil {
 	 *            the <code>Options</code>
 	 * @param arguments
 	 *            the <code>arguments</code>
+	 * @param properties the <code>properties</code>
 	 * @param stopAtNonOption
 	 *            specifies whether to stop interpreting the arguments when a
 	 *            non option has been encountered and to add them to the
