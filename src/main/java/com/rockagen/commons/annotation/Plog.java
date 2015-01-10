@@ -23,28 +23,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 
- * <b>operate log annotation class</b>
- * <p>usage:<code>@OPLog(description) or @OPLog(description="description")</code></p>
- * @author RA
+ *
+ * <b>Operate log annotation class</b>
+ * <p>usage:<code>@Plog(description)</code></p>
+ * @author ra
  * @since JDK1.6
  */
-@Target(ElementType.METHOD)     
-@Retention(RetentionPolicy.RUNTIME)     
-@Documented    
-@Inherited   
-public @interface OPLog {
-	/** 
-     * description
-     * @return  string
-     */  
-    public String description() default "no description";
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+public @interface Plog {
 
-	
 	/**
-	 * value if description not exist
-	 * @return string
+	 * (Optional) The value of the method. Defaults to the method name.
+	 * @return value
 	 */
-	public String value() default "no description";   
-
+	String value() default "";
 }

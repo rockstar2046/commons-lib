@@ -55,12 +55,12 @@ public class ReflexUtil {
 	 * 
 	 * Direct reading the object attribute values,the private / protected
 	 * modifiers will be ignoring.if getter function exist,return getter
-	 * function value</br> If recursively is true, will looking from all class
-	 * hierarchy
+	 * function value<p>If recursively is true, will looking from all class
+	 * hierarchy</p>
 	 * 
-	 * @param object
-	 * @param fieldName
-	 * @param recursively
+	 * @param object object
+	 * @param fieldName field name
+	 * @param recursively recursively
 	 * @return object
 	 */
 	public static Object getFieldValue(final Object object, String fieldName,
@@ -75,7 +75,7 @@ public class ReflexUtil {
 		if (field == null) {
 			log.debug("Could not find field [ {} ] on target [ {} ]",
 					fieldName, object.getClass().getSimpleName());
-			return result;
+			return null;
 		}
 
 		String methodName = "get" + CommUtil.capitalize(fieldName);
@@ -89,8 +89,7 @@ public class ReflexUtil {
 			} catch (InvocationTargetException e) {
 				log.debug("Could not find method [ {} ] on target [ {} ]",
 						methodName, object.getClass().getSimpleName());
-			} catch (IllegalArgumentException e) {
-			} catch (IllegalAccessException e) {
+			}catch (IllegalAccessException e) {
 				// Will not happen
 			}
 		}
@@ -98,8 +97,7 @@ public class ReflexUtil {
 		makeAccessible(field);
 		try {
 			result = field.get(object);
-		} catch (IllegalArgumentException e) {
-		} catch (IllegalAccessException e) {
+		}catch (IllegalAccessException e) {
 			// Will not happen
 		}
 		return result;
@@ -108,13 +106,13 @@ public class ReflexUtil {
 	/**
 	 * Direct writing the object attribute values, the private / protected
 	 * modifiers will be ignoring,if setter function exist,return setter
-	 * function value.</br> If recursively is true, will looking from all class
-	 * hierarchy
+	 * function value. <p>If recursively is true, will looking from all class
+	 * hierarchy</p>
 	 * 
-	 * @param object
-	 * @param fieldName
-	 * @param value
-	 * @param recursively
+	 * @param object object
+	 * @param fieldName field name
+	 * @param value value
+	 * @param recursively recursively
 	 */
 	public static void setFieldValue(final Object object, String fieldName,
 			final Object value, boolean recursively) {
@@ -147,8 +145,7 @@ public class ReflexUtil {
 			} catch (NullPointerException e) {
 				log.debug("{} field: [ {} ] is null", object.getClass()
 						.getSimpleName(), fieldName);
-			} catch (IllegalArgumentException e) {
-			} catch (IllegalAccessException e) {
+			}catch (IllegalAccessException e) {
 				// Will not happen
 			}
 
@@ -158,8 +155,7 @@ public class ReflexUtil {
 
 		try {
 			field.set(object, value);
-		} catch (IllegalArgumentException e) {
-		} catch (NullPointerException e) {
+		}catch (NullPointerException e) {
 			log.debug("{} field: [ {} ] is null", object.getClass()
 					.getSimpleName(), fieldName);
 		} catch (IllegalAccessException e) {
@@ -170,7 +166,7 @@ public class ReflexUtil {
 	/**
 	 * set attribute is accessible
 	 * 
-	 * @param field
+	 * @param field {@link java.lang.reflect.Field}
 	 */
 	public static void makeAccessible(final Field field) {
 		if (!Modifier.isPublic(field.getModifiers())
@@ -182,7 +178,7 @@ public class ReflexUtil {
 	/**
 	 * set method is accessible
 	 * 
-	 * @param method
+	 * @param method {@link java.lang.reflect.Method}
 	 */
 	public static void makeAccessible(final Method method) {
 		if (!Modifier.isPublic(method.getModifiers())
@@ -194,8 +190,8 @@ public class ReflexUtil {
 
 	/**
 	 * set constructor is accessible
-	 * 
-	 * @param constructor
+	 * @param constructor {@link java.lang.reflect.Constructor}
+	 * @param <T> t
 	 */
 	public static <T> void makeAccessible(final Constructor<T> constructor) {
 		if (!Modifier.isPublic(constructor.getModifiers())
@@ -206,15 +202,15 @@ public class ReflexUtil {
 	}
 
 	/**
-	 * obtained the parent class generic parameter types</br>
+	 * obtained the parent class generic parameter types
 	 * <p>
 	 * for exmaple:
 	 * </p>
 	 * <code>
-	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
+	 *  ClassB&lt;T&gt;extends ClassA&lt;T&gt;
 	 * </code>
 	 * 
-	 * @param clazz
+	 * @param clazz {@link java.lang.Class}
 	 * @return Types
 	 */
 	public static Type[] getSuperClassGenricTypes(final Class<?> clazz) {
@@ -227,9 +223,7 @@ public class ReflexUtil {
 
 		if (type instanceof ParameterizedType) {
 
-			Type[] params = ((ParameterizedType) type).getActualTypeArguments();
-
-			return params;
+			return ((ParameterizedType) type).getActualTypeArguments();
 
 		} else {
 			log.warn(
@@ -240,15 +234,15 @@ public class ReflexUtil {
 	}
 
 	/**
-	 * obtained the parent class generic parameter type</br>
+	 * obtained the parent class generic parameter type
 	 * <p>
 	 * for exmaple:
 	 * </p>
 	 * <code>
-	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
+	 *  ClassB&lt;T&gt;extends ClassA&lt;T&gt;
 	 * </code>
 	 * 
-	 * @param clazz
+	 * @param clazz {@link java.lang.Class}
 	 * @param index
 	 *            start 0
 	 * @return Type
@@ -273,15 +267,15 @@ public class ReflexUtil {
 	}
 
 	/**
-	 * obtained the parent class generic parameter classes</br>
+	 * obtained the parent class generic parameter classes
 	 * <p>
 	 * for exmaple:
 	 * </p>
 	 * <code>
-	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
+	 *  ClassB&lt;T&gt;extends ClassA&lt;T&gt;
 	 * </code>
 	 * 
-	 * @param clazz
+	 * @param clazz {@link java.lang.Class}
 	 * @return Classes
 	 */
 	public static Class<?>[] getSuperClassGenricClasses(final Class<?> clazz) {
@@ -296,15 +290,15 @@ public class ReflexUtil {
 	}
 
 	/**
-	 * obtained the parent class generic parameter class</br>
+	 * obtained the parent class generic parameter class
 	 * <p>
 	 * for exmaple:
 	 * </p>
 	 * <code>
-	 *  ClassB&lt;T&gt;extends ClassA&ltT&gt;
+	 *  ClassB&lt;T&gt;extends ClassA&lt;T&gt;
 	 * </code>
 	 * 
-	 * @param clazz
+	 * @param clazz {@link java.lang.Class}
 	 * @param index
 	 *            start 0
 	 * @return Class
@@ -315,13 +309,14 @@ public class ReflexUtil {
 	}
 
 	/**
-	 * Create new instance of specified class and type from a map</br> <b>note:
-	 * clazz must write setter</b>
+	 * Create new instance of specified class and type from a map <p><b>note:
+	 * clazz must write setter</b></p>
 	 * 
-	 * @param clazz
+	 * @param clazz {@link java.lang.Class}
 	 * @param paramsMap
 	 *            attributes
-	 * @param accessible
+	 * @param accessible accesible
+	 * @param <T> t
 	 * @return instance
 	 */
 	public static <T> T getBasicInstance(final Class<T> clazz,

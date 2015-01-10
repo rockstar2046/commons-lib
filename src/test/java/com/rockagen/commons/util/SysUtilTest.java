@@ -15,9 +15,6 @@
  */
 package com.rockagen.commons.util;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -30,10 +27,7 @@ public class SysUtilTest {
 
 	@Test
 	@Ignore
-	public void openUrl() throws IllegalArgumentException,
-			ClassNotFoundException, IllegalAccessException,
-			InterruptedException, InvocationTargetException, IOException,
-			NoSuchMethodException {
+	public void openUrl() throws Exception {
 		System.out.println(SysUtil.OS_NAME);
 
 		SysUtil.browse("http://www.google.com");

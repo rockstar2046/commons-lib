@@ -88,7 +88,7 @@ public class HttpConn {
      *
      * @param target target address
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(String target) throws IOException {
         return send(target, RequestMethod.GET);
@@ -100,7 +100,7 @@ public class HttpConn {
      * @param target target address
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(String target, RequestMethod method) throws IOException {
         return send(target, "", method);
@@ -114,7 +114,7 @@ public class HttpConn {
      * @param target   target address
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(InputStream keystore,
                               char[] password, String target, RequestMethod method) throws IOException {
@@ -125,10 +125,10 @@ public class HttpConn {
      * Send a http request with explicit params
      *
      * @param target  target address
-     * @param headers
+     * @param headers headers
      * @param method  {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(String target, Map<String, String> headers, RequestMethod method)
             throws IOException {
@@ -141,10 +141,10 @@ public class HttpConn {
      * @param keystore keyStore InputStream (Custom SSL)
      * @param password keyStore password
      * @param target   target address
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(InputStream keystore,
                               char[] password, String target, Map<String, String> headers, RequestMethod method)
@@ -159,10 +159,10 @@ public class HttpConn {
      * @param keystore keyStore InputStream (Custom SSL)
      * @param password keyStore password
      * @param target   target address
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               InputStream keystore, char[] password, String target,
@@ -178,7 +178,7 @@ public class HttpConn {
      * @param proxy  proxy address
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(String target, String proxy, RequestMethod method)
             throws IOException {
@@ -190,11 +190,11 @@ public class HttpConn {
      * Send a http request with explicit params
      *
      * @param target   target address
-     * @param headers
+     * @param headers headers
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(String target, String encoding,
                               Map<String, String> headers, RequestMethod method) throws IOException {
@@ -210,7 +210,7 @@ public class HttpConn {
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(String target, String proxy, String encoding, RequestMethod method)
             throws IOException {
@@ -224,10 +224,10 @@ public class HttpConn {
      * @param target   target address
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(String target, String proxy, String encoding,
                               Map<String, String> headers, RequestMethod method) throws IOException {
@@ -243,7 +243,7 @@ public class HttpConn {
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               String target, String encoding, RequestMethod method) throws IOException {
@@ -258,7 +258,7 @@ public class HttpConn {
      * @param target target address
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc, String target, RequestMethod method)
             throws IOException {
@@ -272,10 +272,10 @@ public class HttpConn {
      * @param upc      basic auth {@link UsernamePasswordCredentials}
      * @param target   target address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               String target, String encoding, Map<String, String> headers, RequestMethod method)
@@ -291,10 +291,10 @@ public class HttpConn {
      * @param target   target address
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               String target, String proxy, String encoding,
@@ -305,13 +305,13 @@ public class HttpConn {
 
     /**
      * Send a http request with explicit params
-     *
+     * @param upc {@link org.apache.http.auth.UsernamePasswordCredentials}
      * @param keystore keyStore InputStream (Custom SSL)
      * @param password keyStore password
      * @param target   target address
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               InputStream keystore, char[] password, String target, RequestMethod method)
@@ -325,11 +325,11 @@ public class HttpConn {
      * @param keystore keyStore InputStream (Custom SSL)
      * @param password keyStore password
      * @param target   target address
-     * @param headers
+     * @param headers headers
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(InputStream keystore,
                               char[] password, String target, String encoding,
@@ -346,11 +346,11 @@ public class HttpConn {
      * @param keystore keyStore InputStream (Custom SSL)
      * @param password keyStore password
      * @param target   target address
-     * @param headers
+     * @param headers headers
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               InputStream keystore, char[] password, String target,
@@ -369,7 +369,7 @@ public class HttpConn {
      * @param proxy    proxy address
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(InputStream keystore,
                               char[] password, String target, String proxy, RequestMethod method) throws IOException {
@@ -387,7 +387,7 @@ public class HttpConn {
      * @param proxy    proxy address
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               InputStream keystore, char[] password, String target,
@@ -407,7 +407,7 @@ public class HttpConn {
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(InputStream keystore,
                               char[] password, String target, String proxy, String encoding, RequestMethod method)
@@ -428,7 +428,7 @@ public class HttpConn {
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               InputStream keystore, char[] password, String target,
@@ -446,10 +446,10 @@ public class HttpConn {
      * @param target   target address
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(InputStream keystore,
                               char[] password, String target, String proxy, String encoding,
@@ -468,10 +468,10 @@ public class HttpConn {
      * @param target   target address
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               InputStream keystore, char[] password, String target,
@@ -515,9 +515,9 @@ public class HttpConn {
      * @param proxyHost  HttpHost
      * @param encoding   (default UTF-8)
      * @param method     {@link com.rockagen.commons.http.RequestMethod}
-     * @param headers    (optional)
+     * @param headers headers    (optional)
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String send(UsernamePasswordCredentials upc,
                               InputStream keystore, char[] password,
@@ -543,7 +543,7 @@ public class HttpConn {
      * @param target target address
      * @param body   request body
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, byte[] body)
             throws IOException {
@@ -559,7 +559,7 @@ public class HttpConn {
      * @param body   request body
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, byte[] body, RequestMethod method)
             throws IOException {
@@ -576,7 +576,7 @@ public class HttpConn {
      * @param body   request body
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   String target, byte[] body, RequestMethod method) throws IOException {
@@ -595,7 +595,7 @@ public class HttpConn {
      * @param body     request body
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password, String target,
@@ -615,7 +615,7 @@ public class HttpConn {
      * @param body     request body
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(InputStream keystore,
                                   char[] password, String target, byte[] body, RequestMethod method) throws IOException {
@@ -632,7 +632,7 @@ public class HttpConn {
      * @param proxy  proxy address
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, byte[] body, String proxy, RequestMethod method)
             throws IOException {
@@ -651,7 +651,7 @@ public class HttpConn {
      * @param proxy    proxy address
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(InputStream keystore,
                                   char[] password, String target, byte[] body, String proxy, RequestMethod method)
@@ -671,7 +671,7 @@ public class HttpConn {
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, byte[] body, String proxy,
                                   String encoding, RequestMethod method) throws IOException {
@@ -690,7 +690,7 @@ public class HttpConn {
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   String target, byte[] body, String proxy, String encoding, RequestMethod method)
@@ -711,7 +711,7 @@ public class HttpConn {
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(InputStream keystore,
                                   char[] password, String target, byte[] body, String proxy,
@@ -734,7 +734,7 @@ public class HttpConn {
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password, String target,
@@ -752,10 +752,10 @@ public class HttpConn {
      * @param body     request body
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, byte[] body, String proxy,
                                   String encoding, Map<String, String> headers, RequestMethod method) throws IOException {
@@ -768,10 +768,10 @@ public class HttpConn {
      * Send a http request with implicit params
      *
      * @param target target address
-     * @param params
+     * @param params parameters
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, Map<String, String> params, RequestMethod method)
             throws IOException {
@@ -785,10 +785,10 @@ public class HttpConn {
      *
      * @param upc    basic auth {@link UsernamePasswordCredentials}
      * @param target target address
-     * @param params
+     * @param params parameters
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   String target, Map<String, String> params, RequestMethod method) throws IOException {
@@ -803,10 +803,10 @@ public class HttpConn {
      * @param keystore keyStore InputStream
      * @param password keyStore password
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(InputStream keystore,
                                   char[] password, String target, Map<String, String> params, RequestMethod method)
@@ -823,10 +823,10 @@ public class HttpConn {
      * @param keystore keyStore InputStream
      * @param password keyStore password
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password, String target,
@@ -841,11 +841,11 @@ public class HttpConn {
      * Send a http request with implicit params
      *
      * @param target target address
-     * @param params
+     * @param params parameters
      * @param proxy  proxy address
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, Map<String, String> params,
                                   String proxy, RequestMethod method) throws IOException {
@@ -859,11 +859,11 @@ public class HttpConn {
      *
      * @param upc    basic auth {@link UsernamePasswordCredentials}
      * @param target target address
-     * @param params
+     * @param params parameters
      * @param proxy  proxy address
      * @param method {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   String target, Map<String, String> params, String proxy, RequestMethod method)
@@ -879,11 +879,11 @@ public class HttpConn {
      * @param keystore keyStore InputStream
      * @param password keyStore password
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(InputStream keystore,
                                   char[] password, String target, Map<String, String> params,
@@ -901,11 +901,11 @@ public class HttpConn {
      * @param keystore keyStore InputStream
      * @param password keyStore password
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password, String target,
@@ -920,12 +920,12 @@ public class HttpConn {
      * Send a http request with implicit params
      *
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, Map<String, String> params,
                                   String proxy, String encoding, RequestMethod method) throws IOException {
@@ -939,12 +939,12 @@ public class HttpConn {
      *
      * @param upc      basic auth {@link UsernamePasswordCredentials}
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   String target, Map<String, String> params, String proxy,
@@ -960,12 +960,12 @@ public class HttpConn {
      * @param keystore keyStore InputStream
      * @param password keyStore password
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(InputStream keystore,
                                   char[] password, String target, Map<String, String> params,
@@ -983,12 +983,12 @@ public class HttpConn {
      * @param keystore keyStore InputStream
      * @param password keyStore password
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password, String target,
@@ -1004,13 +1004,13 @@ public class HttpConn {
      * Send a http request with implicit params
      *
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(String target, Map<String, String> params,
                                   String proxy, String encoding, Map<String, String> headers, RequestMethod method)
@@ -1028,10 +1028,10 @@ public class HttpConn {
      * @param body     request body
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   String target, byte[] body, String proxy, String encoding,
@@ -1050,10 +1050,10 @@ public class HttpConn {
      * @param body     request body
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(InputStream keystore,
                                   char[] password, String target, byte[] body, String proxy,
@@ -1069,13 +1069,13 @@ public class HttpConn {
      *
      * @param upc      basic auth {@link UsernamePasswordCredentials}
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   String target, Map<String, String> params, String proxy,
@@ -1092,13 +1092,13 @@ public class HttpConn {
      * @param keystore keyStore InputStream
      * @param password keyStore password
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(InputStream keystore,
                                   char[] password, String target, Map<String, String> params,
@@ -1120,10 +1120,10 @@ public class HttpConn {
      * @param body     request body
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password, String target,
@@ -1142,13 +1142,13 @@ public class HttpConn {
      * @param keystore keyStore InputStream
      * @param password keyStore password
      * @param target   target address
-     * @param params
+     * @param params parameters
      * @param proxy    proxy address
      * @param encoding (default UTF-8)
-     * @param headers
+     * @param headers headers
      * @param method   {@link com.rockagen.commons.http.RequestMethod}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password, String target,
@@ -1171,9 +1171,9 @@ public class HttpConn {
      * @param proxyHost  HttpHost
      * @param encoding   (default UTF-8)
      * @param method     {@link com.rockagen.commons.http.RequestMethod}
-     * @param headers
+     * @param headers headers
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password,
@@ -1237,13 +1237,13 @@ public class HttpConn {
      * @param password   keyStore password
      * @param targetHost HttpHost
      * @param uri        URI
-     * @param params     ( ArrayList NameValuePair)
+     * @param params parameters     ( ArrayList NameValuePair)
      * @param proxyHost  HttpHost
      * @param encoding   (default UTF-8)
      * @param method     {@link com.rockagen.commons.http.RequestMethod}
-     * @param headers
+     * @param headers headers
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password,
@@ -1267,9 +1267,9 @@ public class HttpConn {
      * @param proxyHost  HttpHost
      * @param encoding   (default UTF-8)
      * @param method     {@link com.rockagen.commons.http.RequestMethod}
-     * @param headers
+     * @param headers headers
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String sendBody(UsernamePasswordCredentials upc,
                                   InputStream keystore, char[] password,
@@ -1298,12 +1298,12 @@ public class HttpConn {
     /**
      * Get Http method instance by {@link com.rockagen.commons.http.RequestMethod}
      *
-     * @param method
-     * @param uri
-     * @return
+     * @param method {@link RequestMethod}
+     * @param uri  the uri
+     * @return {@link HttpRequestBase}
      */
     private static HttpRequestBase getHttpMethod(RequestMethod method, String uri) {
-        HttpRequestBase hm = null;
+        HttpRequestBase hm;
         if (method != null) {
             switch (method) {
                 case POST:
@@ -1341,12 +1341,12 @@ public class HttpConn {
     /**
      * Get Http method instance by {@link com.rockagen.commons.http.RequestMethod}
      *
-     * @param method
-     * @param uri
-     * @return
+     * @param method {@link RequestMethod}
+     * @param uri the uri
+     * @return {@link HttpEntityEnclosingRequestBase}
      */
     private static HttpEntityEnclosingRequestBase getHttpEntityMethod(RequestMethod method, String uri) {
-        HttpEntityEnclosingRequestBase hm = null;
+        HttpEntityEnclosingRequestBase hm;
         if (method != null) {
             switch (method) {
                 case POST:
@@ -1369,25 +1369,25 @@ public class HttpConn {
     /**
      * Handler main
      *
+     * @param targetHost target {@link HttpHost}
+     * @param proxyHost proxy {@link HttpHost}
      * @param httpRequestMethod HttpGet or HttpPost...
-     * @param targetHost
-     * @param proxy
-     * @param upc
-     * @param keystore
-     * @param password
+     * @param encoding encoding
+     * @param upc {@link UsernamePasswordCredentials}
+     * @param keystore keystore stream
+     * @param password keystore password
      * @return result String
-     * @throws IOException
-     * @throws KeyStoreException
+     * @throws IOException  if an I/O error occurs
      */
-    protected static String execute(HttpHost targetHost, HttpHost proxy,
+    protected static String execute(HttpHost targetHost, HttpHost proxyHost,
                                     HttpRequest httpRequestMethod, String encoding,
                                     UsernamePasswordCredentials upc, InputStream keystore,
                                     char[] password) throws IOException {
 
         HttpClientBuilder hcb = HttpClients.custom();
         hcb.setDefaultRequestConfig(getRequestConfig());
-        if (proxy != null) {
-            hcb.setProxy(proxy);
+        if (proxyHost != null) {
+            hcb.setProxy(proxyHost);
         }
         if (keystore != null) {
 
@@ -1438,10 +1438,10 @@ public class HttpConn {
     /**
      * Handle response (resolve response to String,httpClient close,etc.)
      *
-     * @param response
-     * @param encoding
+     * @param response {@link HttpResponse}
+     * @param encoding the encoding,default is {@link #ENCODING}
      * @return result String
-     * @throws IOException
+     * @throws IOException  if an I/O error occurs
      */
     public static String getResponse(HttpResponse response, String encoding) throws IOException {
         log.debug("status: {}", response.getStatusLine().getStatusCode());
@@ -1465,7 +1465,7 @@ public class HttpConn {
     /**
      * Get UsernamePasswordCredentials
      *
-     * @param usernameSamePassword
+     * @param usernameSamePassword the same string of username and password
      * @return UsernamePasswordCredentials
      */
     public static UsernamePasswordCredentials getUPC(String usernameSamePassword) {
@@ -1478,8 +1478,8 @@ public class HttpConn {
     /**
      * Get UsernamePasswordCredentials
      *
-     * @param username
-     * @param password
+     * @param username username
+     * @param password password
      * @return UsernamePasswordCredentials
      */
     public static UsernamePasswordCredentials getUPC(String username,
@@ -1493,8 +1493,8 @@ public class HttpConn {
     /**
      * Get url
      *
-     * @param targetHost
-     * @param uri
+     * @param targetHost target {@link org.apache.http.HttpHost}
+     * @param uri the uri
      * @return new url string
      */
     public static String getURL(HttpHost targetHost, String uri) {
@@ -1515,7 +1515,7 @@ public class HttpConn {
      * </p>
      * <li>[0]--> HttpHost</li> <li>[1]--> URI</li>
      *
-     * @param str
+     * @param str the http url
      * @return object array [0]= HttpHost [1]=String(uri)
      */
     private static Object[] resolveUrl(String str) {
@@ -1595,8 +1595,7 @@ public class HttpConn {
      * @return {@link org.apache.http.client.config.RequestConfig}
      */
     protected static RequestConfig getRequestConfig() {
-        RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SO_TIMEOUT).build();
-        return requestConfig;
+        return RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SO_TIMEOUT).build();
     }
 
 }

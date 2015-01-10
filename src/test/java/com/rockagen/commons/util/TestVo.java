@@ -15,9 +15,9 @@
  */
 package com.rockagen.commons.util;
 
-import java.util.Date;
+import com.rockagen.commons.annotation.Plog;
 
-import com.rockagen.commons.annotation.OPLog;
+import java.util.Date;
 
 /**
  * @author RA
@@ -40,7 +40,7 @@ public class TestVo {
 	}
 	public TestVo(){};
 
-	@OPLog
+	@Plog
 	public int getAge() {
 		return age;
 	}

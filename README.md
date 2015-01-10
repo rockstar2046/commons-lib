@@ -2,6 +2,22 @@
 
 commons lib for java,some wrapper functions .
 
+
+## Usage
+`maven:`
+```java
+<dependency>
+	<groupId>com.rockagen</groupId>
+	<artifactId>commons-lib</artifactId>
+	<version>0.1.7-RELEASE</version>
+</dependency>
+```
+
+`gradle:`
+```groovy
+'com.rockagen:commons-lib:0.1.7-RELEASE'
+```
+
 ##Contributing
 [Pull requests][] are welcome,see the [contributor guidelines][] for details.
 

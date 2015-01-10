@@ -15,10 +15,9 @@
  */
 package com.rockagen.commons.annotation;
 
+import com.rockagen.commons.util.ClassUtil;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.rockagen.commons.util.ClassUtil;
 
 /**
  * Test
@@ -28,7 +27,7 @@ import com.rockagen.commons.util.ClassUtil;
  */
 public class OPLogTest {
 	
-	  @OPLog("Test")
+	  @Plog("Test")
 	  public void test()
 	  {
 	  }
@@ -38,10 +37,8 @@ public class OPLogTest {
 	    throws SecurityException, NoSuchMethodException
 	  {
 
-	      OPLog annotation = (OPLog)ClassUtil.getDeclaredMethod(getClass(), false, "test").getAnnotation(OPLog.class);
-	      String methodDescp = annotation.description();
+		  Plog annotation = (Plog)ClassUtil.getDeclaredMethod(getClass(), false, "test").getAnnotation(Plog.class);
 	      String value=annotation.value();
-	      Assert.assertEquals("no description", methodDescp);
 	      Assert.assertEquals("Test", value);
 	  }
 
