@@ -2,6 +2,7 @@
 .settings/
 .project
 .classpath
+.gradle/
 
 # Idea Files
 .idea/
@@ -12,7 +13,13 @@
 
 # Package Files #
 *.jar
-*.war
+*.war                                                                                                   
 *.ear
+
 # build dir
-target/
+/build
+/bin
+/target
+
+# 
+hs_err_pid*
