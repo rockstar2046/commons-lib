@@ -15,13 +15,10 @@
  */
 package com.rockagen.commons.util;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -204,10 +201,10 @@ public class ReflexUtil {
 	/**
 	 * obtained the parent class generic parameter types
 	 * <p>
-	 * for exmaple:
+	 * for example:
 	 * </p>
 	 * <code>
-	 *  ClassB&lt;T&gt;extends ClassA&lt;T&gt;
+	 *  ClassB&lt;T&gt; extends ClassA&lt;T&gt;
 	 * </code>
 	 * 
 	 * @param clazz {@link java.lang.Class}
@@ -236,10 +233,10 @@ public class ReflexUtil {
 	/**
 	 * obtained the parent class generic parameter type
 	 * <p>
-	 * for exmaple:
+	 * for example:
 	 * </p>
 	 * <code>
-	 *  ClassB&lt;T&gt;extends ClassA&lt;T&gt;
+	 *  ClassB&lt;T&gt; extends ClassA&lt;T&gt;
 	 * </code>
 	 * 
 	 * @param clazz {@link java.lang.Class}
@@ -269,10 +266,10 @@ public class ReflexUtil {
 	/**
 	 * obtained the parent class generic parameter classes
 	 * <p>
-	 * for exmaple:
+	 * for example:
 	 * </p>
 	 * <code>
-	 *  ClassB&lt;T&gt;extends ClassA&lt;T&gt;
+	 *  ClassB&lt;T&gt; extends ClassA&lt;T&gt;
 	 * </code>
 	 * 
 	 * @param clazz {@link java.lang.Class}
@@ -292,10 +289,10 @@ public class ReflexUtil {
 	/**
 	 * obtained the parent class generic parameter class
 	 * <p>
-	 * for exmaple:
+	 * for example:
 	 * </p>
 	 * <code>
-	 *  ClassB&lt;T&gt;extends ClassA&lt;T&gt;
+	 *  ClassB&lt;T&gt; extends ClassA&lt;T&gt;
 	 * </code>
 	 * 
 	 * @param clazz {@link java.lang.Class}
@@ -307,6 +304,114 @@ public class ReflexUtil {
 			int index) {
 		return (Class<?>) getSuperClassGenricType(clazz, index);
 	}
+
+
+    /**
+     * obtained the interface generic parameter types
+     * <p>
+     * for example:
+     * </p>
+     * <code>
+     *  ClassB&lt;T&gt; implements ClassA&lt;T&gt;
+     * </code>
+     *
+     * @param clazz {@link java.lang.Class}
+     * @return Types
+     */
+    public static Type[] getInterfacesGenricTypes(final Class<?> clazz) {
+        if (clazz == null)
+            return null;
+        Type[] types=clazz.getGenericInterfaces();
+        
+        Type[] gtypes=new Type[0];
+        for(Type t:types){
+            if (t instanceof ParameterizedType) {
+                Type[] gts=((ParameterizedType) t).getActualTypeArguments();
+                int olen=gtypes.length;
+                int ilen=gts.length;
+                Type[] tmp=new Type[olen+ilen];
+                System.arraycopy(gtypes,0,tmp,0,olen);
+                System.arraycopy(gts, 0, tmp, olen, ilen);
+                gtypes=tmp;
+             }
+        }
+        return gtypes;
+    }
+
+    /**
+     * obtained the interface generic parameter type
+     * <p>
+     * for example:
+     * </p>
+     * <code>
+     *  ClassB&lt;T&gt; implements ClassA&lt;T&gt;
+     * </code>
+     *
+     * @param clazz {@link java.lang.Class}
+     * @param index
+     *            start 0
+     * @return Type
+     */
+    public static Type getInterfacesGenricType(final Class<?> clazz, int index) {
+        Type[] types = getInterfacesGenricTypes(clazz);
+        if (index < 0) {
+            log.warn(
+                    "{}'s index must be greater than 0,return the 0",
+                    clazz == null ? Object.class.getSimpleName() : clazz
+                            .getSimpleName());
+            return types[0];
+        } else if (index > types.length) {
+            log.warn(
+                    "{}'s index in {} not found,return the last",
+                    clazz == null ? Object.class.getSimpleName() : clazz
+                            .getSimpleName(), index);
+            return types[types.length - 1];
+        } else {
+            return types[index];
+        }
+    }
+
+    /**
+     * obtained the interface generic parameter classes
+     * <p>
+     * for example:
+     * </p>
+     * <code>
+     *  ClassB&lt;T&gt; implements ClassA&lt;T&gt;
+     * </code>
+     *
+     * @param clazz {@link java.lang.Class}
+     * @return Classes
+     */
+    public static Class<?>[] getInterfacesGenricClasses(final Class<?> clazz) {
+
+        Type[] types = getInterfacesGenricTypes(clazz);
+        Class<?>[] clazzs = new Class<?>[types.length];
+        for (int i = 0; i < types.length; i++) {
+            clazzs[i] =(Class<?>)types[i];
+        }
+        return clazzs;
+
+    }
+
+    /**
+     * obtained the interface generic parameter class
+     * <p>
+     * for example:
+     * </p>
+     * <code>
+     *  ClassB&lt;T&gt; implements ClassA&lt;T&gt;
+     * </code>
+     *
+     * @param clazz {@link java.lang.Class}
+     * @param index
+     *            start 0
+     * @return Class
+     */
+    public static Class<?> getInterfacesGenricClass(final Class<?> clazz,
+                                                    int index) {
+        return (Class<?>) getInterfacesGenricType(clazz, index);
+    }
 
 	/**
 	 * Create new instance of specified class and type from a map <p><b>note:

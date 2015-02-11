@@ -9,13 +9,13 @@ commons lib for java,some wrapper functions .
 <dependency>
 	<groupId>com.rockagen</groupId>
 	<artifactId>commons-lib</artifactId>
-	<version>0.1.7-RELEASE</version>
+	<version>0.1.8-RELEASE</version>
 </dependency>
 ```
 
 `gradle:`
 ```groovy
-'com.rockagen:commons-lib:0.1.7-RELEASE'
+'com.rockagen:commons-lib:0.1.8-RELEASE'
 ```
 
 ##Contributing

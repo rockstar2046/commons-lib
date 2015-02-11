@@ -15,6 +15,7 @@
  */
 package com.rockagen.commons.util;
 
+import java.sql.Ref;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,32 +33,19 @@ import org.junit.Test;
 public class ReflexUtilTest {
 
 	@Test
-	@Ignore
 	public void testGetInstance() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("name", "ROCKAGEN");
 		map.put("age", 21);
 		map.put("email", null);
 		map.put("addr", "");
-		System.out.println(ReflexUtil
-				.getBasicInstance(TestVo.class, map, false));
+        TestVo obj=ReflexUtil.getBasicInstance(TestVo.class, map, false);
+        Assert.assertEquals(21, obj.getAge());
 	}
 
-	@Test
-	@Ignore
-	public void testGetInstance2() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("name", "ROCKAGEN");
-		map.put("age", 21);
-		map.put("email", null);
-		map.put("addr", "");
-
-		System.out.println(ReflexUtil
-				.getBasicInstance(TestVo2.class, map, true));
-	}
 
 	@Test
-	public void testGetInstance3() throws IllegalArgumentException,
+	public void testGetInstance2() throws IllegalArgumentException,
 			IllegalAccessException {
 
 		Class<?>[] clazz = new Class<?>[] { String.class, int.class,
@@ -84,17 +72,17 @@ public class ReflexUtilTest {
 	}
 
 	@Test
-	@Ignore
+    @Ignore
 	public void testGetAnnotations() {
 		System.out.println("Method: "
-				+ Arrays.toString(ClassUtil.getAnnotatedDeclaredMethods(
-						TestVo3.class, Deprecated.class, true)));
+                + Arrays.toString(ClassUtil.getAnnotatedDeclaredMethods(
+                TestVo3.class, Deprecated.class, true)));
 		System.out.println("Constructor: "
-				+ Arrays.toString(ClassUtil.getAnnotatedDeclaredConstructors(
-						TestVo3.class, Deprecated.class, true)));
+                + Arrays.toString(ClassUtil.getAnnotatedDeclaredConstructors(
+                TestVo3.class, Deprecated.class, true)));
 		System.out.println("Field: "
-				+ Arrays.toString(ClassUtil.getAnnotatedDeclaredFields(
-						TestVo3.class, Deprecated.class, true)));
+                + Arrays.toString(ClassUtil.getAnnotatedDeclaredFields(
+                TestVo3.class, Deprecated.class, true)));
 	}
 
 	@Test
@@ -116,7 +104,30 @@ public class ReflexUtilTest {
 				+ ClassUtil.getDeclaredConstructor(TestVo3.class, true));
 		System.out.println("Method: "
 				+ ClassUtil.getDeclaredMethod(TestVo3.class, true, "setName",
-						new Class[] { String.class }));
+                new Class[]{String.class}));
 	}
+    
+    @Test
+    public void testIntefaceGenericTypeClass(){
+        Class<?>[] clazz=ReflexUtil.getInterfacesGenricClasses(TestInClass.class);
+        Class[] exp={String.class,Long.class,Integer.class};
+        Assert.assertArrayEquals(clazz, exp);
+
+    }   
+    @Test
+    public void testSuperClassesGenericTypeClass(){
+        Class<?>[] clazz=ReflexUtil.getSuperClassGenricClasses(TestInClass.class);
+        Class[] exp={String.class,Long.class};
+        Assert.assertArrayEquals(clazz, exp);
+    }
+    
+    interface TestInterface<A,B,C>{
+        
+    }
+    class SuperTestClass<A,B>{
+        
+    }
+    class TestInClass extends SuperTestClass<String,Long> implements TestInterface<String,Long,Integer>{
+    }
 
 }
