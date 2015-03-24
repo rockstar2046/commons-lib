@@ -19,16 +19,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -169,21 +160,26 @@ public class CommUtil extends StringUtils {
      */
     public static boolean isEmail(String str) {
         // email regular
-        return str.matches("^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$");
+        String regex="^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+        if(!isBlank(str)){
+            return str.matches(regex);
+        }
+        return false;
     }
 
     /**
      * Verify special characters
      *
-     * @param src value
+     * @param str value
      * @return boolean
      */
-    public static boolean hasSpecialChar(String src) {
+    public static boolean hasSpecialChar(String str) {
         String regex = "[a-zA-Z0-9_\\-]*";
 
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(src);
-        return !matcher.matches();
+        if(!isBlank(str)){
+            return !str.matches(regex);
+        }
+        return false;
     }
 
     /**
@@ -239,6 +235,13 @@ public class CommUtil extends StringUtils {
      * @return date String
      */
     public static String date2String(Date date, String pattern) {
+        if(date==null){
+            date=new Date();
+        }
+        
+        if(isBlank(pattern)){
+            pattern="yyyyMMddHHmmss";
+        }
         java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(
                 pattern);
         return dateFormat.format(date);
@@ -251,7 +254,9 @@ public class CommUtil extends StringUtils {
      * @return date String
      */
     public static String dateTime2StringFs(Date date) {
-
+        if(date==null){
+            date=new Date();
+        }
         return date2String(date, "yyyyMMddHHmmss");
     }
 
@@ -262,7 +267,9 @@ public class CommUtil extends StringUtils {
      * @return date String
      */
     public static String dateTime2StringFS(Date date) {
-
+        if(date==null){
+            date=new Date();
+        }
         return date2String(date, "yyyyMMddHHmmssSSS");
 
     }
@@ -275,14 +282,17 @@ public class CommUtil extends StringUtils {
      * @return date
      */
     public static Date string2Date(String dateStr, String pattern) {
+        if(isBlank(dateStr) || isBlank(pattern)){
+            return new Date();
+        }
+        
         java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat(
                 pattern);
-        Date date = new Date();
 
         try {
             return dateFormat.parse(dateStr);
         } catch (ParseException e) {
-            return date;
+            return new Date();
         }
     }
 
@@ -497,8 +507,8 @@ public class CommUtil extends StringUtils {
      */
     public static java.util.List<String> createListFromCommaDelimitedString(
             String access) {
-        if (access == null || access.equals("")) {
-            return null;
+        if(isBlank(access)){
+            return Collections.emptyList();
         }
         List<String> list = new ArrayList<String>();
         String[] args = access.split(",");
@@ -514,13 +524,16 @@ public class CommUtil extends StringUtils {
     /**
      * return a double value from String
      *
-     * @param src value
+     * @param str value
      * @return double
      */
-    public static double extractNumber(String src) {
+    public static double extractNumber(String str) {
+        if(isBlank(str)){
+            return 0;
+        }
         String temp = "0.0";
         Pattern p = Pattern.compile("\\d+\\.?\\d+");
-        Matcher m = p.matcher(src);
+        Matcher m = p.matcher(str);
         while (m.find()) {
             temp = m.group();
         }
@@ -556,6 +569,9 @@ public class CommUtil extends StringUtils {
         } else if (length <= endIndex) {
             return str.substring(startIndex, length);
         } else {
+            if(postfix==null){
+                postfix="";
+            }
             return str.substring(startIndex, endIndex) + postfix;
         }
     }
@@ -567,6 +583,9 @@ public class CommUtil extends StringUtils {
      * @return base64 string
      */
     public static String encodeBase64(String plainText) {
+        if(isBlank(plainText)){
+            return "";
+        }
         byte[] b = Base64.encodeBase64(plainText.getBytes(CHARSET), true);
         return new String(b, CHARSET);
     }
@@ -578,6 +597,9 @@ public class CommUtil extends StringUtils {
      * @return decode Base64 string
      */
     public static String decodeBase64(String signature) {
+        if(isBlank(signature)){
+            return "";
+        }
         byte[] b = Base64.decodeBase64(signature.getBytes(CHARSET));
         return new String(b, CHARSET);
     }
@@ -608,13 +630,17 @@ public class CommUtil extends StringUtils {
      * @return string
      */
     public static String toCommaDelimitedString(String[] src) {
-        StringBuilder sb = new StringBuilder();
-        for (String str : src) {
-            sb.append(str);
-            sb.append(",");
+        if(src!=null && src.length>0) {
+            StringBuilder sb = new StringBuilder();
+            for (String str : src) {
+                sb.append(str);
+                sb.append(",");
+            }
+            sb.deleteCharAt(sb.lastIndexOf(","));
+            return sb.toString();
         }
-        sb.deleteCharAt(sb.lastIndexOf(","));
-        return sb.toString();
+        return "";
+        
     }
 
     /**
@@ -625,7 +651,7 @@ public class CommUtil extends StringUtils {
      */
     public static String escapeCsv(String str) {
         if (isBlank(str)) {
-            return str;
+            return "";
         }
         return StringEscapeUtils.escapeCsv(str);
     }
@@ -844,6 +870,12 @@ public class CommUtil extends StringUtils {
      * @return string
      */
     public static String joinMapValue(Map<String, String> map, String connector) {
+        if(map==null){
+            return "";
+        }
+        if(isBlank(connector)){
+            connector="&";
+        }
         StringBuilder b = new StringBuilder();
         for (Map.Entry<String, String> entry : map.entrySet()) {
             b.append(entry.getKey());
@@ -915,6 +947,10 @@ public class CommUtil extends StringUtils {
      * @return single byte characters string
      */
     public static String toSBC(String dbcString) {
+        
+        if(isBlank(dbcString)){
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < dbcString.length(); i++) {
@@ -939,6 +975,9 @@ public class CommUtil extends StringUtils {
      * @return double byte characters string
      */
     public static String toDBC(String sbcString) {
+        if(isBlank(sbcString)){
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < sbcString.length(); i++) {
@@ -1158,7 +1197,7 @@ public class CommUtil extends StringUtils {
      */
     public static byte[] hexdecode(String hex) {
 
-        if (hex == null || hex.equals("")) {
+        if (isBlank(hex)) {
             return new byte[0];
         }
 
@@ -1302,7 +1341,7 @@ public class CommUtil extends StringUtils {
      * @return snake String
      */
     public static String camel2snake(String camel) {
-        if (camel == null) return "";
+        if (isBlank(camel)) return "";
         if (!(Pattern.compile("[A-Z]").matcher(camel).find()))
             return camel;
         return camel.replaceAll("([A-Z\\d]+([a-z]+)?)([A-Z][a-z])", "$1_$3")
@@ -1318,7 +1357,7 @@ public class CommUtil extends StringUtils {
      * @return camel String
      */
     public static String snake2camel(String snake) {
-        if (snake == null) return "";
+        if (isBlank(snake)) return "";
         String[] words = snake.split("_");
         if (words.length < 1) {
             return snake;
