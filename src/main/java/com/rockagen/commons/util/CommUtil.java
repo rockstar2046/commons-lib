@@ -204,6 +204,12 @@ public class CommUtil extends StringUtils {
      * @return 0, 1, 2, 3, 4
      */
     public static int getPhoneNumberType(String number) {
+        
+        int flag = 0;
+        
+        if(isBlank(number)){
+            return flag;
+        }
         // ~ phone
         String cm = "^(((13[5-9])|(147)|(15[012789])|(18[23478]))\\d{8})|(134[0-8])\\d{7}$";
         String cu = "^((13[0-2])|(145)|(15[5-6])|(18[5-6]))\\d{8}$";
@@ -211,7 +217,6 @@ public class CommUtil extends StringUtils {
 
         String tel = "^((0[12]\\d\\d{8})|(0[3-9]\\d{2}\\d{7,8}))$";
 
-        int flag = 0;
 
         if (number.matches(cm)) {
             flag = 1;
